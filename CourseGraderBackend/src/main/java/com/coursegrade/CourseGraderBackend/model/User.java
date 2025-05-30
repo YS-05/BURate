@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +30,7 @@ public class User implements UserDetails {
     private Integer expectedGrad;
     @Enumerated(EnumType.STRING)
     private Role role = Role.STUDENT;
+    @ManyToMany
     @JoinTable(
             name = "completed_courses",
             joinColumns = @JoinColumn(name = "user_id"),
