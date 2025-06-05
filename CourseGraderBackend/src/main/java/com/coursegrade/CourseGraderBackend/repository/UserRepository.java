@@ -1,4 +1,4 @@
-package com.coursegrade.CourseGraderBackend.repositories;
+package com.coursegrade.CourseGraderBackend.repository;
 
 import com.coursegrade.CourseGraderBackend.model.User;
 import org.springframework.stereotype.Repository;
