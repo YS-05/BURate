@@ -21,7 +21,6 @@ public class Course {
     private String college;
     private String department;
     private String courseNum;
-    private String preReqs;
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = HubRequirement.class)
     @CollectionTable(name = "course_hub_requirements")
