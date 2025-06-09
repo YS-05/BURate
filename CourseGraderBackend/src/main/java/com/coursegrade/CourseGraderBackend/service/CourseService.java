@@ -2,8 +2,10 @@ package com.coursegrade.CourseGraderBackend.service;
 
 import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
+import com.coursegrade.CourseGraderBackend.model.Review;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.repository.CourseRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,7 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
 
-
-
+    @Transactional
     public Course createCourse(String title, String college, String department, String courseCode, String baseUrl) {
         Optional<Course> existingCourse = courseRepository.findByCourseCodeAndDepartmentAndCollege(courseCode, department, college);
         if (existingCourse.isPresent()) {
@@ -111,4 +112,39 @@ public class CourseService {
         return hubRequirements;
     }
 
+    @Transactional
+    public void updateCourseRatings(Review savedReview, Boolean add) {
+        Course course = savedReview.getCourse();
+        int numReviews = course.getTotalReviews();
+        double usefulRating = course.getAverageUsefulnessRating();
+        double interestRating = course.getAverageInterestRating();
+        double workloadRating = course.getAverageWorkloadRating();
+        double difficultyRating = course.getAverageDifficultyRating();
+        double teacherRating = course.getAverageTeacherRating();
+        if (add) {
+            usefulRating = (numReviews * usefulRating) + savedReview.getUsefulnessRating();
+            interestRating = (numReviews * interestRating) + savedReview.getInterestRating();
+            workloadRating = (numReviews * workloadRating) + savedReview.getWorkloadRating();
+            difficultyRating = (numReviews * difficultyRating) + savedReview.getDifficultyRating();
+            teacherRating = (numReviews * teacherRating) + savedReview.getTeacherRating();
+            numReviews++;
+        }
+        else {
+            usefulRating = (numReviews * usefulRating) - savedReview.getUsefulnessRating();
+            interestRating = (numReviews * interestRating) - savedReview.getInterestRating();
+            workloadRating = (numReviews * workloadRating) - savedReview.getWorkloadRating();
+            difficultyRating = (numReviews * difficultyRating) - savedReview.getDifficultyRating();
+            teacherRating = (numReviews * teacherRating) - savedReview.getTeacherRating();
+            numReviews--;
+        }
+        course.setTotalReviews(numReviews);
+        course.setAverageUsefulnessRating(usefulRating/numReviews);
+        course.setAverageInterestRating(interestRating/numReviews);
+        course.setAverageTeacherRating(teacherRating/numReviews);
+        course.setAverageDifficultyRating(difficultyRating/numReviews);
+        course.setAverageWorkloadRating(workloadRating/numReviews);
+
+        Double overallRating = calculateOverallRating(course);
+        course.setAverageOverallRating(overallRating);
+    }
 }

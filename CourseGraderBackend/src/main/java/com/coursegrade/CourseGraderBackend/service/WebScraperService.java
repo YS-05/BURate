@@ -20,7 +20,6 @@ public class WebScraperService {
 
     public void wrapperScrape() {
         List<String> courseUrls = new ArrayList<>();
-
         courseNames(courseUrls, "https://www.bu.edu/academics/cas/courses/",  "CAS"); // For College of Arts & Sciences
         courseNames(courseUrls, "https://www.bu.edu/academics/khc/courses/", "KHC"); // For Arvind & Chandan Nandlal Kilachand Honors College
         courseNames(courseUrls, "https://www.bu.edu/academics/hub/courses/",  "HUB"); // For BU Hub
@@ -49,16 +48,16 @@ public class WebScraperService {
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
         int numPages = getPageCount(baseUrl);
         System.out.println("Number of pages: " + numPages);
-        for (int i = 1; i == 1; i++) { // Replace with numPages when not testing
+        for (int i = 1; i <= numPages; i++) {
             try {
                 Document doc = Jsoup.connect(baseUrl + Integer.toString(i))
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                        .timeout(10000)
-                        .get(); // 10 second timeout.get();
+                        .timeout(120000)
+                        .get(); // 2 minute timeout.get();
                 doc.select("a").forEach(element -> {
                     String title = element.text();
                     String href = element.attr("href");
-                    if (title.contains(college) && href.contains("/courses/")) {
+                    if ((title.contains(college) || title.contains("MET")) && href.contains("/courses/")) {
                         String fullUrl = "https://www.bu.edu" + href;
                         courseUrls.add(fullUrl);
                         System.out.println(title);
@@ -79,8 +78,8 @@ public class WebScraperService {
         try {
             Document doc = Jsoup.connect(baseUrl)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                    .timeout(10000)
-                    .get(); // 10 second timeout.get();
+                    .timeout(120000)
+                    .get(); // 2 minute timeout.get();
             Elements paginationDiv = doc.select("div.pagination");
             if (paginationDiv.isEmpty()) {
                 return 1; // Assume a single page when no div for pagination
@@ -107,8 +106,8 @@ public class WebScraperService {
             try {
                 Document doc = Jsoup.connect(courseUrl)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                        .timeout(10000)
-                        .get(); // 10 second timeout.get();
+                        .timeout(120000)
+                        .get(); // 2 minute timeout.get();
                 System.out.println("Course: " + courseUrl);
                 List<String> hubNames = new ArrayList<>();
                 doc.select("ul.cf-hub-offerings li").forEach(element -> {
