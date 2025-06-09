@@ -1,6 +1,7 @@
 package com.coursegrade.CourseGraderBackend.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class WebScraperService {
 
-    @PostConstruct
+    private final CourseService courseService;
+
     public void wrapperScrape() {
         List<String> courseUrls = new ArrayList<>();
 
@@ -56,9 +59,10 @@ public class WebScraperService {
                     String title = element.text();
                     String href = element.attr("href");
                     if (title.contains(college) && href.contains("/courses/")) {
-                        courseUrls.add("https://www.bu.edu" + href);
+                        String fullUrl = "https://www.bu.edu" + href;
+                        courseUrls.add(fullUrl);
                         System.out.println(title);
-                        courseDetails(title);
+                        courseDetailsSave(title, fullUrl);
                     }
                 });
             } catch (IOException e) {
@@ -106,10 +110,13 @@ public class WebScraperService {
                         .timeout(10000)
                         .get(); // 10 second timeout.get();
                 System.out.println("Course: " + courseUrl);
+                List<String> hubNames = new ArrayList<>();
                 doc.select("ul.cf-hub-offerings li").forEach(element -> {
                     String hub = element.text();
                     System.out.println("Hub: " + hub);
+                    hubNames.add(hub);
                 });
+                courseService.updateCourseWithHubReqs(courseUrl, hubNames);
             } catch (IOException e) {
                 System.out.println("Error connecting: " + e.getMessage());
             }
@@ -126,14 +133,18 @@ public class WebScraperService {
         }
     }
 
-    public void courseDetails(String title) {
+    public void courseDetailsSave(String title, String url) {
         String[] sub = title.split(" ");
         System.out.println("College: " + sub[0]);
         System.out.println("Department: " + sub[1]);
         String[] preCol = sub[2].split(":");
         System.out.println("Course number: " + preCol[0]);
-        String[] byColon = title.split(": ");
-        System.out.println("Course name: " + byColon[1]);
-    }
 
+        int firstColonInd = title.indexOf(": ");
+        String courseName = title.substring(firstColonInd + 2);
+        System.out.println("Course name: " + courseName);
+        System.out.println("College: " + sub[0] + " Department: " + sub[1] + " Course number: " + preCol[0] + " Department: " + courseName);
+        courseService.saveScrapedCourse(sub[0], sub[1], preCol[0], courseName, url);
+        System.out.println("Saved course in database");
+    }
 }

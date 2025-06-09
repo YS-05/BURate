@@ -15,5 +15,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByDepartment(String department);
     List<Course> findByCollege(String college);
     List<Course> findByHubRequirementsIn(Set<HubRequirement> requirements);
-
+    Optional<Course> findByBaseUrl(String baseUrl);
 }
