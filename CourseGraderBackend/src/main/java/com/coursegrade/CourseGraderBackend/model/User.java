@@ -35,7 +35,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private Set<Course> completedCourses = new HashSet<>();
-    private boolean enabled = false; // email not verified initially
+    private boolean enabled = false; // email isn't verified initially
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
