@@ -100,12 +100,11 @@ public class ReviewService {
         dto.setWorkloadRating(review.getWorkloadRating());
         dto.setInterestRating(review.getInterestRating());
         dto.setTeacherRating(review.getTeacherRating());
-        dto.setOverallRating(((review.getDifficultyRating() +
-                review.getTeacherRating()) +
+        dto.setOverallRating(((6.0 - review.getDifficultyRating()) +  // Invert difficulty
+                (6.0 - review.getWorkloadRating()) +  // Invert workload
                 review.getInterestRating() +
-                review.getInterestRating() +
-                review.getUsefulnessRating())/5.0);
-
+                review.getUsefulnessRating() +
+                review.getTeacherRating()) / 5.0);
         dto.setTeacherName(review.getTeacherName());
         dto.setReviewText(review.getReviewText());
         dto.setSemester(review.getSemester());

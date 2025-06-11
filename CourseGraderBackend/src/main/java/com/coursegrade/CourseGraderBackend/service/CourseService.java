@@ -116,35 +116,49 @@ public class CourseService {
     public void updateCourseRatings(Review savedReview, Boolean add) {
         Course course = savedReview.getCourse();
         int numReviews = course.getTotalReviews();
-        double usefulRating = course.getAverageUsefulnessRating();
-        double interestRating = course.getAverageInterestRating();
-        double workloadRating = course.getAverageWorkloadRating();
-        double difficultyRating = course.getAverageDifficultyRating();
-        double teacherRating = course.getAverageTeacherRating();
+
+        double usefulRating = course.getAverageUsefulnessRating() * numReviews;
+        double interestRating = course.getAverageInterestRating() * numReviews;
+        double workloadRating = course.getAverageWorkloadRating() * numReviews;
+        double difficultyRating = course.getAverageDifficultyRating() * numReviews;
+        double teacherRating = course.getAverageTeacherRating() * numReviews;
+
         if (add) {
-            usefulRating = (numReviews * usefulRating) + savedReview.getUsefulnessRating();
-            interestRating = (numReviews * interestRating) + savedReview.getInterestRating();
-            workloadRating = (numReviews * workloadRating) + savedReview.getWorkloadRating();
-            difficultyRating = (numReviews * difficultyRating) + savedReview.getDifficultyRating();
-            teacherRating = (numReviews * teacherRating) + savedReview.getTeacherRating();
+            usefulRating += savedReview.getUsefulnessRating();
+            interestRating += savedReview.getInterestRating();
+            workloadRating += savedReview.getWorkloadRating();
+            difficultyRating += savedReview.getDifficultyRating();
+            teacherRating += savedReview.getTeacherRating();
             numReviews++;
-        }
-        else {
-            usefulRating = (numReviews * usefulRating) - savedReview.getUsefulnessRating();
-            interestRating = (numReviews * interestRating) - savedReview.getInterestRating();
-            workloadRating = (numReviews * workloadRating) - savedReview.getWorkloadRating();
-            difficultyRating = (numReviews * difficultyRating) - savedReview.getDifficultyRating();
-            teacherRating = (numReviews * teacherRating) - savedReview.getTeacherRating();
+        } else {
+            usefulRating -= savedReview.getUsefulnessRating();
+            interestRating -= savedReview.getInterestRating();
+            workloadRating -= savedReview.getWorkloadRating();
+            difficultyRating -= savedReview.getDifficultyRating();
+            teacherRating -= savedReview.getTeacherRating();
             numReviews--;
         }
-        course.setTotalReviews(numReviews);
-        course.setAverageUsefulnessRating(usefulRating/numReviews);
-        course.setAverageInterestRating(interestRating/numReviews);
-        course.setAverageTeacherRating(teacherRating/numReviews);
-        course.setAverageDifficultyRating(difficultyRating/numReviews);
-        course.setAverageWorkloadRating(workloadRating/numReviews);
 
-        Double overallRating = calculateOverallRating(course);
-        course.setAverageOverallRating(overallRating);
+        course.setTotalReviews(numReviews);
+
+        if (numReviews > 0) {
+            course.setAverageUsefulnessRating(usefulRating / numReviews);
+            course.setAverageInterestRating(interestRating / numReviews);
+            course.setAverageTeacherRating(teacherRating / numReviews);
+            course.setAverageDifficultyRating(difficultyRating / numReviews);
+            course.setAverageWorkloadRating(workloadRating / numReviews);
+
+            Double overallRating = calculateOverallRating(course);
+            course.setAverageOverallRating(overallRating);
+        } else {
+            course.setAverageUsefulnessRating(0.0);
+            course.setAverageInterestRating(0.0);
+            course.setAverageTeacherRating(0.0);
+            course.setAverageDifficultyRating(0.0);
+            course.setAverageWorkloadRating(0.0);
+            course.setAverageOverallRating(0.0);
+        }
+
+        courseRepository.save(course);
     }
 }
