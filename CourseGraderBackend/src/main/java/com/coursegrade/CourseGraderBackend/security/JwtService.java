@@ -1,4 +1,4 @@
-package com.coursegrade.CourseGraderBackend.service;
+package com.coursegrade.CourseGraderBackend.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
