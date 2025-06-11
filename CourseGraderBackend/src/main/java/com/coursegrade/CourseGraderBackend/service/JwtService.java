@@ -69,7 +69,7 @@ public class JwtService {
     }
 
     public Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey); // Key must be 32 bytes
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
