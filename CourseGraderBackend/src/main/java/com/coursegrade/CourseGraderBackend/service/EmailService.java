@@ -88,9 +88,7 @@ public class EmailService { // TODO: Better description for verification email +
         }
     }
 
-    public void sendPasswordResetEmail(User user, String token) {
-        String resetUrl = baseUrl + "/reset-password?token=" + token;
-
+    public void sendPasswordResetEmail(User user, String resetCode) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -101,16 +99,12 @@ public class EmailService { // TODO: Better description for verification email +
 
             String content = "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
                     "<h2 style='color: #CC0000;'>Password Reset Request</h2>" +
-                    "<p>Hi there,</p>" +
-                    "<p>We received a request to reset your password. Click the button below to create a new password:</p>" +
-                    "<div style='text-align: center; margin: 30px 0;'>" +
-                    "<a href='" + resetUrl + "' style='background-color: #CC0000; color: white; padding: 12px 30px; " +
-                    "text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;'>Reset Password</a>" +
+                    "<p>We received a request to reset your password. Please use the code below:</p>" +
+                    "<div style='background-color: #f5f5f5; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 5px; font-weight: bold; margin: 20px 0;'>" +
+                    resetCode +
                     "</div>" +
-                    "<p>Or copy and paste this link into your browser:</p>" +
-                    "<p style='color: #666; word-break: break-all; background-color: #f5f5f5; padding: 10px;'>" + resetUrl + "</p>" +
-                    "<p style='color: #999;'>This link will expire in 1 hour for security reasons.</p>" +
-                    "<p style='color: #999;'>If you didn't request this, please ignore this email and your password will remain unchanged.</p>" +
+                    "<p>This code will expire in 1 hour for security reasons.</p>" +
+                    "<p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>" +
                     "<hr style='border: none; border-top: 1px solid #eee; margin: 30px 0;'>" +
                     "<p style='color: #999; font-size: 12px; text-align: center;'>CourseGrader - Your BU Course Review Platform</p>" +
                     "</div>";

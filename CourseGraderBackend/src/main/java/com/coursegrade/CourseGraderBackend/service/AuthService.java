@@ -1,7 +1,6 @@
 package com.coursegrade.CourseGraderBackend.service;
 
-import com.coursegrade.CourseGraderBackend.dto.RegisterLoginUserDTO;
-import com.coursegrade.CourseGraderBackend.dto.VerifyUserDTO;
+import com.coursegrade.CourseGraderBackend.dto.UserResponseDTO;
 import com.coursegrade.CourseGraderBackend.model.Role;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.model.VerificationToken;
@@ -16,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -30,15 +31,20 @@ public class AuthService {
     private final JwtService jwtService;
 
     @Transactional
-    public void register(RegisterLoginUserDTO request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+    public void register(String email, String password) {
+        if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered");
         }
 
+        if (!email.endsWith("@bu.edu")) {
+            throw new RuntimeException("Must be a BU email");
+        }
+
         User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.STUDENT);
+        user.setEnabled(false);
 
         userRepository.save(user);
 
@@ -49,33 +55,107 @@ public class AuthService {
     }
 
     @Transactional
-    public void verify(VerifyUserDTO request) {
-        User user = userRepository.findByEmail(request.getEmail())
+    public boolean verify(String email, String verificationCode) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email not found"));
+
         if (user.isEnabled()) throw new RuntimeException("User is already verified");
-        VerificationToken verificationCode = verificationTokenRepository.findByUser(user)
+
+        VerificationToken token = verificationTokenRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Verification token not found"));
-        if (!verificationCode.isExpired()) {
+
+        if (token.isExpired()) {
+            verificationTokenRepository.delete(token);
             throw new RuntimeException("Verification token is expired");
         }
-        if (!verificationCode.getToken().equals(request.getVerificationCode())) {
+        if (!verificationCode.equals(token.getToken())) {
             throw new RuntimeException("Verification code is incorrect");
         }
         user.setEnabled(true);
         userRepository.save(user);
-        verificationTokenRepository.delete(verificationCode);
+        verificationTokenRepository.delete(token);
+        return true;
     }
 
     @Transactional
-    public String login(RegisterLoginUserDTO request) { // TODO: Implement more features here and checks
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        User user = (User) authentication.getPrincipal();
-        if (!user.isEnabled()) {
-            throw new RuntimeException("Please verify your email before logging in");
+    public Map<String, Object> login(String email, String password) { // TODO: Implement more features here and checks
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+            User user = (User) auth.getPrincipal();
+            if (!user.isEnabled()) {
+                throw new RuntimeException("Please verify your email before logging in");
+            }
+            String token = jwtService.generateToken(user);
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("user", convertToUserResponseDTO(user));
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid username or password");
         }
-        return jwtService.generateToken(user);
+    }
+
+    @Transactional
+    public void resendVerificationEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email not found"));
+        if (user.isEnabled()) {
+            throw new RuntimeException("User is already verified");
+        }
+        verificationTokenRepository.findByUser(user).ifPresent(verificationTokenRepository::delete);
+        String code = generateVerificationCode();
+        VerificationToken token = new VerificationToken(code, user);
+        verificationTokenRepository.save(token);
+        emailService.resendVerificationEmail(user, code);
+    }
+
+    @Transactional
+    public void requestPasswordReset(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("No account with this email"));
+        verificationTokenRepository.findByUser(user).ifPresent(verificationTokenRepository::delete);
+        String verificationCode = generateVerificationCode();
+        VerificationToken token = new VerificationToken(verificationCode, user);
+        verificationTokenRepository.save(token);
+        emailService.sendPasswordResetEmail(user, verificationCode);
+    }
+
+    @Transactional
+    public void resetPassword(String email, String resetCode, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email not found"));
+        VerificationToken token = verificationTokenRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Verification token not found"));
+        if (token.isExpired()) {
+            verificationTokenRepository.delete(token);
+            throw new RuntimeException("Reset password token is expired");
+        }
+        if (!resetCode.equals(token.getToken())) {
+            throw new RuntimeException("Reset code is incorrect");
+        }
+        verificationTokenRepository.delete(token);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public UserResponseDTO getCurrentUser(String token) {
+        String email = jwtService.extractUsername(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return convertToUserResponseDTO(user);
+    }
+
+    public UserResponseDTO convertToUserResponseDTO(User user) {
+        UserResponseDTO response = new UserResponseDTO();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setEnabled(user.isEnabled());
+        response.setCompletedCourses(user.getCompletedCourses());
+        response.setHubsCompleted(user.getHubRequirements());
+        return response;
     }
 
     public String generateVerificationCode() {
@@ -83,5 +163,6 @@ public class AuthService {
         int code = 100000 + random.nextInt(900000); // generates 6-digit code
         return String.valueOf(code);
     }
+
 
 }
