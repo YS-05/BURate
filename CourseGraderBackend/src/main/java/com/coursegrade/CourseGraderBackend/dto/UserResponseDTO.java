@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -21,5 +22,5 @@ public class UserResponseDTO {
     private Role role;
     private boolean enabled;
     private Set<Course> completedCourses;
-    private Set<HubRequirement> hubsCompleted;
+    private Map<HubRequirement, Integer> hubsCompleted;
 }

@@ -67,7 +67,7 @@ public class AuthController {
         ));
     }
 
-    @PostMapping("/me")
+    @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> me(@RequestHeader("Authorization") String token) {
         String jwt = token.substring(7);
         UserResponseDTO user = authService.getCurrentUser(jwt);

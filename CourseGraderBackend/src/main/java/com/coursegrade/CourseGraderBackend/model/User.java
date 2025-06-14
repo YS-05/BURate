@@ -32,7 +32,13 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private Set<Course> completedCourses = new HashSet<>();
-    private Map<HubRequirement, Integer> hubRequirements = new HashMap<>();
+    @ElementCollection
+    @CollectionTable(name = "user_hub_progress",
+            joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @MapKeyColumn(name = "hub_requirement")
+    @Column(name = "completed_count")
+    private Map<HubRequirement, Integer> hubProgress = new HashMap<>();
     private boolean enabled = false; // email isn't verified initially
 
     @Override

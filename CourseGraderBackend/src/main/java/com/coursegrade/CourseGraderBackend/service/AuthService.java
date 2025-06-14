@@ -141,7 +141,7 @@ public class AuthService {
     }
 
     public UserResponseDTO getCurrentUser(String token) {
-        String email = jwtService.extractUsername(token);
+        String email = jwtService.extractEmail(token);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return convertToUserResponseDTO(user);
@@ -154,7 +154,7 @@ public class AuthService {
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());
         response.setCompletedCourses(user.getCompletedCourses());
-        response.setHubsCompleted(user.getHubRequirements());
+        response.setHubsCompleted(user.getHubProgress());
         return response;
     }
 
