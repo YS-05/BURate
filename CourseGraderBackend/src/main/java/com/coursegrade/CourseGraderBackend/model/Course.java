@@ -33,9 +33,6 @@ public class Course {
     private Set<HubRequirement> hubRequirements = new HashSet<>();
     @Column(name = "base_url")
     private String baseUrl;
-    @Column
-    @OneToMany
-    private Set<Review> reviews = new HashSet<>();
     @Column(name = "total_reviews")
     private Integer totalReviews;
     @Column(name = "average_overall_rating")

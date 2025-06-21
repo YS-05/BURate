@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,5 +25,5 @@ public class CourseDTO {
     private Double averageWorkloadRating;
     private Double averageInterestRating;
     private Double averageTeacherRating;
-    private Set<Review> courseReviews;
+    private List<Review> courseReviews;
 }

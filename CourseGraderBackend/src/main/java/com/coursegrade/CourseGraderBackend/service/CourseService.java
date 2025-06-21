@@ -7,6 +7,7 @@ import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.model.Review;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.repository.CourseRepository;
+import com.coursegrade.CourseGraderBackend.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import java.util.*;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public Course createCourse(String title, String college, String department, String courseCode, String baseUrl) {
@@ -49,7 +51,7 @@ public class CourseService {
 
     public Page<CourseDisplayDTO> getAllCoursesPaginated(Pageable pageable) {
         Page<Course> coursePage = courseRepository.findAll(pageable);
-        return coursePage.map(course -> this.convertToDisplayDTO);
+        return coursePage.map(course -> this.convertToDisplayDTO(course));
     }
 
     public CourseDTO getCourseDTOById(Long id) {
@@ -289,4 +291,44 @@ public class CourseService {
 
         courseRepository.save(course);
     }
+
+    private CourseDisplayDTO convertToDisplayDTO(Course course) {
+        return CourseDisplayDTO.builder()
+                .id(course.getId().toString())
+                .title(course.getTitle())
+                .college(course.getCollege())
+                .department(course.getDepartment())
+                .courseCode(course.getCourseCode())
+                .numReviews(course.getTotalReviews())
+                .averageOverallRating(course.getAverageOverallRating())
+                .averageUsefulnessRating(course.getAverageUsefulnessRating())
+                .averageDifficultyRating(course.getAverageDifficultyRating())
+                .averageWorkloadRating(course.getAverageWorkloadRating())
+                .averageInterestRating(course.getAverageInterestRating())
+                .averageTeacherRating(course.getAverageTeacherRating())
+                .build();
+    }
+
+    private CourseDTO convertToFullDTO(Course course) {
+
+        List<Review> reviews = reviewRepository.findByCourseOrderByCreatedAtDesc(course);
+
+        return CourseDTO.builder()
+                .id(course.getId().toString())
+                .title(course.getTitle())
+                .college(course.getCollege())
+                .department(course.getDepartment())
+                .courseCode(course.getCourseCode())
+                .numReviews(course.getTotalReviews())
+                .averageOverallRating(course.getAverageOverallRating())
+                .averageUsefulnessRating(course.getAverageUsefulnessRating())
+                .averageDifficultyRating(course.getAverageDifficultyRating())
+                .averageWorkloadRating(course.getAverageWorkloadRating())
+                .averageInterestRating(course.getAverageInterestRating())
+                .averageTeacherRating(course.getAverageTeacherRating())
+                .courseReviews(reviews)
+                .build();
+
+    }
+
 }
