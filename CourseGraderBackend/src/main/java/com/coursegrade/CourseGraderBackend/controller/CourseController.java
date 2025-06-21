@@ -2,11 +2,9 @@ package com.coursegrade.CourseGraderBackend.controller;
 
 import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
 import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
-import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.service.CourseService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.SortDirection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -60,14 +57,15 @@ public class CourseController {
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CourseDisplayDTO> courses = courseService.searchCoursesWithCollege(
-                minCourseCode, college, hubRequirements, department, minRating, maxDifficulty, maxWorkLoad, minUseful, minInterest, minTeacher, reviewCount
+                minCourseCode, college, hubRequirements, department, minRating, maxDifficulty,
+                maxWorkLoad, minUseful, minInterest, minTeacher, reviewCount, pageable
         );
         return ResponseEntity.ok(courses);
     }
 
     @GetMapping("/colleges")
     public ResponseEntity<List<String>> getAllColleges() {
-        List<String> colleges = courseService.getAllCourses();
+        List<String> colleges = courseService.getAllColleges();
         return ResponseEntity.ok(colleges);
     }
 

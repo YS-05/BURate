@@ -1,5 +1,7 @@
 package com.coursegrade.CourseGraderBackend.service;
 
+import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
+import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
 import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.model.Review;
@@ -7,12 +9,12 @@ import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.repository.CourseRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,132 @@ public class CourseService {
         course.setAverageInterestRating(0.0);
         course.setAverageTeacherRating(0.0);
         return courseRepository.save(course);
+    }
+
+    public Page<CourseDisplayDTO> getAllCoursesPaginated(Pageable pageable) {
+        Page<Course> coursePage = courseRepository.findAll(pageable);
+        return coursePage.map(course -> this.convertToDisplayDTO);
+    }
+
+    public CourseDTO getCourseDTOById(Long id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        return convertToFullDTO(course);
+    }
+
+    public Page<CourseDisplayDTO> searchCoursesWithCollege(
+            Integer minCourseCode, String college, Set<HubRequirement> hubRequirements,
+            String department, Double minRating, Double maxDifficulty, Double maxWorkload,
+            Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount,
+            Pageable pageable
+    ) {
+        List<Course> courses = getCoursesByCollege(college);
+        if (minCourseCode != null && minCourseCode > 0) {
+            for (Course course : courses) {
+                int courseCode = Integer.parseInt(course.getCourseCode());
+                if (courseCode < minCourseCode) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (hubRequirements != null && !hubRequirements.isEmpty()) {
+            for (Course course : courses) {
+                boolean containsReq = false;
+                Set<HubRequirement> courseHubReqs = course.getHubRequirements();
+                for (HubRequirement courseHub : courseHubReqs) {
+                    if (hubRequirements.contains(courseHub)) {
+                        containsReq = true;
+                        break;
+                    }
+                }
+                if (!containsReq) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (department != null && !department.isBlank()) {
+            for (Course course : courses) {
+                if (!course.getDepartment().equalsIgnoreCase(department)) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (minRating != null && minRating > 0) {
+            for (Course course : courses) {
+                if (course.getAverageOverallRating() < minRating) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (maxDifficulty != null && maxDifficulty > 0) {
+            for (Course course : courses) {
+                if (course.getAverageDifficultyRating() > maxDifficulty) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (maxWorkload != null && maxWorkload > 0) {
+            for (Course course : courses) {
+                if (course.getAverageWorkloadRating() > maxWorkload) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (minUsefulness != null && minUsefulness > 0) {
+            for (Course course : courses) {
+                if (course.getAverageUsefulnessRating() < minUsefulness) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (minInterest != null && minInterest > 0) {
+            for (Course course : courses) {
+                if (course.getAverageInterestRating() < minInterest) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (minTeacher != null && minTeacher > 0) {
+            for (Course course : courses) {
+                if (course.getAverageTeacherRating() < minTeacher) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (reviewCount != null && reviewCount > 0) {
+            for (Course course : courses) {
+                if (course.getTotalReviews() < reviewCount) {
+                    courses.remove(course);
+                }
+            }
+        }
+        List<CourseDisplayDTO> dtos = new ArrayList<>();
+        for (Course course : courses) {
+            CourseDisplayDTO dto = convertToDisplayDTO(course);
+            dtos.add(dto);
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(pageable.getPageSize() + start, dtos.size());
+        if (start > dtos.size()) { // Error handling
+            return new PageImpl<>(new ArrayList<>(), pageable, dtos.size());
+        }
+        return new PageImpl<>(dtos.subList(start, end), pageable, dtos.size());
+    }
+
+    public List<String> getAllColleges() {
+        return List.of("CAS", "KHC", "HUB", "MED", "COM", "ENG", "CFA", "CGS",
+                "CDS", "GMS", "SDM", "GMS", "MET", "QST", "SAR", "SHA", "LAW", "SPH", "SSW",
+                "STH", "WED");
+    }
+
+    public List<String> getDepartmentsByCollege(String college) {
+        List<Course> courses = getCoursesByCollege(college);
+        Set<String> departments = new HashSet<>();
+        for (Course course : courses) {
+            departments.add(course.getDepartment());
+        }
+        return new ArrayList<>(departments);
     }
 
     public List<Course> findCoursesByHubReqs(Set<HubRequirement> requirements) {
