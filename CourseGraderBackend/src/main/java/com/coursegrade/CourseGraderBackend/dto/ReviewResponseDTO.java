@@ -27,4 +27,5 @@ public class ReviewResponseDTO {
     private String assignmentTypes; // "Essays, Problem Sets, Group Project"
     private Boolean attendanceRequired;
     private LocalDateTime createdAt;
+    private boolean isOwner;
 }

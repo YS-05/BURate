@@ -243,52 +243,39 @@ public class CourseService {
     }
 
     @Transactional
-    public void updateCourseRatings(Review savedReview, Boolean add) {
-        Course course = savedReview.getCourse();
-        int numReviews = course.getTotalReviews();
-
-        double usefulRating = course.getAverageUsefulnessRating() * numReviews;
-        double interestRating = course.getAverageInterestRating() * numReviews;
-        double workloadRating = course.getAverageWorkloadRating() * numReviews;
-        double difficultyRating = course.getAverageDifficultyRating() * numReviews;
-        double teacherRating = course.getAverageTeacherRating() * numReviews;
-
-        if (add) {
-            usefulRating += savedReview.getUsefulnessRating();
-            interestRating += savedReview.getInterestRating();
-            workloadRating += savedReview.getWorkloadRating();
-            difficultyRating += savedReview.getDifficultyRating();
-            teacherRating += savedReview.getTeacherRating();
-            numReviews++;
-        } else {
-            usefulRating -= savedReview.getUsefulnessRating();
-            interestRating -= savedReview.getInterestRating();
-            workloadRating -= savedReview.getWorkloadRating();
-            difficultyRating -= savedReview.getDifficultyRating();
-            teacherRating -= savedReview.getTeacherRating();
-            numReviews--;
-        }
-
-        course.setTotalReviews(numReviews);
-
-        if (numReviews > 0) {
-            course.setAverageUsefulnessRating(usefulRating / numReviews);
-            course.setAverageInterestRating(interestRating / numReviews);
-            course.setAverageTeacherRating(teacherRating / numReviews);
-            course.setAverageDifficultyRating(difficultyRating / numReviews);
-            course.setAverageWorkloadRating(workloadRating / numReviews);
-
-            Double overallRating = calculateOverallRating(course);
-            course.setAverageOverallRating(overallRating);
-        } else {
+    public void updateCourseRatings(Long courseId) {
+        Course course = getCourseById(courseId)
+                .orElseThrow(() -> new RuntimeException("Invalid course ID"));
+        List<Review> reviews = reviewRepository.findByCourse(course);
+        course.setTotalReviews(reviews.size());
+        if (reviews.isEmpty()) {
+            course.setAverageWorkloadRating(0.0);
+            course.setAverageDifficultyRating(0.0);
             course.setAverageUsefulnessRating(0.0);
             course.setAverageInterestRating(0.0);
             course.setAverageTeacherRating(0.0);
-            course.setAverageDifficultyRating(0.0);
-            course.setAverageWorkloadRating(0.0);
             course.setAverageOverallRating(0.0);
+            return;
         }
-
+        int totalWorkload = 0;
+        int totalDifficulty = 0;
+        int totalUsefulness = 0;
+        int totalInterest = 0;
+        int totalTeacher = 0;
+        for (Review review : reviews) {
+            totalWorkload += review.getWorkloadRating();
+            totalDifficulty += review.getDifficultyRating();
+            totalUsefulness += review.getUsefulnessRating();
+            totalInterest += review.getInterestRating();
+            totalTeacher += review.getTeacherRating();
+        }
+        course.setAverageWorkloadRating((double) totalWorkload / reviews.size());
+        course.setAverageDifficultyRating((double) totalDifficulty / reviews.size());
+        course.setAverageUsefulnessRating((double) totalUsefulness / reviews.size());
+        course.setAverageInterestRating((double) totalInterest / reviews.size());
+        course.setAverageTeacherRating((double) totalTeacher / reviews.size());
+        courseRepository.save(course); // So can calculate overall rating with the helper function
+        course.setAverageOverallRating(calculateOverallRating(course));
         courseRepository.save(course);
     }
 
