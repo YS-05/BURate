@@ -41,6 +41,21 @@ public class User implements UserDetails {
     private Map<HubRequirement, Integer> hubProgress = new HashMap<>();
     private boolean enabled = false; // email isn't verified initially
 
+    public void updateHubProgress() {
+        hubProgress.clear();
+        for (Course course : completedCourses) {
+            for (HubRequirement hub : course.getHubRequirements()) {
+                if (!hubProgress.containsKey(hub)) hubProgress.put(hub, 0);
+                hubProgress.put(hub, hubProgress.get(hub) + 1);
+            }
+        }
+    }
+
+    public boolean isHubFulfilled(HubRequirement hub) {
+        Integer count = hubProgress.get(hub);
+        return count != null && count >= hub.getReqCount();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

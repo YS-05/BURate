@@ -279,7 +279,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    private CourseDisplayDTO convertToDisplayDTO(Course course) {
+    public CourseDisplayDTO convertToDisplayDTO(Course course) {
         return CourseDisplayDTO.builder()
                 .id(course.getId().toString())
                 .title(course.getTitle())
@@ -296,7 +296,7 @@ public class CourseService {
                 .build();
     }
 
-    private CourseDTO convertToFullDTO(Course course) {
+    public CourseDTO convertToFullDTO(Course course) {
 
         List<Review> reviews = reviewRepository.findByCourseOrderByCreatedAtDesc(course);
 
