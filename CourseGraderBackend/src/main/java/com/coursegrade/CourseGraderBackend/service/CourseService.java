@@ -66,90 +66,118 @@ public class CourseService {
             Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount,
             Pageable pageable
     ) {
-        List<Course> courses = getCoursesByCollege(college);
+        List<Course> courses = new ArrayList<>(getCoursesByCollege(college));
         if (minCourseCode != null && minCourseCode > 0) {
-            for (Course course : courses) {
-                int courseCode = Integer.parseInt(course.getCourseCode());
-                if (courseCode < minCourseCode) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                try {
+                    int courseCode = Integer.parseInt(course.getCourseCode());
+                    if (courseCode < minCourseCode) {
+                        iterator.remove();
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid course code");
                 }
             }
         }
         if (hubRequirements != null && !hubRequirements.isEmpty()) {
-            for (Course course : courses) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
                 boolean containsReq = false;
                 Set<HubRequirement> courseHubReqs = course.getHubRequirements();
-                for (HubRequirement courseHub : courseHubReqs) {
-                    if (hubRequirements.contains(courseHub)) {
-                        containsReq = true;
-                        break;
+                if (courseHubReqs != null) {
+                    for (HubRequirement courseHub : courseHubReqs) {
+                        if (hubRequirements.contains(courseHub)) {
+                            containsReq = true;
+                            break;
+                        }
                     }
                 }
                 if (!containsReq) {
-                    courses.remove(course);
+                    iterator.remove();
                 }
             }
         }
         if (department != null && !department.isBlank()) {
-            for (Course course : courses) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
                 if (!course.getDepartment().equalsIgnoreCase(department)) {
-                    courses.remove(course);
+                    iterator.remove();
                 }
             }
         }
         if (noPreReqs != null && noPreReqs) {
-            for (Course course : courses) {
-                if (!course.getNoPreReqs()) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getNoPreReqs() == null || !course.getNoPreReqs()) {
+                    iterator.remove();
                 }
             }
         }
         if (minRating != null && minRating > 0) {
-            for (Course course : courses) {
-                if (course.getAverageOverallRating() < minRating) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageOverallRating() == null || course.getAverageOverallRating() < minRating) {
+                    iterator.remove();
                 }
             }
         }
         if (maxDifficulty != null && maxDifficulty > 0) {
-            for (Course course : courses) {
-                if (course.getAverageDifficultyRating() > maxDifficulty) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageDifficultyRating() == null || course.getAverageDifficultyRating() > maxDifficulty) {
+                    iterator.remove();
                 }
             }
         }
         if (maxWorkload != null && maxWorkload > 0) {
-            for (Course course : courses) {
-                if (course.getAverageWorkloadRating() > maxWorkload) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageWorkloadRating() == null || course.getAverageWorkloadRating() > maxWorkload) {
+                    iterator.remove();
                 }
             }
         }
         if (minUsefulness != null && minUsefulness > 0) {
-            for (Course course : courses) {
-                if (course.getAverageUsefulnessRating() < minUsefulness) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageUsefulnessRating() == null || course.getAverageUsefulnessRating() < minUsefulness) {
+                    iterator.remove();
                 }
             }
         }
         if (minInterest != null && minInterest > 0) {
-            for (Course course : courses) {
-                if (course.getAverageInterestRating() < minInterest) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageInterestRating() == null || course.getAverageInterestRating() < minInterest) {
+                    iterator.remove();
                 }
             }
         }
         if (minTeacher != null && minTeacher > 0) {
-            for (Course course : courses) {
-                if (course.getAverageTeacherRating() < minTeacher) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageTeacherRating() == null || course.getAverageTeacherRating() < minTeacher) {
+                    iterator.remove();
                 }
             }
         }
         if (reviewCount != null && reviewCount > 0) {
-            for (Course course : courses) {
-                if (course.getTotalReviews() < reviewCount) {
-                    courses.remove(course);
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getTotalReviews() == null || course.getTotalReviews() < reviewCount) {
+                    iterator.remove();
                 }
             }
         }
