@@ -41,13 +41,13 @@ public class WebScraperService {
         courseNames(courseUrls, "https://www.bu.edu/academics/sth/courses/", "STH"); // For School of Theology
         courseNames(courseUrls, "https://www.bu.edu/academics/wheelock/courses/", "WED"); // For Wheelock College of Education & Human Development
 
-        courseHubsFulfilled(courseUrls);
+        courseHubsAndDescription(courseUrls);
     }
 
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
         int numPages = getPageCount(baseUrl);
         System.out.println("Number of pages: " + numPages);
-        for (int i = 1; i <= numPages; i++) {
+        for (int i = 1; i <= 1; i++) { // replace with numPages when done testing
             try {
                 Document doc = Jsoup.connect(baseUrl + Integer.toString(i))
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
@@ -100,7 +100,7 @@ public class WebScraperService {
         return 1;
     }
 
-    public void courseHubsFulfilled(List<String> courseUrls) {
+    public void courseHubsAndDescription(List<String> courseUrls) {
         for (String courseUrl : courseUrls) {
             try {
                 Document doc = Jsoup.connect(courseUrl)
@@ -114,7 +114,16 @@ public class WebScraperService {
                     System.out.println("Hub: " + hub);
                     hubNames.add(hub);
                 });
-                courseService.updateCourseWithHubReqs(courseUrl, hubNames);
+                String description = null;
+                Element courseContentDiv = doc.getElementById("course-content");
+                if (courseContentDiv != null) {
+                    Element firstParagraph = courseContentDiv.selectFirst("p");
+                    if (firstParagraph != null) {
+                        description = firstParagraph.text();
+                        System.out.println("Description: " + description);
+                    }
+                }
+                courseService.updateCourseWithHubReqsAndDescription(courseUrl, hubNames, description);
             } catch (IOException e) {
                 System.out.println("Error connecting: " + e.getMessage());
             }

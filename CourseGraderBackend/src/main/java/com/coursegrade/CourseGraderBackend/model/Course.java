@@ -26,6 +26,10 @@ public class Course {
     private String department;
     @Column(name = "course_code")
     private String courseCode;
+    @Column(name = "course_desc", columnDefinition = "TEXT")
+    private String courseDesc;
+    @Column(name = "no_pre_reqs")
+    private Boolean noPreReqs;
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = HubRequirement.class)
     @CollectionTable(name = "course_hub_requirements")

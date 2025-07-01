@@ -35,10 +35,11 @@ public class AuthService {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered");
         }
-
+        /* // Commented out for testing purposes
         if (!email.endsWith("@bu.edu")) {
             throw new RuntimeException("Must be a BU email");
         }
+         */
 
         User user = new User();
         user.setEmail(email);

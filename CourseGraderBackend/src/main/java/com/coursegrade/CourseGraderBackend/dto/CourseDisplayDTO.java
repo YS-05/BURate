@@ -15,6 +15,7 @@ public class CourseDisplayDTO {
     private String college;
     private String department;
     private String courseCode;
+    private Boolean noPreReqs;
     private Integer numReviews;
     private Double averageOverallRating;
     private Double averageUsefulnessRating;

@@ -62,7 +62,7 @@ public class CourseService {
 
     public Page<CourseDisplayDTO> searchCoursesWithCollege(
             Integer minCourseCode, String college, Set<HubRequirement> hubRequirements,
-            String department, Double minRating, Double maxDifficulty, Double maxWorkload,
+            String department, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
             Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount,
             Pageable pageable
     ) {
@@ -93,6 +93,13 @@ public class CourseService {
         if (department != null && !department.isBlank()) {
             for (Course course : courses) {
                 if (!course.getDepartment().equalsIgnoreCase(department)) {
+                    courses.remove(course);
+                }
+            }
+        }
+        if (noPreReqs != null && noPreReqs) {
+            for (Course course : courses) {
+                if (!course.getNoPreReqs()) {
                     courses.remove(course);
                 }
             }
@@ -217,7 +224,7 @@ public class CourseService {
         return createCourse(title, college, department, courseNum, baseUrl);
     }
 
-    public Course updateCourseWithHubReqs(String baseUrl, List<String> hubNames) {
+    public Course updateCourseWithHubReqsAndDescription(String baseUrl, List<String> hubNames, String description) {
         Optional<Course> courseOptional = courseRepository.findByBaseUrl(baseUrl);
         if (courseOptional.isEmpty()) {
             System.out.println("No course found with URL: " + baseUrl);
@@ -226,6 +233,14 @@ public class CourseService {
         Course course = courseOptional.get();
         Set<HubRequirement> hubRequirements = convertHubNamesToEnum(hubNames);
         course.setHubRequirements(hubRequirements);
+        course.setCourseDesc(description);
+        if (description != null) {
+            String descLower = description.toLowerCase();
+            course.setNoPreReqs(!descLower.contains("prerequisite") && !descLower.contains("pre-requisite"));
+        }
+        else {
+            course.setNoPreReqs(true);
+        }
         return courseRepository.save(course);
     }
 
@@ -286,6 +301,7 @@ public class CourseService {
                 .college(course.getCollege())
                 .department(course.getDepartment())
                 .courseCode(course.getCourseCode())
+                .noPreReqs(course.getNoPreReqs())
                 .numReviews(course.getTotalReviews())
                 .averageOverallRating(course.getAverageOverallRating())
                 .averageUsefulnessRating(course.getAverageUsefulnessRating())
@@ -306,6 +322,8 @@ public class CourseService {
                 .college(course.getCollege())
                 .department(course.getDepartment())
                 .courseCode(course.getCourseCode())
+                .description(course.getCourseDesc())
+                .noPreReqs(course.getNoPreReqs())
                 .numReviews(course.getTotalReviews())
                 .averageOverallRating(course.getAverageOverallRating())
                 .averageUsefulnessRating(course.getAverageUsefulnessRating())
