@@ -1,6 +1,9 @@
 package com.coursegrade.CourseGraderBackend.service;
 
+import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
+import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
 import com.coursegrade.CourseGraderBackend.dto.UserResponseDTO;
+import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.Role;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.model.VerificationToken;
@@ -15,9 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class AuthService {
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final CourseService courseService;
 
     @Transactional
     public void register(String email, String password) {
@@ -154,7 +156,13 @@ public class AuthService {
         response.setEmail(user.getEmail());
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());
-        response.setCompletedCourses(user.getCompletedCourses());
+        Set<Course> courses = user.getCompletedCourses();
+        Set<CourseDisplayDTO> courseDTOs = new HashSet<>();
+        for (Course course : courses) {
+            CourseDisplayDTO dto = courseService.convertToDisplayDTO(course);
+            courseDTOs.add(dto);
+        }
+        response.setCompletedCourses(courseDTOs);
         response.setHubsCompleted(user.getHubProgress());
         return response;
     }

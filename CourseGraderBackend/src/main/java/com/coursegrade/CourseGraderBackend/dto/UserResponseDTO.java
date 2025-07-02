@@ -21,6 +21,6 @@ public class UserResponseDTO {
     private String email;
     private Role role;
     private boolean enabled;
-    private Set<Course> completedCourses;
+    private Set<CourseDisplayDTO> completedCourses;
     private Map<HubRequirement, Integer> hubsCompleted;
 }
