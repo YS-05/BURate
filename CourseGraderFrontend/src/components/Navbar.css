@@ -1,0 +1,30 @@
+.custom-nav-link {
+  text-decoration: none !important;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.custom-nav-link:hover {
+  color: #000 !important; /* Black text on hover */
+}
+
+.custom-nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -8px; /* Distance below text */
+  left: 50%;
+  background-color: #000;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.custom-nav-link:hover::after {
+  width: 100%;
+}
+
+.btn {
+    border-color: #000;
+    border-radius: 2px;
+}
