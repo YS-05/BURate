@@ -24,7 +24,7 @@ const NavBar = () => {
           </Link>
           <Link
             to="/register"
-            className="btn btn-outline-dark m-2"
+            className="btn btn-outline-danger m-2"
             style={{ width: "120px", height: "40px" }}
           >
             Sign Up

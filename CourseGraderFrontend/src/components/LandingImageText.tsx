@@ -1,12 +1,12 @@
 import React from "react";
-import LandingImg from "../assets/landingpageimg.jpg";
+import PotentialImg from "../assets/potentialImage.jpg";
 import { Link } from "react-router-dom";
 
 const LandingImageText = () => {
   return (
     <div style={{ position: "relative" }}>
       <img
-        src={LandingImg}
+        src={PotentialImg}
         style={{
           width: "100%",
           height: "60vh",
