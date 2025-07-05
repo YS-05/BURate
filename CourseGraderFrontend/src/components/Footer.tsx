@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-center py-4">
+    <footer className="bg-dark text-center py-4" style={{ height: "140px" }}>
       <div className="d-flex justify-content-center flex-wrap gap-4 mb-2">
         <Link to="/guidelines" className="text-secondary text-decoration-none">
           Site Guidelines

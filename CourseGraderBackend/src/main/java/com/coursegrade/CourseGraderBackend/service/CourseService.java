@@ -61,12 +61,21 @@ public class CourseService {
     }
 
     public Page<CourseDisplayDTO> searchCoursesWithCollege(
-            Integer minCourseCode, String college, Set<HubRequirement> hubRequirements,
+            Integer minCourseCode, Set<String> colleges, Set<HubRequirement> hubRequirements,
             String department, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
             Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount,
             Pageable pageable
     ) {
-        List<Course> courses = new ArrayList<>(getCoursesByCollege(college));
+        List<Course> courses = new ArrayList<>(getAllCourses());
+        if (colleges != null && !colleges.isEmpty()) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (!colleges.contains(course.getCollege())) {
+                    iterator.remove();
+                }
+            }
+        }
         if (minCourseCode != null && minCourseCode > 0) {
             Iterator<Course> iterator = courses.iterator();
             while (iterator.hasNext()) {

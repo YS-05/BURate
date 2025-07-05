@@ -23,8 +23,3 @@
 .custom-nav-link:hover::after {
   width: 100%;
 }
-
-.btn {
-    border-color: #000;
-    border-radius: 2px;
-}

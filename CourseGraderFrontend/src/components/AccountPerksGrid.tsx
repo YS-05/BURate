@@ -5,19 +5,19 @@ import addCourseImg from "../assets/addRev.png";
 
 const perks = [
   {
-    title: "Track hub progress",
+    title: "Track Hub Progress",
     description:
       "Get a visual graph which allows you to track your progress for each hub requirement",
     image: HubImg,
   },
   {
-    title: "Post anonymous reviews",
+    title: "Post Anonymous Reviews",
     description:
       "Add reviews completely anonymous to help future students make better and more informed choices",
     image: ReviewImg,
   },
   {
-    title: "Quickly add and remove courses",
+    title: "Quickly Add and Remove Courses",
     description:
       "Check how the addition or removal of a course affects overall credits and hub progress",
     image: addCourseImg,
@@ -64,7 +64,7 @@ const AccountPerksGrid = () => {
         </div>
 
         <div className="text-center mt-5">
-          <Link to="/signup" className="btn btn-danger btn-lg px-5">
+          <Link to="/register" className="btn btn-danger btn-lg px-5">
             Get Started Now
           </Link>
         </div>

@@ -7,6 +7,8 @@ import SidebarLayout from "./layouts/SidebarLayout";
 import Landing from "./pages/guest/Landing";
 import Login from "./pages/guest/Login";
 import Register from "./pages/guest/Register";
+import Verify from "./pages/guest/Verify";
+import Search from "./pages/guest/Search";
 
 import Dashboard from "./pages/user/Dashboard";
 
@@ -25,23 +27,25 @@ export default App;
 const AppRoutesBasedOnAuth = () => {
   const { user, loading } = useAuth();
   if (loading) {
-    return <div>Loading...</div>; // Can add a spinner later
+    return <div>Loading...</div>;
   }
+
   return (
     <Routes>
       {user && user.enabled ? (
-        // sidebar layout for verified users
-        <Route element={<SidebarLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<Dashboard />} /> {/* fallback */}
+        <Route path="/" element={<SidebarLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="search" element={<Search />} />
+          <Route path="*" element={<Dashboard />} />
         </Route>
       ) : (
-        // navbar layout for guest and unverified users
-        <Route element={<NavbarLayout />}>
-          <Route path="/" element={<Landing />} />
+        <Route path="/" element={<NavbarLayout />}>
+          <Route index element={<Landing />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="*" element={<Landing />} /> {/* fallback */}
+          <Route path="verify" element={<Verify />} />
+          <Route path="search" element={<Search />} />
+          <Route path="*" element={<Landing />} />
         </Route>
       )}
     </Routes>

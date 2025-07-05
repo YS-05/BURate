@@ -40,9 +40,9 @@ public class CourseController {
             return ResponseEntity.ok(course);
     }
 
-    @GetMapping("/search/{college}")
+    @GetMapping("/search")
     public ResponseEntity<Page<CourseDisplayDTO>> searchCourses(
-            @PathVariable String college,
+            @RequestParam(required = false) Set<String> colleges,
             @RequestParam(required = false, defaultValue = "0") Integer minCourseCode,
             @RequestParam(required = false) String department,
             @RequestParam(required = false) Set<HubRequirement> hubRequirements,
@@ -59,7 +59,7 @@ public class CourseController {
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CourseDisplayDTO> courses = courseService.searchCoursesWithCollege(
-                minCourseCode, college, hubRequirements, department, noPreReqs, minRating, maxDifficulty,
+                minCourseCode, colleges, hubRequirements, department, noPreReqs, minRating, maxDifficulty,
                 maxWorkLoad, minUseful, minInterest, minTeacher, reviewCount, pageable
         );
         return ResponseEntity.ok(courses);
