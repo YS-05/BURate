@@ -62,7 +62,7 @@ public class CourseService {
 
     public Page<CourseDisplayDTO> searchCoursesWithCollege(
             Integer minCourseCode, Set<String> colleges, Set<HubRequirement> hubRequirements,
-            String department, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
+            Set<String> department, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
             Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount,
             Pageable pageable
     ) {
@@ -109,11 +109,12 @@ public class CourseService {
                 }
             }
         }
-        if (department != null && !department.isBlank()) {
+        if (department != null && !department.isEmpty()) {
             Iterator<Course> iterator = courses.iterator();
             while (iterator.hasNext()) {
                 Course course = iterator.next();
-                if (!course.getDepartment().equalsIgnoreCase(department)) {
+                String courseDepart = course.getDepartment();
+                if (!department.contains(courseDepart)) {
                     iterator.remove();
                 }
             }

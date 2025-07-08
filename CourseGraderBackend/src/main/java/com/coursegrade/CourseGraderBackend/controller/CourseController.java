@@ -5,7 +5,6 @@ import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.service.CourseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +43,7 @@ public class CourseController {
     public ResponseEntity<Page<CourseDisplayDTO>> searchCourses(
             @RequestParam(required = false) Set<String> colleges,
             @RequestParam(required = false, defaultValue = "0") Integer minCourseCode,
-            @RequestParam(required = false) String department,
+            @RequestParam(required = false) Set<String> department,
             @RequestParam(required = false) Set<HubRequirement> hubRequirements,
             @RequestParam(required = false) Boolean noPreReqs,
             @RequestParam(required = false) Double minRating,
@@ -55,7 +54,7 @@ public class CourseController {
             @RequestParam(required = false) Double minTeacher,
             @RequestParam(required = false) Integer reviewCount,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "18") int size // divisible by 2 and 3 (front-end purposes)
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CourseDisplayDTO> courses = courseService.searchCoursesWithCollege(
