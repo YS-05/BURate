@@ -1,0 +1,15 @@
+.pagination .page-link {
+  color: #dc3545;              /* Red text */
+  border-color: #dc3545;       /* Red border */
+}
+
+.pagination .page-link:hover {
+  background-color: #f8d7da;   /* Light red hover */
+  color: #dc3545;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #f8d7da;   /* Solid red background for active */
+  color: white;                /* White text for contrast */
+  border-color: #dc3545;
+}

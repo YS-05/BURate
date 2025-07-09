@@ -28,7 +28,7 @@ interface GridCardProps {
 
 const GridCard = ({ course }: GridCardProps) => {
   return (
-    <div className="card h-100 border-danger">
+    <div className="card h-100 border-danger rounded-0">
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-2">
           <div className="d-flex align-items-center">

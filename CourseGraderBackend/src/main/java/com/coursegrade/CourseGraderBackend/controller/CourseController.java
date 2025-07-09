@@ -44,7 +44,7 @@ public class CourseController {
             @RequestParam(required = false) Set<String> colleges,
             @RequestParam(required = false, defaultValue = "0") Integer minCourseCode,
             @RequestParam(required = false) Set<String> departments,
-            @RequestParam(required = false) Set<HubRequirement> hubRequirements,
+            @RequestParam(required = false) Set<String> hubReqs,
             @RequestParam(required = false) Boolean noPreReqs,
             @RequestParam(required = false) Double minRating,
             @RequestParam(required = false) Double maxDifficulty,
@@ -53,13 +53,13 @@ public class CourseController {
             @RequestParam(required = false) Double minInterest,
             @RequestParam(required = false) Double minTeacher,
             @RequestParam(required = false) Integer reviewCount,
-            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "byCourseCode") String sortBy,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "18") int size // divisible by 2 and 3 (front-end purposes)
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CourseDisplayDTO> courses = courseService.searchCoursesWithCollege(
-                minCourseCode, colleges, hubRequirements, departments, noPreReqs, minRating, maxDifficulty,
+                minCourseCode, colleges, hubReqs, departments, noPreReqs, minRating, maxDifficulty,
                 maxWorkLoad, minUseful, minInterest, minTeacher, reviewCount, sortBy, pageable
         );
         return ResponseEntity.ok(courses);

@@ -26,7 +26,7 @@ export const fetchDepartmentsByCollege = (college: string) =>
 export const fetchFilteredCourses = (filters: {
   colleges?: string[];
   departments?: string[];
-  hubs?: string[];
+  hubReqs?: string[];
   minRating?: number;
   maxDifficulty?: number;
   maxWorkload?: number;
@@ -37,7 +37,7 @@ export const fetchFilteredCourses = (filters: {
   minCourseCode?: number;
   reviewCount?: number;
   sortBy?: string;
-}) => {
+}, page: number) => {
   const params = new URLSearchParams();
 
   if (filters.colleges) {
@@ -48,8 +48,8 @@ export const fetchFilteredCourses = (filters: {
     filters.departments.forEach((dept) => params.append("departments", dept));
   }
 
-  if (filters.hubs) {
-    filters.hubs.forEach((hub) => params.append("hubs", hub));
+  if (filters.hubReqs) {
+    filters.hubReqs.forEach((hub) => params.append("hubReqs", hub));
   }
 
   if (filters.minRating !== undefined)
@@ -81,6 +81,8 @@ export const fetchFilteredCourses = (filters: {
 
   if (filters.sortBy)
     params.append("sortBy", filters.sortBy);
+
+  params.append("page", page.toString());
 
   return api.get(`/courses/search?${params.toString()}`);
 }

@@ -62,11 +62,22 @@ public class CourseService {
     }
 
     public Page<CourseDisplayDTO> searchCoursesWithCollege(
-            Integer minCourseCode, Set<String> colleges, Set<HubRequirement> hubRequirements,
+            Integer minCourseCode, Set<String> colleges, Set<String> hubReqs,
             Set<String> departments, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
             Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount, String sortBy,
             Pageable pageable
     ) {
+        HashSet<HubRequirement> hubRequirements = new HashSet<>();
+        if (hubReqs != null && !hubReqs.isEmpty()) {
+            for (String req : hubReqs) {
+                for (HubRequirement hubRequirement : HubRequirement.values()) {
+                    if (req.equals(hubRequirement.name())) {
+                        hubRequirements.add(hubRequirement);
+                        break;
+                    }
+                }
+            }
+        }
         List<Course> courses = new ArrayList<>(getAllCourses());
         if (colleges != null && !colleges.isEmpty()) {
             Iterator<Course> iterator = courses.iterator();
@@ -91,7 +102,7 @@ public class CourseService {
                 }
             }
         }
-        if (hubRequirements != null && !hubRequirements.isEmpty()) {
+        if (!hubRequirements.isEmpty()) {
             Iterator<Course> iterator = courses.iterator();
             while (iterator.hasNext()) {
                 Course course = iterator.next();

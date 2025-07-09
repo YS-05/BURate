@@ -15,40 +15,30 @@ interface FilterProps {
 }
 
 const hubRequirementOptions: OptionType[] = [
-  { label: "Aesthetic Exploration (AEX)", value: "AESTHETIC_EXPLORATION" },
+  { label: "Aesthetic Exploration (AEX)", value: "AEX" },
+  { label: "Philosophical Inquiry and Life's Meanings (PLM)", value: "PLM" },
+  { label: "Historical Consciousness (HCO)", value: "HCO" },
+  { label: "Scientific Inquiry I (SI1)", value: "SI1" },
+  { label: "Social Inquiry I (SO1)", value: "SO1" },
+  { label: "Scientific Inquiry II (SI2)", value: "SI2" },
+  { label: "Social Inquiry II (SO2)", value: "SO2" },
+  { label: "Quantitative Reasoning I (QR1)", value: "QR1" },
+  { label: "Quantitative Reasoning II (QR2)", value: "QR2" },
+  { label: "The Individual in Community (IIC)", value: "IIC" },
   {
-    label: "Quantitative Reasoning I (QR1)",
-    value: "QUANTITATIVE_REASONING_I",
+    label: "Global Citizenship and Intercultural Literacy (GCI)",
+    value: "GCI",
   },
-  {
-    label: "Quantitative Reasoning II (QR2)",
-    value: "QUANTITATIVE_REASONING_II",
-  },
-  { label: "Scientific Inquiry I (SI1)", value: "SCIENTIFIC_INQUIRY_I" },
-  { label: "Scientific Inquiry II (SI2)", value: "SCIENTIFIC_INQUIRY_II" },
-  { label: "Ethical Reasoning (ETR)", value: "ETHICAL_REASONING" },
-  { label: "Social Inquiry I (SO1)", value: "SOCIAL_INQUIRY_I" },
-  { label: "Social Inquiry II (SO2)", value: "SOCIAL_INQUIRY_II" },
-  { label: "Teamwork / Collaboration (TWC)", value: "TEAMWORK_COLLABORATION" },
-  { label: "Critical Thinking (CRT)", value: "CRITICAL_THINKING" },
-  {
-    label: "Research & Information Literacy (RIL)",
-    value: "RESEARCH_AND_INFORMATION_LITERACY",
-  },
-  { label: "Writing‑Intensive (WRI)", value: "WRITING_INTENSIVE" },
-  {
-    label: "Digital / Multimedia Expression (DME)",
-    value: "DIGITAL_MULTIMEDIA_EXPRESSION",
-  },
-  {
-    label: "Oral / Signed Communication (OSC)",
-    value: "ORAL_SIGNED_COMMUNICATION",
-  },
-  { label: "Intercultural Knowledge (IKR)", value: "INTERCULTURAL_KNOWLEDGE" },
-  {
-    label: "Global Citizenship (GCI)",
-    value: "GLOBAL_CITIZENSHIP_INTERCULTURAL_LITERACY",
-  },
+  { label: "Ethical Reasoning (ETR)", value: "ETR" },
+  { label: "First-Year Writing Seminar (FYW)", value: "FYW" },
+  { label: "Writing, Research, and Inquiry (WRI)", value: "WRI" },
+  { label: "Writing-Intensive Course (WIN)", value: "WIN" },
+  { label: "Oral and/or Signed Communication (OSC)", value: "OSC" },
+  { label: "Digital/Multimedia Expression (DME)", value: "DME" },
+  { label: "Critical Thinking (CRT)", value: "CRT" },
+  { label: "Research and Information Literacy (RIL)", value: "RIL" },
+  { label: "Teamwork/Collaboration (TWC)", value: "TWC" },
+  { label: "Creativity/Innovation (CRI)", value: "CRI" },
 ];
 
 const CheckboxOption = (props: OptionProps<OptionType, true>) => (
@@ -126,7 +116,7 @@ const Filter = ({ setFilters, onSearch, setSortBy, sortBy }: FilterProps) => {
     const payload = {
       colleges: selectedColleges.map((c) => c.value),
       departments: selectedDepartments.map((d) => d.value),
-      hubs: selectedHubs.map((h) => h.value),
+      hubReqs: selectedHubs.map((h) => h.value),
       minRating,
       maxDifficulty,
       maxWorkload,
