@@ -36,6 +36,7 @@ export const fetchFilteredCourses = (filters: {
   noPreReqs?: boolean;
   minCourseCode?: number;
   reviewCount?: number;
+  sortBy?: string;
 }) => {
   const params = new URLSearchParams();
 
@@ -77,6 +78,9 @@ export const fetchFilteredCourses = (filters: {
 
   if (filters.noPreReqs !== undefined)
     params.append("noPreReqs", filters.noPreReqs.toString());
+
+  if (filters.sortBy)
+    params.append("sortBy", filters.sortBy);
 
   return api.get(`/courses/search?${params.toString()}`);
 }

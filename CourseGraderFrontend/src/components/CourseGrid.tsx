@@ -1,5 +1,9 @@
 import GridCard from "./GridCard";
 
+interface HubRequirement {
+  name: string;
+}
+
 interface Course {
   id: string;
   title: string;
@@ -14,6 +18,7 @@ interface Course {
   averageWorkloadRating: number;
   averageInterestRating: number;
   averageTeacherRating: number;
+  hubRequirements: HubRequirement[];
 }
 
 interface Props {

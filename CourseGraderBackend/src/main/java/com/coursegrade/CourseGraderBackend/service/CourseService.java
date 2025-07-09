@@ -2,6 +2,7 @@ package com.coursegrade.CourseGraderBackend.service;
 
 import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
 import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
+import com.coursegrade.CourseGraderBackend.dto.HubRequirementDTO;
 import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.model.Review;
@@ -62,8 +63,8 @@ public class CourseService {
 
     public Page<CourseDisplayDTO> searchCoursesWithCollege(
             Integer minCourseCode, Set<String> colleges, Set<HubRequirement> hubRequirements,
-            Set<String> department, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
-            Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount,
+            Set<String> departments, Boolean noPreReqs, Double minRating, Double maxDifficulty, Double maxWorkload,
+            Double minUsefulness, Double minInterest, Double minTeacher, Integer reviewCount, String sortBy,
             Pageable pageable
     ) {
         List<Course> courses = new ArrayList<>(getAllCourses());
@@ -109,12 +110,12 @@ public class CourseService {
                 }
             }
         }
-        if (department != null && !department.isEmpty()) {
+        if (departments != null && !departments.isEmpty()) {
             Iterator<Course> iterator = courses.iterator();
             while (iterator.hasNext()) {
                 Course course = iterator.next();
                 String courseDepart = course.getDepartment();
-                if (!department.contains(courseDepart)) {
+                if (!departments.contains(courseDepart)) {
                     iterator.remove();
                 }
             }
@@ -195,6 +196,26 @@ public class CourseService {
         for (Course course : courses) {
             CourseDisplayDTO dto = convertToDisplayDTO(course);
             dtos.add(dto);
+        }
+
+        if (sortBy != null) {
+            if (sortBy.equals("byCourseCode")) {
+                dtos.sort((a, b) -> {
+                    try {
+                        int aCode = Integer.parseInt(a.getCourseCode());
+                        int bCode = Integer.parseInt(b.getCourseCode());
+                        return Integer.compare(aCode, bCode);
+                    } catch (NumberFormatException e) {
+                        return a.getCourseCode().compareTo(b.getCourseCode());
+                    }
+                });
+            }
+            else if (sortBy.equals("byRating")) {
+                dtos.sort((a,b) -> Double.compare(b.getAverageOverallRating(), a.getAverageOverallRating())); // Descending order
+            }
+            else if (sortBy.equals("byReviews")) {
+                dtos.sort((a, b) -> Integer.compare(b.getNumReviews(), a.getNumReviews())); // Descending
+            }
         }
 
         int start = (int) pageable.getOffset();
@@ -333,6 +354,12 @@ public class CourseService {
     }
 
     public CourseDisplayDTO convertToDisplayDTO(Course course) {
+        Set<HubRequirementDTO> hubs = new HashSet<>();
+        for (HubRequirement hubReq : course.getHubRequirements()) {
+            HubRequirementDTO hubReqDTO = new HubRequirementDTO();
+            hubReqDTO.setName(hubReq.getCode());
+            hubs.add(hubReqDTO);
+        }
         return CourseDisplayDTO.builder()
                 .id(course.getId().toString())
                 .title(course.getTitle())
@@ -347,6 +374,7 @@ public class CourseService {
                 .averageWorkloadRating(course.getAverageWorkloadRating())
                 .averageInterestRating(course.getAverageInterestRating())
                 .averageTeacherRating(course.getAverageTeacherRating())
+                .hubRequirements(hubs)
                 .build();
     }
 

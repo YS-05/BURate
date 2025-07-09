@@ -9,7 +9,9 @@ interface OptionType {
 
 interface FilterProps {
   setFilters: (filters: Record<string, any>) => void;
-  onSearch: () => void;
+  onSearch: (filters: Record<string, any>) => void;
+  setSortBy: (sortBy: string) => void;
+  sortBy: string;
 }
 
 const hubRequirementOptions: OptionType[] = [
@@ -61,7 +63,7 @@ const CheckboxOption = (props: OptionProps<OptionType, true>) => (
   </components.Option>
 );
 
-const Filter = ({ setFilters, onSearch }: FilterProps) => {
+const Filter = ({ setFilters, onSearch, setSortBy, sortBy }: FilterProps) => {
   const [collegeOptions, setCollegeOptions] = useState<OptionType[]>([]);
   const [selectedColleges, setSelectedColleges] = useState<OptionType[]>([]);
   const [departmentOptions, setDepartmentOptions] = useState<OptionType[]>([]);
@@ -134,9 +136,11 @@ const Filter = ({ setFilters, onSearch }: FilterProps) => {
       minCourseCode: minCourseCode === "" ? undefined : minCourseCode,
       reviewCount: reviewCount === "" ? undefined : reviewCount,
       noPreReqs,
+      sortBy: sortBy || undefined, // Include sortBy in the payload
     };
+
     setFilters(payload);
-    onSearch();
+    onSearch(payload);
   };
 
   return (
@@ -175,7 +179,7 @@ const Filter = ({ setFilters, onSearch }: FilterProps) => {
             <Select
               options={hubRequirementOptions}
               value={selectedHubs}
-              onChange={(opts) => setSelectedDepartments(opts as OptionType[])}
+              onChange={(opts) => setSelectedHubs(opts as OptionType[])}
               isMulti
               closeMenuOnSelect={false}
               placeholder="Select hub requirements..."
@@ -311,18 +315,35 @@ const Filter = ({ setFilters, onSearch }: FilterProps) => {
             />
           </div>
         </div>
+        <div className="row">
+          <div className="col-12 col-md-3 col-lg-2 mb-4">
+            <label className="form-label">Sort Results By</label>
+            <select
+              className="form-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="byCourseCode">Course Number</option>
+              <option value="byRating">Best Rating</option>
+              <option value="byReviews">Most Reviewed</option>
+            </select>
+          </div>
+          <div className="col-12 col-md-6 col-lg-4 mb-3 d-flex align-items-end">
+            <button
+              type="submit"
+              className="btn btn-danger"
+              style={{
+                letterSpacing: "0.5px",
+                padding: "0.6rem 1.4rem",
+                fontWeight: 500,
+                fontSize: "1.05rem",
+              }}
+            >
+              Search Courses
+            </button>
+          </div>
+        </div>
       </div>
-      <button
-        type="submit"
-        className="btn btn-danger mb-4"
-        style={{
-          letterSpacing: "0.5px",
-          padding: "0.6rem 1.4rem",
-          fontSize: "1.05rem",
-        }}
-      >
-        Search Courses
-      </button>
     </form>
   );
 };
