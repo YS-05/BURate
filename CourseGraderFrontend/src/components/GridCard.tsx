@@ -1,30 +1,10 @@
 import React from "react";
 import Bookmark from "../assets/bookmark.svg";
 import { useNavigate } from "react-router-dom";
-
-interface HubRequirement {
-  name: string;
-}
-
-interface Course {
-  id: string;
-  title: string;
-  college: string;
-  department: string;
-  courseCode: string;
-  noPreReqs: boolean;
-  numReviews: number;
-  averageOverallRating: number;
-  averageUsefulnessRating: number;
-  averageDifficultyRating: number;
-  averageWorkloadRating: number;
-  averageInterestRating: number;
-  averageTeacherRating: number;
-  hubRequirements: HubRequirement[];
-}
+import { CourseDisplayDTO } from "../auth/AuthDTOs";
 
 interface GridCardProps {
-  course: Course;
+  course: CourseDisplayDTO;
 }
 
 const GridCard = ({ course }: GridCardProps) => {

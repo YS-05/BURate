@@ -1,59 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
-export type HubRequirementCode =
-  | "PLM"
-  | "AEX"
-  | "HCO"
-  | "SI1"
-  | "SI2"
-  | "SO1"
-  | "SO2"
-  | "QR1"
-  | "QR2"
-  | "IIC"
-  | "GCI"
-  | "ETR"
-  | "FYW"
-  | "WRI"
-  | "WIN"
-  | "OSC"
-  | "DME"
-  | "CRT"
-  | "RIL"
-  | "TWC"
-  | "CRI";
-
-export type CourseDisplay = {
-  id: string;
-  title: string;
-  college: string;
-  department: string;
-  courseCode: string;
-  noPreReqs: boolean;
-  numReviews: number;
-  averageOverallRating: number;
-  averageUsefulnessRating: number;
-  averageDifficultyRating: number;
-  averageWorkloadRating: number;
-  averageInterestRating: number;
-  averageTeacherRating: number;
-  hubRequirements: HubRequirementCode[];
-};
+import { CourseDisplayDTO, HubRequirement } from "./AuthDTOs";
 
 export type User = {
   id: number;
   email: string;
   role: "STUDENT" | "ADMIN";
   enabled: boolean;
-  completedCourses: CourseDisplay[];
-  hubsCompleted: Record<HubRequirementCode, number>;
+  completedCourses: CourseDisplayDTO[];
+  hubsCompleted: Record<HubRequirement, number>;
 };
 
 type AuthContextType = {
   user: User | null; // null = guest, User = logged in
   loading: boolean; // true = still checking /auth/me
   login: (token: string) => void; // call this after /login succeeds
-  logout: () => void; // clears the JWT and resets to guest
+  logout: () => void; // clears the JWT token from localstorage and resets to guest
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined); // AuthContext has 2 sub components, .Provider, .Consumer
@@ -65,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("token", token);
     try {
       const res = await fetch("http://localhost:8080/api/auth/me", {
-        // Replace with actual url when deploying
+        // Replace with actual url when deploying instead of localhost
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -8,9 +8,13 @@ import Landing from "./pages/guest/Landing";
 import Login from "./pages/guest/Login";
 import Register from "./pages/guest/Register";
 import Verify from "./pages/guest/Verify";
-import Search from "./pages/guest/Search";
+import Search from "./pages/shared/Search";
 
 import Dashboard from "./pages/user/Dashboard";
+import HubProgress from "./pages/user/HubProgress";
+import MyCourses from "./pages/user/MyCourses";
+import MyReviews from "./pages/user/MyReviews";
+import SavedCourses from "./pages/user/SavedCourses";
 
 function App() {
   return (
@@ -45,6 +49,10 @@ const AppRoutesBasedOnAuth = () => {
         <Route path="/" element={<SidebarLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="hub-progress" element={<HubProgress />} />
+          <Route path="my-courses" element={<MyCourses />} />
+          <Route path="saved-courses" element={<SavedCourses />} />
+          <Route path="my-reviews" element={<MyReviews />} />
           <Route path="search" element={<Search />} />
           <Route path="*" element={<Dashboard />} />
         </Route>

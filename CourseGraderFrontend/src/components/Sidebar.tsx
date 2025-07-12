@@ -1,13 +1,34 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import Logo from "../assets/BURateLogo.svg";
+import House from "../assets/house.svg";
+import Chart from "../assets/bar-chart.svg";
+import Book from "../assets/book.svg";
+import Bookmark from "../assets/bookmark.svg";
+import Pen from "../assets/pen.svg";
+import Search from "../assets/search.svg";
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     logout();
+    navigate("/");
+  };
+
+  const isActive = (path: string) => {
+    if (
+      path === "/dashboard" &&
+      (location.pathname === "/" || location.pathname === "/dashboard")
+    ) {
+      return true;
+    }
+    if (path !== "/dashboard" && location.pathname.startsWith(path)) {
+      return true;
+    }
+    return false;
   };
 
   const navigationItems = [
@@ -15,29 +36,43 @@ const Sidebar = () => {
     {
       name: "Dashboard",
       path: "/dashboard",
+      icon: House,
     },
     {
       name: "Hub Progress",
       path: "/hub-progress",
+      icon: Chart,
     },
     {
       name: "My Courses",
       path: "/my-courses",
+      icon: Book,
+    },
+    {
+      name: "Saved Courses",
+      path: "/saved-courses",
+      icon: Bookmark,
     },
     {
       name: "My Reviews",
       path: "/my-reviews",
+      icon: Pen,
     },
     {
       name: "Search Courses",
       path: "/search",
+      icon: Search,
     },
   ];
 
   return (
     <div
       className="d-flex flex-column border-end border-secondary"
-      style={{ width: "30vw", minHeight: "100vh", backgroundColor: "#f5f5f5" }}
+      style={{
+        minWidth: "250px",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+      }}
     >
       <div className="p-4 border-bottom border-secondary">
         <Link to="/dashboard" className="d-flex align-items-center">
@@ -57,7 +92,19 @@ const Sidebar = () => {
                 to={item.path}
                 className="d-flex align-items-center p-3 rounded text-decoration-none transition"
               >
-                <span className="fw-medium text-danger">{item.name}</span>
+                <img
+                  src={item.icon}
+                  alt={`${item.name} icon`}
+                  style={{ height: "25px", width: "25px" }}
+                  className="me-4"
+                />
+                <span
+                  className={`fw-medium ${
+                    isActive(item.path) ? "text-danger" : "text-dark"
+                  }`}
+                >
+                  {item.name}
+                </span>
               </Link>
             </li>
           ))}

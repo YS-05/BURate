@@ -3,12 +3,12 @@ import Sidebar from "../components/Sidebar";
 
 const SidebarLayout = () => {
   return (
-    <>
+    <div className="d-flex">
       <Sidebar />
-      <main style={{ padding: "0" }}>
+      <main className="flex-grow-1" style={{ padding: "0", overflow: "auto" }}>
         <Outlet />
       </main>
-    </>
+    </div>
   );
 };
 
