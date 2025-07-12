@@ -9,7 +9,15 @@
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #f8d7da;   /* Solid red background for active */
-  color: white;                /* White text for contrast */
+  background-color: #f8d7da;   /* Light red for active */
+  color: white;                /* White text */
   border-color: #dc3545;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #dc3545;              /* Keep red even when disabled */
+  border-color: #dc3545;       /* Red border for disabled */
+  background-color: transparent;
+  opacity: 0.6;
+  pointer-events: none;        /* Prevent interaction */
 }

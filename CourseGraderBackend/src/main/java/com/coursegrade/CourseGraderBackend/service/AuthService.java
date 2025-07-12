@@ -96,6 +96,7 @@ public class AuthService {
             response.put("user", convertToUserResponseDTO(user));
             return response;
         } catch (Exception e) {
+            System.out.println("Login error: " + e.getMessage());
             throw new RuntimeException("Invalid username or password");
         }
     }

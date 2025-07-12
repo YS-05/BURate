@@ -37,6 +37,7 @@ export type CourseDisplay = {
   averageWorkloadRating: number;
   averageInterestRating: number;
   averageTeacherRating: number;
+  hubRequirements: HubRequirementCode[];
 };
 
 export type User = {

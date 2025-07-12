@@ -1,5 +1,6 @@
 import React from "react";
 import Bookmark from "../assets/bookmark.svg";
+import { useNavigate } from "react-router-dom";
 
 interface HubRequirement {
   name: string;
@@ -27,6 +28,8 @@ interface GridCardProps {
 }
 
 const GridCard = ({ course }: GridCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="card h-100 border-danger rounded-0">
       <div className="card-body">
@@ -114,7 +117,10 @@ const GridCard = ({ course }: GridCardProps) => {
           <button className="btn btn-danger btn-sm flex-fill">
             View Course
           </button>
-          <button className="btn btn-outline-dark btn-sm flex-fill">
+          <button
+            className="btn btn-outline-dark btn-sm flex-fill"
+            onClick={() => navigate("/login")}
+          >
             Add Course
           </button>
         </div>

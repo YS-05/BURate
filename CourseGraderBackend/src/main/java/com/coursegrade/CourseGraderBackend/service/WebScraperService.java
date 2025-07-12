@@ -47,7 +47,7 @@ public class WebScraperService {
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
         int numPages = getPageCount(baseUrl);
         System.out.println("Number of pages: " + numPages);
-        for (int i = 1; i <= 1; i++) { // replace with numPages when done testing
+        for (int i = 1; i <= numPages; i++) { // replace with numPages when done testing
             try {
                 Document doc = Jsoup.connect(baseUrl + Integer.toString(i))
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")

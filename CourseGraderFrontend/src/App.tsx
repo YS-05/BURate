@@ -27,13 +27,23 @@ export default App;
 const AppRoutesBasedOnAuth = () => {
   const { user, loading } = useAuth();
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "100vh" }}
+      >
+        <div className="spinner-border text-danger" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
     <Routes>
       {user && user.enabled ? (
         <Route path="/" element={<SidebarLayout />}>
+          <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="search" element={<Search />} />
           <Route path="*" element={<Dashboard />} />

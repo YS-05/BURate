@@ -1,7 +1,15 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 const SidebarLayout = () => {
-  return <div>SidebarLayout</div>;
+  return (
+    <>
+      <Sidebar />
+      <main style={{ padding: "0" }}>
+        <Outlet />
+      </main>
+    </>
+  );
 };
 
 export default SidebarLayout;

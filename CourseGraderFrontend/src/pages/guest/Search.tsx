@@ -60,12 +60,7 @@ const Search = () => {
         <div className="container">
           <div className="mb-3">
             <span className="text-muted">
-              Showing {currentPage * paginationInfo.pageSize + 1}-
-              {Math.min(
-                (currentPage + 1) * paginationInfo.pageSize,
-                paginationInfo.totalElements
-              )}{" "}
-              of {paginationInfo.totalElements} courses
+              Found {paginationInfo.totalElements} courses
             </span>
           </div>
         </div>
@@ -79,7 +74,7 @@ const Search = () => {
         </div>
       )}
 
-      <CourseGrid courses={results} />
+      {!loading && <CourseGrid courses={results} />}
 
       {paginationInfo.totalPages > 1 && (
         <Pagination

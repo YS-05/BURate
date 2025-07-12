@@ -29,14 +29,14 @@ const Register = () => {
   const onSubmit = async (formData: RegisterForm) => {
     try {
       const res = await api.post("/auth/register", formData);
-      alert(res.data.message);
-      localStorage.setItem("verificationEmail", formData.email); // save email
+      console.log(res.data.message);
+      localStorage.setItem("verificationEmail", formData.email); // save email so autofills /verify email
       reset();
       navigate("/verify"); // redirect to verification page
     } catch (error: any) {
       const message =
         error.response?.data?.message || "Registration failed. Try again.";
-      alert(message);
+      console.log(message);
     }
   };
 
