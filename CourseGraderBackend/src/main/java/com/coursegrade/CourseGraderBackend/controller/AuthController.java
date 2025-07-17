@@ -2,6 +2,7 @@ package com.coursegrade.CourseGraderBackend.controller;
 
 import com.coursegrade.CourseGraderBackend.dto.*;
 import com.coursegrade.CourseGraderBackend.service.AuthService;
+import com.coursegrade.CourseGraderBackend.service.CollegeService;
 import com.coursegrade.CourseGraderBackend.service.WebScraperService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final WebScraperService webScraperService;
-
-    private Map<String, List<String>> cachedMajorsByCollege = new HashMap<>();
-    private boolean dataLoaded = false;
+    private final CollegeService collegeService;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody @Valid RegisterUserDTO request) {
@@ -75,30 +74,17 @@ public class AuthController {
                 "message", "Password reset successful! You can log in with your new password."
         ));
     }
-
+    
     @GetMapping("/colleges")
     public ResponseEntity<Set<String>> getAllColleges() {
-        ensureDataInitialized();
-        Set<String> colleges = cachedMajorsByCollege.keySet();
+        Set<String> colleges = collegeService.getAllColleges();
         return ResponseEntity.ok(colleges);
     }
 
     @GetMapping("/majors/{college}")
-    public ResponseEntity<List<String>> getMajorsByCollege(@PathVariable String college) {
-        ensureDataInitialized();
-        List<String> majors = cachedMajorsByCollege.get(college);
+    public ResponseEntity<Set<String>> getMajorsByCollege(@PathVariable String college) {
+        Set<String> majors = collegeService.getMajorsByCollege(college);
         return ResponseEntity.ok(majors);
-    }
-
-    private void ensureDataInitialized() {
-        if (!dataLoaded || cachedMajorsByCollege.isEmpty()) {
-            synchronized (this) {
-                if (!dataLoaded || cachedMajorsByCollege.isEmpty()) {
-                    webScraperService.scrapeMajors();
-                    dataLoaded = true;
-                }
-            }
-        }
     }
 
     @GetMapping("/me")

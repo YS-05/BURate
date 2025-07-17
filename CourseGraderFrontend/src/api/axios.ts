@@ -20,6 +20,10 @@ api.interceptors.request.use((config) => {
 
 export const fetchColleges = () => api.get("/courses/colleges");
 
+export const fetchFullColleges = () => api.get("/auth/colleges");
+
+export const fetchMajorsByFullCollege = (college: string) => api.get(`/auth/majors/${college}`);
+
 export const fetchDepartmentsByCollege = (college: string) =>
   api.get(`/courses/departments/${college}`);
 
@@ -37,7 +41,7 @@ export const fetchFilteredCourses = (filters: {
   minCourseCode?: number;
   reviewCount?: number;
   sortBy?: string;
-}, page: number) => {
+}, page: number = 0) => {
   const params = new URLSearchParams();
 
   if (filters.colleges) {

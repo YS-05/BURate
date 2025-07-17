@@ -91,6 +91,7 @@ public class WebScraperService {
         if (!college.isPresent()) {
             College newCollege = new College();
             newCollege.setMajors(new HashSet<>());
+            newCollege.getMajors().add("Undecided");
             newCollege.setFullName(collegeName);
             collegeRepository.save(newCollege);
             return newCollege;

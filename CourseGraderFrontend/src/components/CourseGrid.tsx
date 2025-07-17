@@ -1,28 +1,8 @@
 import GridCard from "./GridCard";
-
-interface HubRequirement {
-  name: string;
-}
-
-interface Course {
-  id: string;
-  title: string;
-  college: string;
-  department: string;
-  courseCode: string;
-  noPreReqs: boolean;
-  numReviews: number;
-  averageOverallRating: number;
-  averageUsefulnessRating: number;
-  averageDifficultyRating: number;
-  averageWorkloadRating: number;
-  averageInterestRating: number;
-  averageTeacherRating: number;
-  hubRequirements: HubRequirement[];
-}
+import { CourseDisplayDTO } from "../auth/AuthDTOs";
 
 interface Props {
-  courses: Course[];
+  courses: CourseDisplayDTO[];
 }
 
 const CourseGrid = ({ courses }: Props) => {
