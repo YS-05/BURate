@@ -19,12 +19,21 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
-    private String email; // must be @bu.edu
+    private String email;
     private String password;
     private Integer expectedGrad;
+
+    @Column(name = "college")
+    private String college; // e.g., "CAS", "ENG", "COM"
+
+    @Column(name = "major")
+    private String major; // e.g., "Computer Science", "Mathematics"
+
     @Enumerated(EnumType.STRING)
     private Role role = Role.STUDENT;
+
     @ManyToMany
     @JoinTable(
             name = "completed_courses",
@@ -32,6 +41,23 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private Set<Course> completedCourses = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "saved_courses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> savedCourses = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "courses_in_progress",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> coursesInProgress = new HashSet<>();
+
     @ElementCollection
     @CollectionTable(name = "user_hub_progress",
             joinColumns = @JoinColumn(name = "user_id"))
@@ -39,6 +65,7 @@ public class User implements UserDetails {
     @MapKeyColumn(name = "hub_requirement")
     @Column(name = "completed_count")
     private Map<HubRequirement, Integer> hubProgress = new HashMap<>();
+
     private boolean enabled = false; // email isn't verified initially
 
     public void updateHubProgress() {

@@ -161,7 +161,6 @@ public class ReviewService {
         dto.setAttendanceRequired(review.getAttendanceRequired());
         dto.setCreatedAt(review.getCreatedAt());
         dto.setOwner(review.getUser().getId().equals(currentUser.getId()));
-
         return dto;
     }
 }

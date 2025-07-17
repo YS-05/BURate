@@ -33,18 +33,16 @@ public class AuthService {
     private final CourseService courseService;
 
     @Transactional
-    public void register(String email, String password) {
+    public void register(String email, String major, String college, Integer expectedGrad, String password) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered");
         }
-        /* // Commented out for testing purposes
-        if (!email.endsWith("@bu.edu")) {
-            throw new RuntimeException("Must be a BU email");
-        }
-         */
 
         User user = new User();
         user.setEmail(email);
+        user.setMajor(major);
+        user.setCollege(college);
+        user.setExpectedGrad(expectedGrad);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.STUDENT);
         user.setEnabled(false);
@@ -155,16 +153,11 @@ public class AuthService {
         UserResponseDTO response = new UserResponseDTO();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
+        response.setExpectedGrad(user.getExpectedGrad());
+        response.setCollege(user.getCollege());
+        response.setMajor(user.getMajor());
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());
-        Set<Course> courses = user.getCompletedCourses();
-        Set<CourseDisplayDTO> courseDTOs = new HashSet<>();
-        for (Course course : courses) {
-            CourseDisplayDTO dto = courseService.convertToDisplayDTO(course);
-            courseDTOs.add(dto);
-        }
-        response.setCompletedCourses(courseDTOs);
-        response.setHubsCompleted(user.getHubProgress());
         return response;
     }
 

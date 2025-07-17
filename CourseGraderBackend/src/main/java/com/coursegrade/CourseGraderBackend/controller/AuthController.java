@@ -2,12 +2,16 @@ package com.coursegrade.CourseGraderBackend.controller;
 
 import com.coursegrade.CourseGraderBackend.dto.*;
 import com.coursegrade.CourseGraderBackend.service.AuthService;
+import com.coursegrade.CourseGraderBackend.service.WebScraperService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -15,10 +19,15 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final WebScraperService webScraperService;
+
+    private Map<String, List<String>> cachedMajorsByCollege = new HashMap<>();
+    private boolean dataLoaded = false;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@RequestBody @Valid RegisterLoginUserDTO request) {
-        authService.register(request.getEmail(), request.getPassword());
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody @Valid RegisterUserDTO request) {
+        authService.register(request.getEmail(), request.getCollege(), request.getMajor(),
+                request.getExpectedGrad(), request.getPassword());
         return ResponseEntity.ok(Map.of(
                 "message", "Registration successful! Please check your email to verify your account."
         ));
@@ -38,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody @Valid RegisterLoginUserDTO request) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody @Valid LoginUserDTO request) {
         Map<String, Object> response = authService.login(request.getEmail(), request.getPassword());
         return ResponseEntity.ok(response);
     }
@@ -65,6 +74,31 @@ public class AuthController {
         return ResponseEntity.ok(Map.of(
                 "message", "Password reset successful! You can log in with your new password."
         ));
+    }
+
+    @GetMapping("/colleges")
+    public ResponseEntity<Set<String>> getAllColleges() {
+        ensureDataInitialized();
+        Set<String> colleges = cachedMajorsByCollege.keySet();
+        return ResponseEntity.ok(colleges);
+    }
+
+    @GetMapping("/majors/{college}")
+    public ResponseEntity<List<String>> getMajorsByCollege(@PathVariable String college) {
+        ensureDataInitialized();
+        List<String> majors = cachedMajorsByCollege.get(college);
+        return ResponseEntity.ok(majors);
+    }
+
+    private void ensureDataInitialized() {
+        if (!dataLoaded || cachedMajorsByCollege.isEmpty()) {
+            synchronized (this) {
+                if (!dataLoaded || cachedMajorsByCollege.isEmpty()) {
+                    webScraperService.scrapeMajors(cachedMajorsByCollege);
+                    dataLoaded = true;
+                }
+            }
+        }
     }
 
     @GetMapping("/me")

@@ -74,13 +74,12 @@ const Sidebar = () => {
         backgroundColor: "#f5f5f5",
       }}
     >
-      <div className="p-4 border-bottom border-secondary">
+      <div className="p-4 border-bottom border-secondary d-flex justify-content-center">
         <Link to="/dashboard" className="d-flex align-items-center">
           <img
             src={Logo}
             alt="BU Rate Logo"
             style={{ height: "60px", width: "auto" }}
-            className="me-2"
           />
         </Link>
       </div>

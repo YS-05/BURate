@@ -19,8 +19,9 @@ import java.util.Set;
 public class UserResponseDTO {
     private Long id;
     private String email;
+    private Integer expectedGrad;
+    private String college;
+    private String major;
     private Role role;
     private boolean enabled;
-    private Set<CourseDisplayDTO> completedCourses;
-    private Map<HubRequirement, Integer> hubsCompleted;
 }

@@ -2,7 +2,6 @@ package com.coursegrade.CourseGraderBackend.controller;
 
 import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
 import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
-import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

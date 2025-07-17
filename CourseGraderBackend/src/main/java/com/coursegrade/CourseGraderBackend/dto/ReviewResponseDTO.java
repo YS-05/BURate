@@ -1,5 +1,6 @@
 package com.coursegrade.CourseGraderBackend.dto;
 
+import com.coursegrade.CourseGraderBackend.model.VoteType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +29,7 @@ public class ReviewResponseDTO {
     private Boolean attendanceRequired;
     private LocalDateTime createdAt;
     private boolean isOwner;
+    private Integer upvoteCount;
+    private Integer downvoteCount;
+    private VoteType userVote;
 }

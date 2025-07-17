@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -40,6 +42,16 @@ public class Review {
     private Integer hoursPerWeek;
     private String assignmentTypes; // "Essays, Problem Sets, Group Project"
     private Boolean attendanceRequired;
+    @Column(nullable = false)
+    private Integer upvoteCount = 0;
+    @Column(nullable = false)
+    private Integer downvoteCount = 0;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Vote> votes = new ArrayList<>();
+
+    public Integer getNetReviewScore() {
+        return upvoteCount - downvoteCount;
+    }
 
     public Double getOverallRating() {
         return (usefulnessRating + difficultyRating + workloadRating

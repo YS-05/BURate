@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +42,44 @@ public class WebScraperService {
         courseNames(courseUrls, "https://www.bu.edu/academics/ssw/courses/", "SSW"); // For School of Social Work
         courseNames(courseUrls, "https://www.bu.edu/academics/sth/courses/", "STH"); // For School of Theology
         courseNames(courseUrls, "https://www.bu.edu/academics/wheelock/courses/", "WED"); // For Wheelock College of Education & Human Development
-
         courseHubsAndDescription(courseUrls);
+    }
+
+    public Map<String, List<String>> scrapeMajors(Map<String, List<String>> majors) {
+        try {
+            Document doc = Jsoup.connect("https://www.bu.edu/admissions/why-bu/academics/majors/")
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                    .timeout(120000)
+                    .get(); // 2 minute timeout.get();
+            Element majorsListContainer = doc.selectFirst("div.majors-list");
+            if (majorsListContainer == null) {
+                System.out.println("Could not find majors-list container");
+                return majors;
+            }
+            Elements majorListItems = majorsListContainer.select("div.major-list-item");
+            System.out.println("Number of majors: " + majorListItems.size());
+            for (Element majorItem : majorListItems) {
+                AddMajor(majorItem, majors);
+            }
+        } catch (IOException e) {
+            System.out.println("Error connecting: " + e.getMessage());
+        }
+        return majors;
+    }
+
+    public void AddMajor(Element majorElement, Map<String, List<String>> majors) {
+        Element majorNameElement = majorElement.selectFirst("div.major-name");
+        if (majorNameElement == null) return;
+        String majorName = majorNameElement.text();
+        System.out.println(majorName);
+        Elements majorCollegeElements = majorElement.select("div.major-college");
+        for (Element majorCollege : majorCollegeElements) {
+            String collegeName = majorCollege.text();
+            if (!collegeName.isEmpty()) {
+                if (!majors.containsKey(collegeName)) majors.put(collegeName, new ArrayList<>());
+                majors.get(collegeName).add(majorName);
+            }
+        }
     }
 
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
