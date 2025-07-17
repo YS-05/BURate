@@ -1,5 +1,8 @@
 package com.coursegrade.CourseGraderBackend.service;
 
+import com.coursegrade.CourseGraderBackend.model.College;
+import com.coursegrade.CourseGraderBackend.repository.CollegeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,18 +11,17 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class WebScraperService {
 
     private final CourseService courseService;
+    private final CollegeRepository collegeRepository;
 
     public void wrapperScrape() {
+        scrapeMajors();
         List<String> courseUrls = new ArrayList<>();
         courseNames(courseUrls, "https://www.bu.edu/academics/cas/courses/",  "CAS"); // For College of Arts & Sciences
         courseNames(courseUrls, "https://www.bu.edu/academics/khc/courses/", "KHC"); // For Arvind & Chandan Nandlal Kilachand Honors College
@@ -45,7 +47,8 @@ public class WebScraperService {
         courseHubsAndDescription(courseUrls);
     }
 
-    public Map<String, List<String>> scrapeMajors(Map<String, List<String>> majors) {
+    @Transactional
+    public void scrapeMajors() {
         try {
             Document doc = Jsoup.connect("https://www.bu.edu/admissions/why-bu/academics/majors/")
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
@@ -54,20 +57,20 @@ public class WebScraperService {
             Element majorsListContainer = doc.selectFirst("div.majors-list");
             if (majorsListContainer == null) {
                 System.out.println("Could not find majors-list container");
-                return majors;
+                return;
             }
             Elements majorListItems = majorsListContainer.select("div.major-list-item");
             System.out.println("Number of majors: " + majorListItems.size());
             for (Element majorItem : majorListItems) {
-                AddMajor(majorItem, majors);
+                addMajor(majorItem);
             }
         } catch (IOException e) {
             System.out.println("Error connecting: " + e.getMessage());
         }
-        return majors;
     }
 
-    public void AddMajor(Element majorElement, Map<String, List<String>> majors) {
+    @Transactional
+    public void addMajor(Element majorElement) {
         Element majorNameElement = majorElement.selectFirst("div.major-name");
         if (majorNameElement == null) return;
         String majorName = majorNameElement.text();
@@ -75,17 +78,30 @@ public class WebScraperService {
         Elements majorCollegeElements = majorElement.select("div.major-college");
         for (Element majorCollege : majorCollegeElements) {
             String collegeName = majorCollege.text();
-            if (!collegeName.isEmpty()) {
-                if (!majors.containsKey(collegeName)) majors.put(collegeName, new ArrayList<>());
-                majors.get(collegeName).add(majorName);
-            }
+            College college = getCollege(collegeName);
+            college.getMajors().add(majorName);
+            collegeRepository.save(college);
+            System.out.println("College: " + collegeName + " Major: " + majorName);
         }
+    }
+
+    @Transactional
+    public College getCollege(String collegeName) {
+        Optional<College> college = collegeRepository.findById(collegeName);
+        if (!college.isPresent()) {
+            College newCollege = new College();
+            newCollege.setMajors(new HashSet<>());
+            newCollege.setFullName(collegeName);
+            collegeRepository.save(newCollege);
+            return newCollege;
+        }
+        else return college.get();
     }
 
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
         int numPages = getPageCount(baseUrl);
         System.out.println("Number of pages: " + numPages);
-        for (int i = 1; i <= numPages; i++) { // replace with numPages when done testing
+        for (int i = 1; i <= 1; i++) { // replace with numPages when done testing
             try {
                 Document doc = Jsoup.connect(baseUrl + Integer.toString(i))
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")

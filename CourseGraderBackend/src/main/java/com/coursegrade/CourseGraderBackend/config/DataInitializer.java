@@ -1,5 +1,6 @@
 package com.coursegrade.CourseGraderBackend.config;
 
+import com.coursegrade.CourseGraderBackend.repository.CollegeRepository;
 import com.coursegrade.CourseGraderBackend.repository.CourseRepository;
 import com.coursegrade.CourseGraderBackend.service.CourseService;
 import com.coursegrade.CourseGraderBackend.service.WebScraperService;
@@ -14,15 +15,16 @@ public class DataInitializer implements ApplicationRunner {
 
     private final WebScraperService webScraperService;
     private final CourseService courseService;
+    private final CollegeRepository collegeRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if (courseService.getAllCourses().isEmpty()) {
-            System.out.println("No courses found. Starting scraping...");
+        if (courseService.getAllCourses().isEmpty() || collegeRepository.count() == 0L) {
+            System.out.println("Missing data. Starting scraping...");
             webScraperService.wrapperScrape();
             System.out.println("Data initialization completed.");
         } else {
-            System.out.println("Courses already exist in database. Skipping scraping.");
+            System.out.println("Courses and colleges already exist in database. Skipping scraping.");
         }
     }
 }

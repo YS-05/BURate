@@ -1,4 +1,12 @@
-export type RegisterLoginUserDTO = {
+export type RegisterUserDTO = {
+  email: string;
+  college: string;
+  major: string;
+  expectedGrad: number;
+  password: string;
+}
+
+export type LoginUserDTO = {
   email: string;
   password: string;
 };

@@ -1,9 +1,6 @@
 package com.coursegrade.CourseGraderBackend.service;
 
-import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
-import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
 import com.coursegrade.CourseGraderBackend.dto.UserResponseDTO;
-import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.Role;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.model.VerificationToken;

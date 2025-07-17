@@ -94,7 +94,7 @@ public class AuthController {
         if (!dataLoaded || cachedMajorsByCollege.isEmpty()) {
             synchronized (this) {
                 if (!dataLoaded || cachedMajorsByCollege.isEmpty()) {
-                    webScraperService.scrapeMajors(cachedMajorsByCollege);
+                    webScraperService.scrapeMajors();
                     dataLoaded = true;
                 }
             }
