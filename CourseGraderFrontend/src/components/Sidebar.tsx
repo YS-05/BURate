@@ -1,17 +1,13 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import Logo from "../assets/BURateLogo.svg";
-import House from "../assets/house.svg";
-import Chart from "../assets/bar-chart.svg";
-import Book from "../assets/book.svg";
-import Bookmark from "../assets/bookmark.svg";
-import Pen from "../assets/pen.svg";
-import Search from "../assets/search.svg";
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSignOut = () => {
     logout();
@@ -32,92 +28,224 @@ const Sidebar = () => {
   };
 
   const navigationItems = [
-    // can add icons to this later, optionally can add settings
     {
       name: "Dashboard",
       path: "/dashboard",
-      icon: House,
     },
     {
       name: "Hub Progress",
       path: "/hub-progress",
-      icon: Chart,
     },
     {
       name: "My Courses",
       path: "/my-courses",
-      icon: Book,
     },
     {
       name: "Saved Courses",
       path: "/saved-courses",
-      icon: Bookmark,
     },
     {
       name: "My Reviews",
       path: "/my-reviews",
-      icon: Pen,
     },
     {
       name: "Search Courses",
       path: "/search",
-      icon: Search,
+    },
+    {
+      name: "Account",
+      path: "/account",
     },
   ];
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <div
-      className="d-flex flex-column border-end border-secondary"
-      style={{
-        minWidth: "250px",
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      <div className="p-4 border-bottom border-secondary d-flex justify-content-center">
+    <>
+      {/* Mobile Header - Only visible on mobile/tablet */}
+      <div
+        className="d-lg-none position-fixed w-100 d-flex align-items-center justify-content-between px-3 border-bottom border-secondary"
+        style={{
+          height: "70px",
+          backgroundColor: "#f5f5f5",
+          top: 0,
+          left: 0,
+          zIndex: 1030,
+        }}
+      >
+        {/* Hamburger Menu Button */}
+        <button
+          className="btn p-2"
+          onClick={toggleMobileMenu}
+          style={{
+            backgroundColor: "transparent",
+            border: "1px solid #dee2e6",
+            borderRadius: "8px",
+          }}
+          aria-label="Toggle navigation menu"
+        >
+          {isMobileMenuOpen ? (
+            // Close icon
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ) : (
+            // Hamburger icon
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          )}
+        </button>
+
+        {/* Logo in mobile header */}
         <Link to="/dashboard" className="d-flex align-items-center">
           <img
             src={Logo}
             alt="BU Rate Logo"
-            style={{ height: "60px", width: "auto" }}
+            style={{ height: "45px", width: "auto" }}
           />
         </Link>
+
+        {/* Empty div for spacing */}
+        <div style={{ width: "48px" }}></div>
       </div>
-      <nav className="flex-grow-1 p-3">
-        <ul className="list-unstyled mb-0">
-          {navigationItems.map((item) => (
-            <li key={item.path} className="mb-2">
-              <Link
-                to={item.path}
-                className="d-flex align-items-center p-3 rounded text-decoration-none transition"
-              >
-                <img
-                  src={item.icon}
-                  alt={`${item.name} icon`}
-                  style={{ height: "25px", width: "25px" }}
-                  className="me-4"
-                />
-                <span
-                  className={`fw-medium ${
-                    isActive(item.path) ? "text-danger" : "text-dark"
-                  }`}
+
+      {/* Overlay for mobile menu */}
+      {isMobileMenuOpen && (
+        <div
+          className="d-lg-none position-fixed w-100 h-100"
+          style={{
+            top: 0,
+            left: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1040,
+          }}
+          onClick={closeMobileMenu}
+        />
+      )}
+
+      {/* Desktop Sidebar - Always visible on large screens */}
+      <div
+        className="d-none d-lg-flex flex-column border-end border-secondary"
+        style={{
+          minWidth: "250px",
+          minHeight: "100vh",
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        <div className="p-4 border-bottom border-secondary d-flex justify-content-center">
+          <Link to="/dashboard" className="d-flex align-items-center">
+            <img
+              src={Logo}
+              alt="BU Rate Logo"
+              style={{ height: "60px", width: "auto" }}
+            />
+          </Link>
+        </div>
+        <nav className="flex-grow-1 p-3">
+          <ul className="list-unstyled mb-0">
+            {navigationItems.map((item) => (
+              <li key={item.path} className="mb-2">
+                <Link
+                  to={item.path}
+                  className="d-flex align-items-center p-3 rounded text-decoration-none transition"
                 >
-                  {item.name}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="p-3 border-top border-secondary">
-        <button
-          onClick={handleSignOut}
-          className="btn btn-danger w-100 d-flex align-items-center justify-content-center"
-        >
-          Sign Out
-        </button>
+                  <span
+                    className={`fs-5 ${
+                      isActive(item.path) ? "text-danger" : "text-dark"
+                    }`}
+                  >
+                    {item.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="p-3 border-top border-secondary">
+          <button
+            onClick={handleSignOut}
+            className="btn btn-danger w-100 d-flex align-items-center justify-content-center"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
-    </div>
+
+      {/* Mobile Sidebar - Slides in from left */}
+      <div
+        className={`d-lg-none position-fixed d-flex flex-column border-end border-secondary`}
+        style={{
+          minWidth: "250px",
+          height: "100vh",
+          backgroundColor: "#f5f5f5",
+          top: 0,
+          left: 0,
+          zIndex: 1045,
+          transform: isMobileMenuOpen ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.3s ease-in-out",
+        }}
+      >
+        {/* Mobile sidebar header - just for spacing */}
+        <div style={{ height: "70px" }}></div>
+
+        <nav className="flex-grow-1 p-3">
+          <ul className="list-unstyled mb-0">
+            {navigationItems.map((item) => (
+              <li key={item.path} className="mb-2">
+                <Link
+                  to={item.path}
+                  className="d-flex align-items-center p-3 rounded text-decoration-none transition"
+                  onClick={closeMobileMenu}
+                >
+                  <span
+                    className={`fw-medium ${
+                      isActive(item.path) ? "text-danger" : "text-dark"
+                    }`}
+                  >
+                    {item.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="p-3 border-top border-secondary">
+          <button
+            onClick={() => {
+              handleSignOut();
+              closeMobileMenu();
+            }}
+            className="btn btn-danger w-100 d-flex align-items-center justify-content-center"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 

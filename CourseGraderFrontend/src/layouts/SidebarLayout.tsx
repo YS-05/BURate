@@ -5,7 +5,10 @@ const SidebarLayout = () => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <main className="flex-grow-1" style={{ padding: "0", overflow: "auto" }}>
+      <main
+        className="main-content flex-grow-1"
+        style={{ padding: "0", overflow: "auto" }}
+      >
         <Outlet />
       </main>
     </div>

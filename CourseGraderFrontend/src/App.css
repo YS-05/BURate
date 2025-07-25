@@ -1,0 +1,23 @@
+/* Add this CSS to your main CSS file or App.css */
+
+/* Mobile layout adjustments */
+@media (max-width: 991.98px) {
+  /* Push content down to account for fixed mobile header */
+  .main-content {
+    padding-top: 70px !important;
+    margin-top: 0 !important;
+  }
+  
+  /* Ensure body doesn't have overflow issues */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Desktop layout - no changes needed, content sits next to sidebar naturally */
+@media (min-width: 992px) {
+  .main-content {
+    /* No top padding needed on desktop since sidebar is not fixed */
+    padding-top: 0;
+  }
+}

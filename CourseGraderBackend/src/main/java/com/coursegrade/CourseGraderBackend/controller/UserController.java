@@ -30,7 +30,7 @@ public class UserController {
             @PathVariable Long courseId,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.addCompletedCourse(courseId, currentUser);
+        userService.addCompletedCourse(courseId, currentUser.getId());
         return ResponseEntity.ok(Map.of("message", "Course added to completed courses"));
     }
 
@@ -39,7 +39,7 @@ public class UserController {
             @PathVariable Long courseId,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.addSavedCourse(courseId, currentUser);
+        userService.addSavedCourse(courseId, currentUser.getId());
         return ResponseEntity.ok(Map.of("message", "Course added to saved courses"));
     }
 
@@ -48,7 +48,7 @@ public class UserController {
             @PathVariable Long courseId,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.addInProgressCourse(courseId, currentUser);
+        userService.addInProgressCourse(courseId, currentUser.getId());
         return ResponseEntity.ok(Map.of("message", "Course added to courses in progress"));
     }
 
@@ -57,7 +57,7 @@ public class UserController {
             @PathVariable Long courseId,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.removeCompletedCourse(courseId, currentUser);
+        userService.removeCompletedCourse(courseId, currentUser.getId());
         return ResponseEntity.ok(Map.of("message", "Course removed from completed courses"));
     }
 
@@ -66,7 +66,7 @@ public class UserController {
             @PathVariable Long courseId,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.removeSavedCourse(courseId, currentUser);
+        userService.removeSavedCourse(courseId, currentUser.getId());
         return ResponseEntity.ok(Map.of("message", "Course removed from saved courses"));
     }
 
@@ -75,7 +75,7 @@ public class UserController {
             @PathVariable Long courseId,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.removeInProgressCourse(courseId, currentUser);
+        userService.removeInProgressCourse(courseId, currentUser.getId());
         return ResponseEntity.ok(Map.of("message", "Course removed from courses in progress"));
     }
 

@@ -150,9 +150,6 @@ public class AuthService {
         UserResponseDTO response = new UserResponseDTO();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
-        response.setExpectedGrad(user.getExpectedGrad());
-        response.setCollege(user.getCollege());
-        response.setMajor(user.getMajor());
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());
         return response;

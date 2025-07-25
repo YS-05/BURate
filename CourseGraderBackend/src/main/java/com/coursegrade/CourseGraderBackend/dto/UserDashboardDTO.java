@@ -16,11 +16,13 @@ public class UserDashboardDTO {
     private Integer expectedGrad;
     private String college;
     private String major;
+
     private Integer coursesCompleted;
     private Integer coursesInProgress;
     private Integer coursesSaved;
     private Integer coursesReviewed;
     private Integer totalUpvotes; // Your reviews have helped x students
     private Double averageReviewScore; // (Upvotes - Downvotes) / num reviews
+
     private Set<String> coursesToReview;
 }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CourseDisplayDTO, UserDashboardDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -17,6 +18,38 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+export const fetchDashboardData = async (): Promise<UserDashboardDTO> => {
+  const response = await api.get<UserDashboardDTO>("/users/dashboard")
+  return response.data
+}
+
+export const addCompletedCourse = (courseId: string) => api.post(`/users/completed-courses/${courseId}`);
+
+export const addSavedCourse = (courseId: string) => api.post(`/users/saved-courses/${courseId}`);
+
+export const addInProgressCourse = (courseId: string) => api.post(`/users/courses-in-progress/${courseId}`);
+
+export const removeCompletedCourse = (courseId: string) => api.delete(`/users/completed-courses/${courseId}`);
+
+export const removeSavedCourse = (courseId: string) => api.delete(`/users/saved-courses/${courseId}`);
+
+export const removeInProgressCourse = (courseId: string) => api.delete(`/users/courses-in-progress/${courseId}`);
+
+export const fetchCompletedCourses = async (): Promise<CourseDisplayDTO[]> => {
+  const response = await api.get<CourseDisplayDTO[]>("/users/completed-courses");
+  return response.data;
+};
+
+export const fetchSavedCourses = async (): Promise<CourseDisplayDTO[]> => {
+  const response = await api.get<CourseDisplayDTO[]>("/users/saved-courses");
+  return response.data;
+};
+
+export const fetchCoursesInProgress = async (): Promise<CourseDisplayDTO[]> => {
+  const response = await api.get<CourseDisplayDTO[]>("/users/courses-in-progress");
+  return response.data;
+};
 
 export const fetchColleges = () => api.get("/courses/colleges");
 

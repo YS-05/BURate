@@ -134,8 +134,8 @@ const Filter = ({ setFilters, onSearch, setSortBy, sortBy }: FilterProps) => {
   };
 
   return (
-    <form className="container mt-4" onSubmit={handleSubmit}>
-      <h4 className="mb-4">Filter Courses</h4>
+    <form className="container" onSubmit={handleSubmit}>
+      <h3 className="mb-4 text-center">Filter Courses</h3>
       <div className="mb-1">
         <h5 className="mb-3">Initial Filters</h5>
         <div className="row">
@@ -238,7 +238,7 @@ const Filter = ({ setFilters, onSearch, setSortBy, sortBy }: FilterProps) => {
           </div>
           <div className="col-12 col-md-4 col-lg-2 mb-3">
             <label className="form-label">
-              Min Teacher Rating: {minTeacher.toFixed(1)}
+              Min Teacher: {minTeacher.toFixed(1)}
             </label>
             <input
               type="range"

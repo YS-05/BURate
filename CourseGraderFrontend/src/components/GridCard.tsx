@@ -1,14 +1,127 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Bookmark from "../assets/bookmark.svg";
+import FilledBookmark from "../assets/bookmark-fill.svg";
 import { useNavigate } from "react-router-dom";
 import { CourseDisplayDTO } from "../auth/AuthDTOs";
+import { useAuth } from "../auth/AuthProvider";
+import {
+  addCompletedCourse,
+  addSavedCourse,
+  addInProgressCourse,
+  removeCompletedCourse,
+  removeSavedCourse,
+  removeInProgressCourse,
+  fetchCompletedCourses, // may not need this and next 2, remove imports if not needed
+  fetchSavedCourses,
+  fetchCoursesInProgress,
+} from "../api/axios";
 
 interface GridCardProps {
   course: CourseDisplayDTO;
+  onRefresh?: () => void; // Optional refresh callback
 }
 
-const GridCard = ({ course }: GridCardProps) => {
+const GridCard = ({ course, onRefresh }: GridCardProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isInProgress, setIsInProgress] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      checkCourseStatus();
+    }
+  }, [user]);
+
+  const checkCourseStatus = async () => {
+    try {
+      const [completed, saved, inProgress] = await Promise.all([
+        fetchCompletedCourses(),
+        fetchSavedCourses(),
+        fetchCoursesInProgress(),
+      ]);
+      setIsCompleted(completed.some((c) => c.id === course.id));
+      setIsSaved(saved.some((c) => c.id === course.id));
+      setIsInProgress(inProgress.some((c) => c.id === course.id));
+    } catch (err) {
+      console.log("Failed to check status", err);
+    }
+  };
+
+  const handleCompletedToggle = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      setLoading(true);
+      if (isCompleted) {
+        await removeCompletedCourse(course.id);
+        setIsCompleted(false);
+      } else {
+        await addCompletedCourse(course.id);
+        setIsCompleted(true);
+      }
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (err) {
+      console.log("Failed to toggle completed courses", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSavedToggle = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      setLoading(true);
+      if (isSaved) {
+        await removeSavedCourse(course.id);
+        setIsSaved(false);
+      } else {
+        await addSavedCourse(course.id);
+        setIsSaved(true);
+      }
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (error) {
+      console.error("Failed to toggle saved status:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInProgressToggle = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      setLoading(true);
+      if (isInProgress) {
+        await removeInProgressCourse(course.id);
+        setIsInProgress(false);
+      } else {
+        await addInProgressCourse(course.id);
+        setIsInProgress(true);
+      }
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (error) {
+      console.error("Failed to toggle in progress status:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="card h-100 border-danger rounded-0">
@@ -16,9 +129,22 @@ const GridCard = ({ course }: GridCardProps) => {
         <div className="d-flex justify-content-between align-items-center mb-2">
           <div className="d-flex align-items-center">
             <img
-              src={Bookmark}
+              src={isSaved ? FilledBookmark : Bookmark}
               alt="Bookmark"
-              style={{ width: "18px", height: "18px", marginRight: "6px" }}
+              style={{
+                width: "18px",
+                height: "18px",
+                marginRight: "6px",
+                cursor: "pointer",
+              }}
+              onClick={handleSavedToggle}
+              title={
+                user
+                  ? isSaved
+                    ? "Remove bookmark"
+                    : "Bookmark course"
+                  : "Login to bookmark"
+              }
             />
             <h6 className="mb-0 fw-bold">
               {course.college} {course.department} {course.courseCode}
@@ -93,15 +219,28 @@ const GridCard = ({ course }: GridCardProps) => {
             </div>
           </div>
         </div>
-        <div className="d-flex gap-2">
-          <button className="btn btn-danger btn-sm flex-fill">
-            View Course
-          </button>
+        <div className="d-flex flex-column gap-2">
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-outline-dark btn-sm flex-fill"
+              onClick={handleCompletedToggle}
+              disabled={loading}
+            >
+              {loading ? "..." : isCompleted ? "Remove Done" : "Mark Done"}
+            </button>
+            <button
+              className="btn btn-danger btn-sm flex-fill"
+              onClick={handleInProgressToggle}
+              disabled={loading}
+            >
+              {loading ? "..." : isInProgress ? "End current" : "Add current"}
+            </button>
+          </div>
           <button
-            className="btn btn-outline-dark btn-sm flex-fill"
-            onClick={() => navigate("/login")}
+            className="btn btn-warning btn-sm w-100"
+            onClick={() => navigate(`/course/${course.id}`)}
           >
-            Add Course
+            View Course
           </button>
         </div>
       </div>

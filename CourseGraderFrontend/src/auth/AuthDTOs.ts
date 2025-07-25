@@ -53,7 +53,6 @@ export type HubRequirementDTO = {
   name: string;
 };
 
-
 export type CourseDisplayDTO = {
   id: string;
   title: string;
@@ -70,3 +69,17 @@ export type CourseDisplayDTO = {
   averageTeacherRating: number;
   hubRequirements: HubRequirementDTO[];
 }
+
+export type UserDashboardDTO = {
+  email: string;
+  expectedGrad: number;
+  college: string;
+  major: string;
+  coursesCompleted: number;
+  coursesInProgress: number;
+  coursesSaved: number;
+  coursesReviewed: number;
+  totalUpvotes: number;
+  averageReviewScore: number;
+  coursesToReview: Set<string>;
+};

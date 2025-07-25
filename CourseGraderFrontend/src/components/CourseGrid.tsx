@@ -3,14 +3,20 @@ import { CourseDisplayDTO } from "../auth/AuthDTOs";
 
 interface Props {
   courses: CourseDisplayDTO[];
+  onRefresh?: () => void; // Optional refresh callback
 }
 
-const CourseGrid = ({ courses }: Props) => {
+const CourseGrid = ({ courses, onRefresh }: Props) => {
   if (courses.length === 0) {
     return (
-      <p className="text-muted text-center mt-5 mb-5">
-        No courses found. Try adjusting the filter parameters.
-      </p>
+      <div
+        className="d-flex align-items-center justify-content-center"
+        style={{ minHeight: "30vh" }}
+      >
+        <p className="text-muted text-center">
+          No courses found. Try adjusting the filter parameters.
+        </p>
+      </div>
     );
   }
   return (
@@ -18,7 +24,7 @@ const CourseGrid = ({ courses }: Props) => {
       <div className="row g-4">
         {courses.map((course) => (
           <div key={course.id} className="col-12 col-md-6 col-lg-4">
-            <GridCard course={course} />
+            <GridCard course={course} onRefresh={onRefresh} />
           </div>
         ))}
       </div>

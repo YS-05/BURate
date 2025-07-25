@@ -6,8 +6,6 @@ export type User = {
   email: string;
   role: "STUDENT" | "ADMIN";
   enabled: boolean;
-  completedCourses: CourseDisplayDTO[];
-  hubsCompleted: Record<HubRequirement, number>;
 };
 
 type AuthContextType = {

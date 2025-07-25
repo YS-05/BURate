@@ -15,6 +15,7 @@ import HubProgress from "./pages/user/HubProgress";
 import MyCourses from "./pages/user/MyCourses";
 import MyReviews from "./pages/user/MyReviews";
 import SavedCourses from "./pages/user/SavedCourses";
+import "./App.css";
 
 function App() {
   return (

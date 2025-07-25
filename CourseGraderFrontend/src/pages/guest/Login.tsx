@@ -37,7 +37,7 @@ const Login = () => {
       navigate("/dashboard");
     } catch (error: any) {
       const message =
-        error.response?.data?.message || "Login failed. Please try again.";
+        error.response?.data?.message || "Incorrect email or password";
       setLoginError(message);
     }
   };

@@ -48,7 +48,12 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "#f5f5f5",
+        padding: "30px",
+      }}
+    >
       <Filter
         setFilters={setFilters}
         onSearch={(searchFilters) => handleSearch(searchFilters, 0)}
