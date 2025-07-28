@@ -72,10 +72,25 @@ public class User implements UserDetails {
         hubProgress.clear();
         for (Course course : completedCourses) {
             for (HubRequirement hub : course.getHubRequirements()) {
-                if (!hubProgress.containsKey(hub)) hubProgress.put(hub, 0);
-                hubProgress.put(hub, hubProgress.get(hub) + 1);
+                hubProgress.put(hub, hubProgress.getOrDefault(hub, 0) + 1);
             }
         }
+    }
+
+    public Map<HubRequirement, Integer> getProjectedHubProgress() {
+        Map<HubRequirement, Integer> projected = new HashMap<>(hubProgress); // includes completed courses
+        for (Course course : coursesInProgress) {
+            for (HubRequirement hub : course.getHubRequirements()) {
+                projected.put(hub, projected.getOrDefault(hub, 0) + 1);
+            }
+        }
+        return projected;
+    }
+
+    public boolean isHubProjectedToFulfill(HubRequirement hub) {
+        Map<HubRequirement, Integer> projected = getProjectedHubProgress();
+        Integer count = projected.get(hub);
+        return count != null && count >= hub.getReqCount();
     }
 
     public boolean isHubFulfilled(HubRequirement hub) {

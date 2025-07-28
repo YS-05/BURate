@@ -222,14 +222,19 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
         <div className="d-flex flex-column gap-2">
           <div className="d-flex gap-2">
             <button
-              className="btn btn-outline-dark btn-sm flex-fill"
+              className="btn btn-sm flex-fill"
+              style={{
+                backgroundColor: "#495057" /* Bootstrap dark gray */,
+                borderColor: "#495057",
+                color: "white",
+              }}
               onClick={handleCompletedToggle}
               disabled={loading}
             >
               {loading ? "..." : isCompleted ? "Remove Done" : "Mark Done"}
             </button>
             <button
-              className="btn btn-danger btn-sm flex-fill"
+              className="btn btn-outline-secondary btn-sm flex-fill"
               onClick={handleInProgressToggle}
               disabled={loading}
             >
@@ -237,7 +242,7 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
             </button>
           </div>
           <button
-            className="btn btn-warning btn-sm w-100"
+            className="btn btn-danger btn-sm w-100"
             onClick={() => navigate(`/course/${course.id}`)}
           >
             View Course

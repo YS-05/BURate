@@ -17,6 +17,8 @@ public class HubProgressItem {
     private String category;
     private Integer required;
     private Integer completed;
+    private Integer projected;
+    private boolean projectedFulfilled;
     private boolean fulfilled;
     private List<String> fulfillingCourses;
 }

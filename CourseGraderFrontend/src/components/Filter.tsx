@@ -135,7 +135,7 @@ const Filter = ({ setFilters, onSearch, setSortBy, sortBy }: FilterProps) => {
 
   return (
     <form className="container" onSubmit={handleSubmit}>
-      <h3 className="mb-4 text-center">Filter Courses</h3>
+      <h3 className="mb-4 text-center text-danger">Filter Courses</h3>
       <div className="mb-1">
         <h5 className="mb-3">Initial Filters</h5>
         <div className="row">

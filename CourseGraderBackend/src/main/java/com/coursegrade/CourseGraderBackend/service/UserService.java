@@ -29,7 +29,9 @@ public class UserService {
     private final ReviewRepository reviewRepository;
 
     @Transactional
-    public HubProgressDTO getHubProgress(User user) {
+    public HubProgressDTO getHubProgress(Long userId) {
+        User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
         user.updateHubProgress();
         HubProgressDTO hubProgressDTO = new HubProgressDTO();
         List<HubProgressItem> items = new ArrayList<>();
@@ -40,6 +42,8 @@ public class UserService {
             item.setHubCode(hub.getCode());
             item.setRequired(hub.getReqCount());
             item.setFulfilled(user.isHubFulfilled(hub));
+            item.setProjected(user.getProjectedHubProgress().getOrDefault(hub, 0));
+            item.setProjectedFulfilled(user.isHubProjectedToFulfill(hub));
 
             int completed = user.getHubProgress().getOrDefault(hub, 0);
             item.setCompleted(completed);

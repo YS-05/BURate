@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping("/hub-progress")
     public ResponseEntity<HubProgressDTO> getHubProgress(@AuthenticationPrincipal User currentUser) {
-        HubProgressDTO progress = userService.getHubProgress(currentUser);
+        HubProgressDTO progress = userService.getHubProgress(currentUser.getId());
         return ResponseEntity.ok(progress);
     }
 

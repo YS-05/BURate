@@ -83,3 +83,19 @@ export type UserDashboardDTO = {
   averageReviewScore: number;
   coursesToReview: Set<string>;
 };
+
+export type HubProgressDTO = {
+  hubProgress: HubProgressItem[];
+}
+
+export type HubProgressItem = {
+  hubCode: string;
+  hubName: string;
+  category: string;
+  required: number;
+  completed: number;
+  projected: number;
+  projectedFulfilled: boolean;
+  fulfilled: boolean;
+  fulfillingCourses: string[];
+}

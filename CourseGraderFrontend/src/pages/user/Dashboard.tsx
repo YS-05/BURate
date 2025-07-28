@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { UserDashboardDTO } from "../../auth/AuthDTOs";
-import { fetchDashboardData } from "../../api/axios";
+import { fetchDashboardData, fetchCompletedCourses } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -214,6 +214,54 @@ const Dashboard = () => {
                 </div>
               )}
             {/* Add last case here to display course names when functionality for adding courses is done */}
+            {dashboardData && dashboardData.coursesToReview.size > 0 && (
+              <div className="card border-4">
+                <div className="card-body p-4">
+                  <h4 className="text-center mb-4">
+                    Courses ready for review (
+                    {dashboardData.coursesToReview.size})
+                  </h4>
+                  <div className="row g-3">
+                    {Array.from(dashboardData.coursesToReview).map(
+                      (courseId, index) => (
+                        <div
+                          key={courseId}
+                          className="col-12 col-md-6 col-lg-4"
+                        >
+                          <div className="card bg-light border-2 border-danger">
+                            <div className="card-body text-center p-3">
+                              <h6 className="text-muted mb-2">
+                                Course Name: {courseId}
+                              </h6>
+                              <button
+                                className="btn btn-danger btn-sm"
+                                onClick={() =>
+                                  navigate(`/course/${courseId}/review`)
+                                }
+                              >
+                                Write Review
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                  <div className="text-center mt-4">
+                    <p className="text-muted mb-3">
+                      Help other students by sharing your experience with these
+                      courses!
+                    </p>
+                    <button
+                      className="btn btn-outline-danger"
+                      onClick={() => navigate("/my-courses")}
+                    >
+                      View All My Courses
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -147,16 +147,19 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Desktop Sidebar - Always visible on large screens */}
+      {/* Desktop Sidebar - Sticky position, always visible */}
       <div
-        className="d-none d-lg-flex flex-column border-end border-secondary"
+        className="d-none d-lg-flex flex-column border-end border-secondary position-sticky"
         style={{
-          minWidth: "250px",
-          minHeight: "100vh",
+          width: "250px",
+          height: "100vh",
           backgroundColor: "#f5f5f5",
+          top: 0,
+          alignSelf: "flex-start",
         }}
       >
-        <div className="p-4 border-bottom border-secondary d-flex justify-content-center">
+        {/* Logo Section */}
+        <div className="p-4 border-bottom border-secondary d-flex justify-content-center flex-shrink-0">
           <Link to="/dashboard" className="d-flex align-items-center">
             <img
               src={Logo}
@@ -165,7 +168,9 @@ const Sidebar = () => {
             />
           </Link>
         </div>
-        <nav className="flex-grow-1 p-3">
+
+        {/* Navigation Section - Scrollable */}
+        <nav className="flex-grow-1 p-3 overflow-y-auto">
           <ul className="list-unstyled mb-0">
             {navigationItems.map((item) => (
               <li key={item.path} className="mb-2">
@@ -185,7 +190,9 @@ const Sidebar = () => {
             ))}
           </ul>
         </nav>
-        <div className="p-3 border-top border-secondary">
+
+        {/* Logout Button - Fixed at bottom */}
+        <div className="p-3 border-top border-secondary flex-shrink-0">
           <button
             onClick={handleSignOut}
             className="btn btn-danger w-100 d-flex align-items-center justify-content-center"

@@ -15,6 +15,7 @@ import HubProgress from "./pages/user/HubProgress";
 import MyCourses from "./pages/user/MyCourses";
 import MyReviews from "./pages/user/MyReviews";
 import SavedCourses from "./pages/user/SavedCourses";
+import Account from "./pages/user/Account";
 import "./App.css";
 
 function App() {
@@ -55,6 +56,7 @@ const AppRoutesBasedOnAuth = () => {
           <Route path="saved-courses" element={<SavedCourses />} />
           <Route path="my-reviews" element={<MyReviews />} />
           <Route path="search" element={<Search />} />
+          <Route path="account" element={<Account />} />
           <Route path="*" element={<Dashboard />} />
         </Route>
       ) : (

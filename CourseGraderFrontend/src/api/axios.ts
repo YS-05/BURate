@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -60,6 +60,10 @@ export const fetchMajorsByFullCollege = (college: string) => api.get(`/auth/majo
 export const fetchDepartmentsByCollege = (college: string) =>
   api.get(`/courses/departments/${college}`);
 
+export const fetchHubProgress = async (): Promise<HubProgressDTO> => {
+  const response = await api.get<HubProgressDTO>("/users/hub-progress");
+  return response.data;
+};
 export const fetchFilteredCourses = (filters: {
   colleges?: string[];
   departments?: string[];

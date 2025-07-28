@@ -76,7 +76,7 @@ const SavedCourses = () => {
       <div className="container">
         <div className="row mb-4">
           <div className="col-12">
-            <h3 className="mb-4 text-center">Saved Courses</h3>
+            <h3 className="mb-4 text-center text-danger">Saved Courses</h3>
             <p className="text-muted text-center">
               Courses you've bookmarked for future reference:{" "}
               {savedCourses.length}{" "}
