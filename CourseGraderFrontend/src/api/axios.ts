@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -35,6 +35,21 @@ export const removeCompletedCourse = (courseId: string) => api.delete(`/users/co
 export const removeSavedCourse = (courseId: string) => api.delete(`/users/saved-courses/${courseId}`);
 
 export const removeInProgressCourse = (courseId: string) => api.delete(`/users/courses-in-progress/${courseId}`);
+
+export const fetchCourseById = async (courseId: string): Promise<CourseDTO> => {
+ const response = await api.get<CourseDTO>(`/courses/${courseId}`);
+ return response.data;
+};
+
+export const createReview = async (courseId: string, reviewData: CreateReviewDTO): Promise<ReviewResponseDTO> => {
+ const response = await api.post<ReviewResponseDTO>(`/reviews/course/${courseId}`, reviewData);
+ return response.data;
+};
+
+export const deleteReview = async (reviewId: string): Promise<{ message: string }> => {
+ const response = await api.delete<{ message: string }>(`/reviews/${reviewId}`);
+ return response.data;
+};
 
 export const fetchCompletedCourses = async (): Promise<CourseDisplayDTO[]> => {
   const response = await api.get<CourseDisplayDTO[]>("/users/completed-courses");

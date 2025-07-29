@@ -152,10 +152,12 @@ const Sidebar = () => {
         className="d-none d-lg-flex flex-column border-end border-secondary position-sticky"
         style={{
           width: "250px",
+          minWidth: "250px",
           height: "100vh",
           backgroundColor: "#f5f5f5",
           top: 0,
           alignSelf: "flex-start",
+          flexShrink: 0,
         }}
       >
         {/* Logo Section */}

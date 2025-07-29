@@ -5,6 +5,8 @@ import { CourseDisplayDTO } from "../../auth/AuthDTOs";
 import CourseGrid from "../../components/CourseGrid";
 import Bookmark from "../../assets/bookmark.svg";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const SavedCourses = () => {
   const { user } = useAuth();
@@ -47,25 +49,11 @@ const SavedCourses = () => {
   }
 
   if (error) {
-    return (
-      <div className="container mt-5">
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      </div>
-    );
+    return <ErrorDisplay error={error} />;
   }
 
   if (loading) {
-    return (
-      <div className="container mt-5">
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border text-danger" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (

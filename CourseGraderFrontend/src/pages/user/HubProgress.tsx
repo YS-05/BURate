@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { fetchHubProgress } from "../../api/axios";
 import { HubProgressDTO, HubProgressItem } from "../../auth/AuthDTOs";
 import { useAuth } from "../../auth/AuthProvider";
+import Spinner from "../../components/Spinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const HubProgress = () => {
   const [loading, setLoading] = useState(true);
@@ -66,25 +68,11 @@ const HubProgress = () => {
   }
 
   if (error) {
-    return (
-      <div className="container mt-5">
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      </div>
-    );
+    return <ErrorDisplay error={error} />;
   }
 
   if (loading) {
-    return (
-      <div className="container mt-5">
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border text-danger" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   const groupedProgress: Record<string, HubProgressItem[]> = {};
@@ -202,7 +190,7 @@ const HubProgress = () => {
                   </div>
                   <div className="progress mt-2" style={{ height: "8px" }}>
                     <div
-                      className="progress-bar bg-warning"
+                      className="progress-bar bg-danger"
                       role="progressbar"
                       style={{ width: `${categoryProgress}%` }}
                     ></div>

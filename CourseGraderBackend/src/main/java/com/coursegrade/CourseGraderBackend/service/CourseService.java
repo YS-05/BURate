@@ -3,6 +3,7 @@ package com.coursegrade.CourseGraderBackend.service;
 import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
 import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
 import com.coursegrade.CourseGraderBackend.dto.HubRequirementDTO;
+import com.coursegrade.CourseGraderBackend.dto.ReviewResponseDTO;
 import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.model.Review;
@@ -55,10 +56,10 @@ public class CourseService {
         return coursePage.map(course -> this.convertToDisplayDTO(course));
     }
 
-    public CourseDTO getCourseDTOById(Long id) {
+    public CourseDTO getCourseDTOById(Long id, User user) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
-        return convertToFullDTO(course);
+        return convertToFullDTO(course, user);
     }
 
     public Page<CourseDisplayDTO> searchCoursesWithCollege(
@@ -389,9 +390,18 @@ public class CourseService {
                 .build();
     }
 
-    public CourseDTO convertToFullDTO(Course course) {
-
+    public CourseDTO convertToFullDTO(Course course, User user) {
+        Set<HubRequirementDTO> hubs = new HashSet<>();
+        for (HubRequirement hubReq : course.getHubRequirements()) {
+            HubRequirementDTO hubReqDTO = new HubRequirementDTO();
+            hubReqDTO.setName(hubReq.getCode());
+            hubs.add(hubReqDTO);
+        }
         List<Review> reviews = reviewRepository.findByCourseOrderByCreatedAtDesc(course);
+        List<ReviewResponseDTO> reviewDTOs = new ArrayList<>();
+        for (Review review : reviews) {
+            reviewDTOs.add(convertToResponseDTO(review, user));
+        }
 
         return CourseDTO.builder()
                 .id(course.getId().toString())
@@ -408,9 +418,42 @@ public class CourseService {
                 .averageWorkloadRating(course.getAverageWorkloadRating())
                 .averageInterestRating(course.getAverageInterestRating())
                 .averageTeacherRating(course.getAverageTeacherRating())
-                .courseReviews(reviews)
+                .courseReviews(reviewDTOs)
+                .hubRequirements(hubs)
                 .build();
 
+    }
+
+    public ReviewResponseDTO convertToResponseDTO(Review review, User currentUser) { // Moved here to fix circular dependency
+        ReviewResponseDTO dto = new ReviewResponseDTO();
+
+        dto.setId(review.getId());
+        dto.setCourseId(review.getCourse().getId());
+
+        dto.setUsefulnessRating(review.getUsefulnessRating());
+        dto.setDifficultyRating(review.getDifficultyRating());
+        dto.setWorkloadRating(review.getWorkloadRating());
+        dto.setInterestRating(review.getInterestRating());
+        dto.setTeacherRating(review.getTeacherRating());
+        dto.setOverallRating(((6.0 - review.getDifficultyRating()) +  // Invert difficulty
+                (6.0 - review.getWorkloadRating()) +  // Invert workload
+                review.getInterestRating() +
+                review.getUsefulnessRating() +
+                review.getTeacherRating()) / 5.0);
+        dto.setTeacherName(review.getTeacherName());
+        dto.setReviewText(review.getReviewText());
+        dto.setSemester(review.getSemester());
+        dto.setHoursPerWeek(review.getHoursPerWeek());
+        dto.setAssignmentTypes(review.getAssignmentTypes());
+        dto.setAttendanceRequired(review.getAttendanceRequired());
+        dto.setCreatedAt(review.getCreatedAt());
+        if (currentUser == null) { // when the user is not logged in
+            dto.setOwner(false);
+        }
+        else {
+            dto.setOwner(review.getUser().getId().equals(currentUser.getId()));
+        }
+        return dto;
     }
 
 }

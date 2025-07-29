@@ -99,3 +99,63 @@ export type HubProgressItem = {
   fulfilled: boolean;
   fulfillingCourses: string[];
 }
+
+export type CourseDTO = {
+  id: string;
+  title: string;
+  college: string;
+  department: string;
+  courseCode: string;
+  description: string;
+  noPreReqs: boolean;
+  numReviews: number;
+  averageOverallRating: number;
+  averageUsefulnessRating: number;
+  averageDifficultyRating: number;
+  averageWorkloadRating: number;
+  averageInterestRating: number;
+  averageTeacherRating: number;
+  hubRequirements: HubRequirementDTO[];
+  courseReviews: ReviewResponseDTO[];
+}
+
+export enum VoteType {
+  UPVOTE = "UPVOTE",
+  DOWNVOTE = "DOWNVOTE"
+}
+
+export type ReviewResponseDTO = {
+  id: number;
+  courseId: number;
+  usefulnessRating: number;
+  difficultyRating: number;
+  workloadRating: number;
+  interestRating: number;
+  overallRating: number;
+  teacherRating: number;
+  teacherName: string;
+  reviewText: string;
+  semester: string;
+  hoursPerWeek: number;
+  assignmentTypes: string; 
+  attendanceRequired: boolean;
+  createdAt: string; 
+  isOwner: boolean;
+  upvoteCount: number;
+  downvoteCount: number;
+  userVote: VoteType | null;
+}
+
+export type CreateReviewDTO = {
+ usefulnessRating: number; // @Min(1) @Max(5)
+ difficultyRating: number; // @Min(1) @Max(5)
+ workloadRating: number; // @Min(1) @Max(5)
+ interestRating: number; // @Min(1) @Max(5)
+ teacherRating: number; // @Min(1) @Max(5)
+ teacherName: string; // @Size(max = 100)
+ reviewText: string; // @Size(max = 2000)
+ semester: string; // @Size(max = 100)
+ hoursPerWeek: number; // @Min(0) @Max(40)
+ assignmentTypes: string; // @Size(max = 100) 
+ attendanceRequired: boolean;
+}

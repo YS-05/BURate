@@ -17,6 +17,7 @@ import MyReviews from "./pages/user/MyReviews";
 import SavedCourses from "./pages/user/SavedCourses";
 import Account from "./pages/user/Account";
 import "./App.css";
+import CoursePage from "./pages/shared/CoursePage";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ const AppRoutesBasedOnAuth = () => {
           <Route path="saved-courses" element={<SavedCourses />} />
           <Route path="my-reviews" element={<MyReviews />} />
           <Route path="search" element={<Search />} />
+          <Route path="course/:courseId" element={<CoursePage />} />{" "}
           <Route path="account" element={<Account />} />
           <Route path="*" element={<Dashboard />} />
         </Route>
@@ -66,6 +68,7 @@ const AppRoutesBasedOnAuth = () => {
           <Route path="register" element={<Register />} />
           <Route path="verify" element={<Verify />} />
           <Route path="search" element={<Search />} />
+          <Route path="course/:courseId" element={<CoursePage />} />{" "}
           <Route path="*" element={<Landing />} />
         </Route>
       )}

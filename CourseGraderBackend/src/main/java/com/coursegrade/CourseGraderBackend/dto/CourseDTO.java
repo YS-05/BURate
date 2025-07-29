@@ -1,12 +1,12 @@
 package com.coursegrade.CourseGraderBackend.dto;
 
-import com.coursegrade.CourseGraderBackend.model.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -27,5 +27,6 @@ public class CourseDTO {
     private Double averageWorkloadRating;
     private Double averageInterestRating;
     private Double averageTeacherRating;
-    private List<Review> courseReviews;
+    private Set<HubRequirementDTO> hubRequirements;
+    private List<ReviewResponseDTO> courseReviews;
 }

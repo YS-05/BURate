@@ -3,6 +3,8 @@ import { useAuth } from "../../auth/AuthProvider";
 import { UserDashboardDTO } from "../../auth/AuthDTOs";
 import { fetchDashboardData, fetchCompletedCourses } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -32,26 +34,11 @@ const Dashboard = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <div className="spinner-border text-danger" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    <Spinner />;
   }
 
   if (error) {
-    return (
-      <div className="container mt-5">
-        <div className="alert alert-danger" role="alert">
-          Error loading dashboard: {error}
-        </div>
-      </div>
-    );
+    return <ErrorDisplay error={error} />;
   }
 
   return (
@@ -72,7 +59,8 @@ const Dashboard = () => {
                 lineHeight: "1.2",
               }}
             >
-              Overview of your metrics, {dashboardData?.email}
+              Overview of your metrics,{" "}
+              <span style={{ color: "#e57373" }}>{dashboardData?.email}</span>
             </h2>
             <div className="text-center text-muted">
               {dashboardData?.college && dashboardData?.major && (
@@ -99,9 +87,9 @@ const Dashboard = () => {
             Courses and reviews info:
           </h2>
           <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100">
+            <div className="card border-4 h-100 rounded-0 border-danger">
               <div className="card-body text-center p-4">
-                <h2 className="fw-bold text-danger mb-2">
+                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.coursesCompleted || 0}
                 </h2>
                 <h4>Number of courses completed</h4>
@@ -109,9 +97,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100">
+            <div className="card border-4 h-100 rounded-0 border-danger">
               <div className="card-body text-center p-4">
-                <h2 className="fw-bold text-danger mb-2">
+                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.coursesInProgress || 0}
                 </h2>
                 <h4>Number of courses in progress</h4>
@@ -119,9 +107,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100">
+            <div className="card border-4 h-100 rounded-0 border-danger">
               <div className="card-body text-center p-4">
-                <h2 className="fw-bold text-danger mb-2">
+                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.coursesSaved || 0}
                 </h2>
                 <h4>Number of courses bookmarked</h4>
@@ -129,9 +117,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100">
+            <div className="card border-4 h-100 rounded-0 border-danger">
               <div className="card-body text-center p-4">
-                <h2 className="fw-bold text-danger mb-2">
+                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.coursesReviewed || 0}
                 </h2>
                 <h4>Number of courses Reviewed</h4>
@@ -139,9 +127,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100">
+            <div className="card border-4 h-100 rounded-0 border-danger">
               <div className="card-body text-center p-4">
-                <h2 className="fw-bold text-danger mb-2">
+                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.totalUpvotes || 0}
                 </h2>
                 <h4>Total upvotes from your reviews</h4>
@@ -149,9 +137,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100">
+            <div className="card border-4 h-100 rounded-0 border-danger">
               <div className="card-body text-center p-4">
-                <h2 className="fw-bold text-danger mb-2">
+                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.averageReviewScore !== undefined &&
                   dashboardData?.averageReviewScore !== null
                     ? dashboardData.averageReviewScore.toFixed(1)
@@ -176,7 +164,7 @@ const Dashboard = () => {
             {dashboardData &&
               dashboardData.coursesCompleted < 5 &&
               dashboardData.coursesToReview.size === 0 && (
-                <div className="card border-4">
+                <div className="card border-4 rounded-0 border-danger">
                   <div className="card-body text-center p-5">
                     <h4 className="text-muted mb-3">
                       Start your course journey!
@@ -197,9 +185,11 @@ const Dashboard = () => {
             {dashboardData &&
               dashboardData.coursesCompleted >= 5 &&
               dashboardData.coursesToReview.size === 0 && (
-                <div className="card border-4">
+                <div className="card border-4 rounded-0 border-danger">
                   <div className="card-body text-center p-5">
-                    <h4 className="text-success mb-3">All caught up!</h4>
+                    <h4 style={{ color: "#20c997" }} className="mb-3">
+                      All caught up!
+                    </h4>
                     <p className="text-muted mb-4">
                       You've reviewed all your completed courses. Great job
                       helping the community!
@@ -215,7 +205,7 @@ const Dashboard = () => {
               )}
             {/* Add last case here to display course names when functionality for adding courses is done */}
             {dashboardData && dashboardData.coursesToReview.size > 0 && (
-              <div className="card border-4">
+              <div className="card border-4 rounded-0 border-danger">
                 <div className="card-body p-4">
                   <h4 className="text-center mb-4">
                     Courses ready for review (
@@ -228,7 +218,7 @@ const Dashboard = () => {
                           key={courseId}
                           className="col-12 col-md-6 col-lg-4"
                         >
-                          <div className="card bg-light border-2 border-danger">
+                          <div className="card bg-light border-2 border-danger rounded-0">
                             <div className="card-body text-center p-3">
                               <h6 className="text-muted mb-2">
                                 Course Name: {courseId}

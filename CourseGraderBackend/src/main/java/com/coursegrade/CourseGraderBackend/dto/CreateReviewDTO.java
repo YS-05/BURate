@@ -29,15 +29,21 @@ public class CreateReviewDTO {
     @NotNull
     @Min(1) @Max(5)
     private Integer teacherRating;
+    @NotNull
     @Size(max = 100)
     private String teacherName;
+    @NotNull
     @Size(max = 2000)
     private String reviewText;
+    @NotNull
     @Size(max = 100)
     private String semester;
+    @NotNull
     @Min(0) @Max(40)
     private Integer hoursPerWeek;
+    @NotNull
     @Size(max = 100)
     private String assignmentTypes; // "Essays, Problem Sets, Group Project"
+    @NotNull
     private Boolean attendanceRequired;
 }

@@ -48,7 +48,7 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
         courseService.updateCourseRatings(courseId);
 
-        return convertToResponseDTO(savedReview, user);
+        return courseService.convertToResponseDTO(savedReview, user);
     }
 
     @Transactional
@@ -83,7 +83,7 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
         courseService.updateCourseRatings(review.getCourse().getId());
 
-        return convertToResponseDTO(savedReview, user);
+        return courseService.convertToResponseDTO(savedReview, user);
     }
 
     @Transactional
@@ -103,7 +103,7 @@ public class ReviewService {
     public ReviewResponseDTO getReviewById(Long reviewId, User currentUser) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
-        return convertToResponseDTO(review, currentUser);
+        return courseService.convertToResponseDTO(review, currentUser);
     }
 
     public List<ReviewResponseDTO> getReviewsByCourse(Long courseId, User user) {
@@ -112,7 +112,7 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findByCourseOrderByCreatedAtDesc(course);
         List<ReviewResponseDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
-            dtos.add(convertToResponseDTO(review, user));
+            dtos.add(courseService.convertToResponseDTO(review, user));
         }
         return dtos;
     }
@@ -123,7 +123,7 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findByCourseAndTeacherNameContainingIgnoreCase(course, teacher);
         List<ReviewResponseDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
-            dtos.add(convertToResponseDTO(review, currentUser));
+            dtos.add(courseService.convertToResponseDTO(review, currentUser));
         }
         return dtos;
     }
@@ -132,35 +132,8 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findByUser(currentUser);
         List<ReviewResponseDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
-            dtos.add(convertToResponseDTO(review, currentUser));
+            dtos.add(courseService.convertToResponseDTO(review, currentUser));
         }
         return dtos;
-    }
-
-    public ReviewResponseDTO convertToResponseDTO(Review review, User currentUser) {
-        ReviewResponseDTO dto = new ReviewResponseDTO();
-
-        dto.setId(review.getId());
-        dto.setCourseId(review.getCourse().getId());
-
-        dto.setUsefulnessRating(review.getUsefulnessRating());
-        dto.setDifficultyRating(review.getDifficultyRating());
-        dto.setWorkloadRating(review.getWorkloadRating());
-        dto.setInterestRating(review.getInterestRating());
-        dto.setTeacherRating(review.getTeacherRating());
-        dto.setOverallRating(((6.0 - review.getDifficultyRating()) +  // Invert difficulty
-                (6.0 - review.getWorkloadRating()) +  // Invert workload
-                review.getInterestRating() +
-                review.getUsefulnessRating() +
-                review.getTeacherRating()) / 5.0);
-        dto.setTeacherName(review.getTeacherName());
-        dto.setReviewText(review.getReviewText());
-        dto.setSemester(review.getSemester());
-        dto.setHoursPerWeek(review.getHoursPerWeek());
-        dto.setAssignmentTypes(review.getAssignmentTypes());
-        dto.setAttendanceRequired(review.getAttendanceRequired());
-        dto.setCreatedAt(review.getCreatedAt());
-        dto.setOwner(review.getUser().getId().equals(currentUser.getId()));
-        return dto;
     }
 }

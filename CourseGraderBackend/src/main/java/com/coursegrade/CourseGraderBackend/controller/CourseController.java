@@ -2,6 +2,7 @@ package com.coursegrade.CourseGraderBackend.controller;
 
 import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
 import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
+import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +35,11 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
-        CourseDTO course = courseService.getCourseDTOById(id);
+    public ResponseEntity<CourseDTO> getCourseById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user
+    ) {
+        CourseDTO course = courseService.getCourseDTOById(id, user);
             return ResponseEntity.ok(course);
     }
 

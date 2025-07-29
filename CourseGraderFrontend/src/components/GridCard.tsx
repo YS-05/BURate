@@ -11,7 +11,7 @@ import {
   removeCompletedCourse,
   removeSavedCourse,
   removeInProgressCourse,
-  fetchCompletedCourses, // may not need this and next 2, remove imports if not needed
+  fetchCompletedCourses,
   fetchSavedCourses,
   fetchCoursesInProgress,
 } from "../api/axios";

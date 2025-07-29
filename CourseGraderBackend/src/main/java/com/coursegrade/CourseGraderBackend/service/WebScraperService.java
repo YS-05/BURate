@@ -24,7 +24,7 @@ public class WebScraperService {
         scrapeMajors();
         List<String> courseUrls = new ArrayList<>();
         courseNames(courseUrls, "https://www.bu.edu/academics/cas/courses/",  "CAS"); // For College of Arts & Sciences
-        courseNames(courseUrls, "https://www.bu.edu/academics/khc/courses/", "KHC"); // For Arvind & Chandan Nandlal Kilachand Honors College
+       /* courseNames(courseUrls, "https://www.bu.edu/academics/khc/courses/", "KHC"); // For Arvind & Chandan Nandlal Kilachand Honors College
         courseNames(courseUrls, "https://www.bu.edu/academics/hub/courses/",  "HUB"); // For BU Hub
         courseNames(courseUrls, "https://www.bu.edu/academics/camed/courses/", "MED"); // For Chobanian & Avedisian School of Medicine
         courseNames(courseUrls, "https://www.bu.edu/academics/com/courses/", "COM"); // For College of Communications
@@ -43,7 +43,7 @@ public class WebScraperService {
         courseNames(courseUrls, "https://www.bu.edu/academics/sph/courses/", "SPH"); // For School of Public Health
         courseNames(courseUrls, "https://www.bu.edu/academics/ssw/courses/", "SSW"); // For School of Social Work
         courseNames(courseUrls, "https://www.bu.edu/academics/sth/courses/", "STH"); // For School of Theology
-        courseNames(courseUrls, "https://www.bu.edu/academics/wheelock/courses/", "WED"); // For Wheelock College of Education & Human Development
+        courseNames(courseUrls, "https://www.bu.edu/academics/wheelock/courses/", "WED"); // For Wheelock College of Education & Human Development */
         courseHubsAndDescription(courseUrls);
     }
 
@@ -102,7 +102,7 @@ public class WebScraperService {
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
         int numPages = getPageCount(baseUrl);
         System.out.println("Number of pages: " + numPages);
-        for (int i = 1; i <= 1; i++) { // replace with numPages when done testing
+        for (int i = 1; i <= numPages; i++) { // replace with numPages when done testing
             try {
                 Document doc = Jsoup.connect(baseUrl + Integer.toString(i))
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
