@@ -102,7 +102,7 @@ const Dashboard = () => {
                 <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
                   {dashboardData?.coursesInProgress || 0}
                 </h2>
-                <h4>Number of courses in progress</h4>
+                <h4>Number of future courses planned</h4>
               </div>
             </div>
           </div>

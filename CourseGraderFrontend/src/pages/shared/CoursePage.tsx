@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CourseDTO } from "../../auth/AuthDTOs";
 import { useAuth } from "../../auth/AuthProvider";
@@ -21,29 +21,44 @@ const CoursePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>("");
 
-  useEffect(() => {
-    const loadCourse = async () => {
-      if (!courseId) {
-        setError("No course Id provided");
-        setLoading(false);
-        return;
+  // Extract loadCourse as a useCallback so it can be reused
+  const loadCourse = useCallback(async () => {
+    if (!courseId) {
+      setError("No course Id provided");
+      setLoading(false);
+      return;
+    }
+    try {
+      setLoading(true);
+      setError(""); // Clear any existing errors
+      const courseData = await fetchCourseById(courseId);
+      setCourse(courseData);
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        setError("Course not found");
+      } else {
+        setError("Failed to load course details");
       }
-      try {
-        setLoading(true);
-        const courseData = await fetchCourseById(courseId);
-        setCourse(courseData);
-      } catch (err: any) {
-        if (err.response?.status === 404) {
-          setError("Course not found");
-        } else {
-          setError("Failed to load course details");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadCourse();
+    } finally {
+      setLoading(false);
+    }
   }, [courseId]);
+
+  const refreshCourse = useCallback(async () => {
+    if (!courseId) return;
+
+    try {
+      const courseData = await fetchCourseById(courseId);
+      setCourse(courseData);
+      setError("");
+    } catch (err: any) {
+      console.error("Failed to refresh course data:", err);
+    }
+  }, [courseId]);
+
+  useEffect(() => {
+    loadCourse();
+  }, [loadCourse]);
 
   if (loading) {
     return <Spinner />;
@@ -72,7 +87,7 @@ const CoursePage = () => {
         <div className="mb-4">
           <button
             className="btn btn-outline-secondary"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/search")}
           >
             ← Back
           </button>
@@ -86,7 +101,7 @@ const CoursePage = () => {
           courseTitle={course?.title}
         />
         <div className="row g-4">
-          <div className="col-lg-8">
+          <div className="col-lg-12">
             <RatingsOverview
               overallRating={course?.averageOverallRating}
               usefulRating={course?.averageUsefulnessRating}
@@ -97,10 +112,8 @@ const CoursePage = () => {
             />
             <CourseDescription description={course?.description} />
             <HubDisplay hubs={course?.hubRequirements} />
-            <ReviewCard reviews={course?.courseReviews} id={courseId} />
-          </div>
-          <div className="col-lg-4">
             <CourseAction id={courseId} />
+            <ReviewCard reviews={course?.courseReviews} id={courseId} />
           </div>
         </div>
       </div>

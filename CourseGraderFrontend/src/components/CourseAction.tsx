@@ -163,8 +163,8 @@ const CourseAction = ({ id }: Props) => {
                 {actionLoading
                   ? "Loading..."
                   : isInProgress
-                  ? "Currently Taking"
-                  : "Add to Current Courses"}
+                  ? "In Future Courses"
+                  : "Add to Future Courses"}
               </button>
               <button
                 className={`btn ${
@@ -178,6 +178,12 @@ const CourseAction = ({ id }: Props) => {
                   : isSaved
                   ? "Saved"
                   : "Save for Later"}
+              </button>
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => navigate(`/course/${id}/review`)}
+              >
+                Write a review
               </button>
             </>
           ) : (

@@ -238,7 +238,7 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
               onClick={handleInProgressToggle}
               disabled={loading}
             >
-              {loading ? "..." : isInProgress ? "End current" : "Add current"}
+              {loading ? "..." : isInProgress ? "End Future" : "Add Future"}
             </button>
           </div>
           <button

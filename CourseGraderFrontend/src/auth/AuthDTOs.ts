@@ -140,7 +140,7 @@ export type ReviewResponseDTO = {
   assignmentTypes: string; 
   attendanceRequired: boolean;
   createdAt: string; 
-  isOwner: boolean;
+  owner: boolean;
   upvoteCount: number;
   downvoteCount: number;
   userVote: VoteType | null;
@@ -158,4 +158,15 @@ export type CreateReviewDTO = {
  hoursPerWeek: number; // @Min(0) @Max(40)
  assignmentTypes: string; // @Size(max = 100) 
  attendanceRequired: boolean;
+}
+
+export type VoteRequestDTO = {
+  voteType: VoteType;
+}
+
+export type VoteResponseDTO = {
+  reviewId: string;
+  upvoteCount: number;
+  downvoteCount: number;
+  userVote: VoteType | null;
 }

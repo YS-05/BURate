@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteRequestDTO, VoteResponseDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -67,6 +67,16 @@ export const fetchCoursesInProgress = async (): Promise<CourseDisplayDTO[]> => {
 };
 
 export const fetchColleges = () => api.get("/courses/colleges");
+
+export const fetchReviewVotes = async (reviewId: string): Promise<VoteResponseDTO> => {
+  const response = await api.get<VoteResponseDTO>(`/votes/review/${reviewId}`);
+  return response.data;
+};
+
+export const voteOnReview = async (reviewId: string, request: VoteRequestDTO): Promise<VoteResponseDTO> => {
+  const response = await api.post<VoteResponseDTO>(`/votes/review/${reviewId}`, request);
+  return response.data;
+};
 
 export const fetchFullColleges = () => api.get("/auth/colleges");
 

@@ -107,17 +107,19 @@ public class CourseService {
             Iterator<Course> iterator = courses.iterator();
             while (iterator.hasNext()) {
                 Course course = iterator.next();
-                boolean containsReq = false;
                 Set<HubRequirement> courseHubReqs = course.getHubRequirements();
-                if (courseHubReqs != null) {
-                    for (HubRequirement courseHub : courseHubReqs) {
-                        if (hubRequirements.contains(courseHub)) {
-                            containsReq = true;
-                            break;
-                        }
+                if (courseHubReqs == null || courseHubReqs.isEmpty()) {
+                    iterator.remove();
+                    continue;
+                }
+                boolean hasAllRequiredHubs = true;
+                for (HubRequirement hub : hubRequirements) {
+                    if (!courseHubReqs.contains(hub)) {
+                        hasAllRequiredHubs = false;
+                        break;
                     }
                 }
-                if (!containsReq) {
+                if (!hasAllRequiredHubs) {
                     iterator.remove();
                 }
             }

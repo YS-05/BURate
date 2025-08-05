@@ -36,7 +36,7 @@ const HubProgress = () => {
 
   const getProgressColor = (fulfilled: boolean, percentage: number) => {
     if (fulfilled) return "success-subtle";
-    if (percentage >= 50) return "warning";
+    if (percentage >= 50) return "info";
     return "danger";
   };
 
@@ -52,15 +52,15 @@ const HubProgress = () => {
       );
     }
     if (projectedFulfilled) {
-      return <span className="badge bg-warning">📋 Will Complete</span>;
+      return <span className="badge bg-info">Will Complete</span>;
     }
-    return <span className="badge bg-danger">⏳ In Progress</span>;
+    return <span className="badge bg-danger">Needs Attention</span>;
   };
 
   if (!user) {
     return (
       <div className="container mt-5">
-        <div className="alert alert-warning" role="alert">
+        <div className="alert alert-info" role="alert">
           Error getting your hub progress, please re-log in
         </div>
       </div>
@@ -139,10 +139,10 @@ const HubProgress = () => {
                         <small className="text-muted">Completed</small>
                       </div>
                       <div className="col-4">
-                        <div className="fw-bold text-warning fs-4">
+                        <div className="fw-bold text-info fs-4">
                           {projectedFulfilled - fulfilledRequirements}
                         </div>
-                        <small className="text-muted">Projected</small>
+                        <small className="text-muted">In Future</small>
                       </div>
                       <div className="col-4">
                         <div className="fw-bold text-danger fs-4">
@@ -246,7 +246,7 @@ const HubProgress = () => {
                                 <div className="small text-muted">
                                   {item.completed} of {item.required} required
                                   {item.projected > item.completed && (
-                                    <span className="text-warning ms-2">
+                                    <span className="text-info ms-2">
                                       +{item.projected - item.completed}{" "}
                                       projected
                                     </span>
@@ -282,7 +282,7 @@ const HubProgress = () => {
                                       style={{
                                         color: item.fulfilled
                                           ? "#20c997"
-                                          : "#ffc107",
+                                          : "#0dcaf0",
                                       }}
                                     >
                                       {item.fulfilled
@@ -298,12 +298,12 @@ const HubProgress = () => {
                                       className="fw-semibold"
                                       style={{
                                         color: item.projectedFulfilled
-                                          ? "#ffc107"
+                                          ? "#0dcaf0"
                                           : "#dc3545",
                                       }}
                                     >
                                       {item.fulfilled
-                                        ? "N/A" // Already complete
+                                        ? "Already Complete" // Already complete
                                         : item.projectedFulfilled
                                         ? "Will Complete" // Will be complete
                                         : "Needs Attention"}

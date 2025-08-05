@@ -78,8 +78,8 @@ const MyCourses = () => {
           <div className="col-12">
             <h3 className="mb-4 text-center text-danger">My Courses</h3>
             <p className="text-muted text-center">
-              Courses you are currently taking or completed in the past:{" "}
-              {totalCourses} {totalCourses === 1 ? "course" : "courses"}
+              Courses you are planning to take or have already completed in the
+              past: {totalCourses} {totalCourses === 1 ? "course" : "courses"}
             </p>
           </div>
         </div>
@@ -113,7 +113,7 @@ const MyCourses = () => {
               <div className="container">
                 <div className="row mb-3">
                   <div className="col-12">
-                    <h4 className="mb-2">Courses in Progress:</h4>
+                    <h4 className="mb-2">Your Current/Future Courses:</h4>
                   </div>
                 </div>
               </div>
