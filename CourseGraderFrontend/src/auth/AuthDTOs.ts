@@ -138,7 +138,7 @@ export type ReviewResponseDTO = {
   semester: string;
   hoursPerWeek: number;
   assignmentTypes: string; 
-  attendanceRequired: boolean;
+  attendanceRequired: string;
   createdAt: string; 
   owner: boolean;
   upvoteCount: number;
@@ -157,16 +157,11 @@ export type CreateReviewDTO = {
  semester: string; // @Size(max = 100)
  hoursPerWeek: number; // @Min(0) @Max(40)
  assignmentTypes: string; // @Size(max = 100) 
- attendanceRequired: boolean;
-}
-
-export type VoteRequestDTO = {
-  voteType: VoteType;
+ attendanceRequired: string;
 }
 
 export type VoteResponseDTO = {
   reviewId: string;
-  upvoteCount: number;
-  downvoteCount: number;
-  userVote: VoteType | null;
+  voteCount: number;
+  userVote: string | null;
 }

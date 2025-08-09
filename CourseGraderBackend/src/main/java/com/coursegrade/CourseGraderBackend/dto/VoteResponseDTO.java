@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VoteResponseDTO {
     private String reviewId;
-    private Integer upvoteCount;
-    private Integer downvoteCount;
-    private VoteType userVote; // null if no vote by current user
+    private Integer voteCount;
+    private String userVote; // null if no vote by current user
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CourseDTO } from "../../auth/AuthDTOs";
 import { useAuth } from "../../auth/AuthProvider";
-import { fetchCourseById } from "../../api/axios";
+import { fetchCourseById, fetchTeachersByCourse } from "../../api/axios";
 import Spinner from "../../components/Spinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import CourseHeader from "../../components/CourseHeader";
@@ -18,6 +18,7 @@ const CoursePage = () => {
   const { user } = useAuth();
 
   const [course, setCourse] = useState<CourseDTO | null>(null);
+  const [teachers, setTeachers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>("");
 
@@ -32,6 +33,8 @@ const CoursePage = () => {
       setLoading(true);
       setError(""); // Clear any existing errors
       const courseData = await fetchCourseById(courseId);
+      const teacherNames = await fetchTeachersByCourse(courseId);
+      setTeachers(teacherNames);
       setCourse(courseData);
     } catch (err: any) {
       if (err.response?.status === 404) {
@@ -41,18 +44,6 @@ const CoursePage = () => {
       }
     } finally {
       setLoading(false);
-    }
-  }, [courseId]);
-
-  const refreshCourse = useCallback(async () => {
-    if (!courseId) return;
-
-    try {
-      const courseData = await fetchCourseById(courseId);
-      setCourse(courseData);
-      setError("");
-    } catch (err: any) {
-      console.error("Failed to refresh course data:", err);
     }
   }, [courseId]);
 
@@ -113,7 +104,7 @@ const CoursePage = () => {
             <CourseDescription description={course?.description} />
             <HubDisplay hubs={course?.hubRequirements} />
             <CourseAction id={courseId} />
-            <ReviewCard reviews={course?.courseReviews} id={courseId} />
+            <ReviewCard id={courseId} teachers={teachers} />
           </div>
         </div>
       </div>

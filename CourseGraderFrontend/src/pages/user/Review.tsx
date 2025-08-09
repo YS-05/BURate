@@ -21,8 +21,8 @@ const schema = z.object({
   reviewText: z.string().min(1).max(2000),
   semester: z.string().min(1).max(100),
   hoursPerWeek: z.number().min(0).max(40),
-  assignmentTypes: z.string().min(1).max(100),
-  attendanceRequired: z.boolean(),
+  assignmentTypes: z.string().min(1).max(500),
+  attendanceRequired: z.string(),
 });
 
 type ReviewForm = z.infer<typeof schema>;

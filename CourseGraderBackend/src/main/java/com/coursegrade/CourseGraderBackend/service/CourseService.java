@@ -420,7 +420,6 @@ public class CourseService {
                 .averageWorkloadRating(course.getAverageWorkloadRating())
                 .averageInterestRating(course.getAverageInterestRating())
                 .averageTeacherRating(course.getAverageTeacherRating())
-                .courseReviews(reviewDTOs)
                 .hubRequirements(hubs)
                 .build();
 

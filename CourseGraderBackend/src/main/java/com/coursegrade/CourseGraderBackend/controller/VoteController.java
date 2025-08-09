@@ -1,6 +1,5 @@
 package com.coursegrade.CourseGraderBackend.controller;
 
-import com.coursegrade.CourseGraderBackend.dto.VoteRequestDTO;
 import com.coursegrade.CourseGraderBackend.dto.VoteResponseDTO;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.service.VoteService;
@@ -19,9 +18,9 @@ public class VoteController {
     @PostMapping("/review/{reviewId}")
     public ResponseEntity<VoteResponseDTO> voteOnReview(
             @PathVariable Long reviewId,
-            @RequestBody VoteRequestDTO request,
+            @RequestParam String voteType,
             @AuthenticationPrincipal User currentUser) {
-        VoteResponseDTO response = voteService.voteOnReview(currentUser, reviewId, request.getVoteType());
+        VoteResponseDTO response = voteService.voteOnReview(currentUser, reviewId, voteType);
         return ResponseEntity.ok(response);
     }
 

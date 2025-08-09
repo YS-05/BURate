@@ -2,38 +2,67 @@ import { ReviewResponseDTO } from "../auth/AuthDTOs";
 import { useAuth } from "../auth/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import ReviewItem from "./ReviewItem";
+import { useEffect, useState } from "react";
+import { fetchCourseReviews } from "../api/axios";
+import Spinner from "./Spinner";
 
 interface Props {
-  reviews: ReviewResponseDTO[] | undefined;
   id: string | undefined;
+  teachers: string[];
 }
 
-const ReviewCard = ({ reviews, id }: Props) => {
+const ReviewCard = ({ id, teachers }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
+  const [reviews, setReviews] = useState<ReviewResponseDTO[]>([]);
+  const [selectedTeacher, setSelectedTeacher] = useState("");
   const hasUserReviewed = reviews?.some((review) => review.owner) ?? false;
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const reviewData = await fetchCourseReviews(id, selectedTeacher);
+        setReviews(reviewData);
+      } catch (err: any) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadReviews();
+  }, [id, selectedTeacher]);
+
+  const handleTeacherChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTeacher(event.target.value);
+  };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="card border-danger rounded-0 mb-4">
       <div className="card-header d-flex justify-content-between align-items-center">
         <h5 className="mb-0">Reviews: {reviews?.length || 0}</h5>
-        {user &&
-          (hasUserReviewed ? (
-            <span
-              className="badge me-2"
-              style={{ backgroundColor: "#20c997", color: "white" }}
-            >
-              ✓ Reviewed
-            </span>
-          ) : (
-            <button
-              className="btn btn-danger btn-sm"
-              onClick={() => navigate(`/course/${id}/review`)}
-            >
-              Write a Review
-            </button>
-          ))}
+        <div className="dropdown-container">
+          <select
+            className="form-select"
+            value={selectedTeacher}
+            onChange={handleTeacherChange}
+            style={{ minWidth: "200px" }}
+          >
+            <option value="">All Teachers</option>
+            {teachers.map((teacher, index) => (
+              <option key={index} value={teacher}>
+                {teacher}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="card-body">

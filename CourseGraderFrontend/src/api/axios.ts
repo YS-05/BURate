@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteRequestDTO, VoteResponseDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -73,10 +73,25 @@ export const fetchReviewVotes = async (reviewId: string): Promise<VoteResponseDT
   return response.data;
 };
 
-export const voteOnReview = async (reviewId: string, request: VoteRequestDTO): Promise<VoteResponseDTO> => {
-  const response = await api.post<VoteResponseDTO>(`/votes/review/${reviewId}`, request);
+export const voteOnReview = async (reviewId: string, voteType: string): Promise<VoteResponseDTO> => {
+  const response = await api.post<VoteResponseDTO>(`/votes/review/${reviewId}?voteType=${voteType}`);
   return response.data;
 };
+
+export const fetchTeachersByCourse = async (courseId: string): Promise<string[]> => {
+  const response = await api.get(`/reviews/course/${courseId}/teachers`);
+  return response.data;
+}
+
+export const fetchCourseReviews = async (courseId: string, teacherName?: string): Promise<ReviewResponseDTO[]> => {
+  const params = new URLSearchParams();
+  if (teacherName) {
+    params.append("teacherName", teacherName);
+  }
+  const url = `/reviews/course/${courseId}${params.toString() ? `?${params.toString()}` : ''}`;
+  const response = await api.get<ReviewResponseDTO[]>(url);
+  return response.data;
+}
 
 export const fetchFullColleges = () => api.get("/auth/colleges");
 

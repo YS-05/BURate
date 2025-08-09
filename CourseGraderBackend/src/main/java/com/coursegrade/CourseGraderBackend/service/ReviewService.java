@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -37,7 +38,7 @@ public class ReviewService {
         review.setWorkloadRating(reviewDTO.getWorkloadRating());
         review.setUsefulnessRating(reviewDTO.getUsefulnessRating());
         review.setInterestRating(reviewDTO.getInterestRating());
-        review.setTeacherName(reviewDTO.getTeacherName());
+        review.setTeacherName(formatTeacherName(reviewDTO.getTeacherName()));
         review.setReviewText(reviewDTO.getReviewText());
         review.setSemester(reviewDTO.getSemester());
         review.setHoursPerWeek(reviewDTO.getHoursPerWeek());
@@ -49,6 +50,18 @@ public class ReviewService {
         courseService.updateCourseRatings(courseId);
 
         return courseService.convertToResponseDTO(savedReview, user);
+    }
+
+    public String formatTeacherName(String teacherName) {
+        if (teacherName == null || teacherName.trim().isEmpty()) return teacherName;
+        String formattedTeacher = "";
+        String[] split = teacherName.split(" ");
+        for (int i = 0; i < split.length; i++) {
+            if (i > 0) formattedTeacher += " ";
+            String firstUpper = split[i].substring(0, 1).toUpperCase() + split[i].substring(1);
+            formattedTeacher += firstUpper;
+        }
+        return formattedTeacher;
     }
 
     @Transactional
@@ -106,13 +119,15 @@ public class ReviewService {
         return courseService.convertToResponseDTO(review, currentUser);
     }
 
-    public List<ReviewResponseDTO> getReviewsByCourse(Long courseId, User user) {
+    public List<ReviewResponseDTO> getReviewsByCourseAndTeacher(Long courseId, User user, String teacher) {
         Course course = courseService.getCourseById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
         List<Review> reviews = reviewRepository.findByCourseOrderByCreatedAtDesc(course);
         List<ReviewResponseDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
-            dtos.add(courseService.convertToResponseDTO(review, user));
+            if (teacher == null || teacher.isEmpty() || review.getTeacherName().equals(teacher)) {
+                dtos.add(courseService.convertToResponseDTO(review, user));
+            }
         }
         return dtos;
     }
@@ -126,6 +141,17 @@ public class ReviewService {
             dtos.add(courseService.convertToResponseDTO(review, currentUser));
         }
         return dtos;
+    }
+
+    public List<String> getReviewTeachers(Long courseId, User currentUser) {
+        HashSet<String> teachers = new HashSet<>();
+        Course course = courseService.getCourseById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        List<Review> reviews = reviewRepository.findByCourseOrderByCreatedAtDesc(course);
+        for (Review review : reviews) {
+            teachers.add(review.getTeacherName());
+        }
+        return new ArrayList<>(teachers);
     }
 
     public List<ReviewResponseDTO> getMyReviews(User currentUser) {

@@ -63,9 +63,10 @@ public class ReviewController {
     @GetMapping("/course/{courseId}")
     public ResponseEntity<List<ReviewResponseDTO>> getCourseReviews(
             @PathVariable Long courseId,
-            @AuthenticationPrincipal User currentUser
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam(required = false) String teacherName
     ) {
-        List<ReviewResponseDTO> reviews = reviewService.getReviewsByCourse(courseId, currentUser);
+        List<ReviewResponseDTO> reviews = reviewService.getReviewsByCourseAndTeacher(courseId, currentUser, teacherName);
         return ResponseEntity.ok(reviews);
     }
 
@@ -77,6 +78,15 @@ public class ReviewController {
 
         List<ReviewResponseDTO> reviews = reviewService.getReviewsByTeacher(courseId, teacherName, currentUser);
         return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/course/{courseId}/teachers")
+    public ResponseEntity<List<String>> getReviewTeachers(
+            @PathVariable Long courseId,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        List<String> teachers = reviewService.getReviewTeachers(courseId, currentUser);
+        return ResponseEntity.ok(teachers);
     }
 
     @GetMapping("/my-reviews")

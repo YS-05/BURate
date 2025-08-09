@@ -1,6 +1,7 @@
 package com.coursegrade.CourseGraderBackend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,10 +37,12 @@ public class Review {
     private Integer teacherRating;
     @Column(nullable = false)
     private String teacherName;
+    @Size(max = 2000)
     private String reviewText;
     private String semester;
     private LocalDateTime createdAt;
     private Integer hoursPerWeek;
+    @Size(max = 500)
     private String assignmentTypes; // "Essays, Problem Sets, Group Project"
     private Boolean attendanceRequired;
     @Column(nullable = false)

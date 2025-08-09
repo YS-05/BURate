@@ -19,17 +19,18 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final ReviewRepository reviewRepository;
 
-    public VoteResponseDTO voteOnReview(User user, Long reviewId, VoteType voteType) {
+    public VoteResponseDTO voteOnReview(User user, Long reviewId, String voteType) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
         Optional<Vote> vote = voteRepository.findByUserAndReview(user, review);
+        VoteType voteTypeEnum = VoteType.valueOf(voteType);
         if (vote.isPresent()) {
             Vote curVote = vote.get();
-            if (curVote.getVoteType() == voteType) {
+            if (curVote.getVoteType() == voteTypeEnum) {
                 voteRepository.delete(curVote);
             }
             else {
-                curVote.setVoteType(voteType);
+                curVote.setVoteType(voteTypeEnum);
                 voteRepository.save(curVote);
             }
         }
@@ -37,7 +38,7 @@ public class VoteService {
             Vote newVote = new Vote();
             newVote.setUser(user);
             newVote.setReview(review);
-            newVote.setVoteType(voteType);
+            newVote.setVoteType(voteTypeEnum);
             voteRepository.save(newVote);
         }
         updateReviewVotes(review);
@@ -65,14 +66,13 @@ public class VoteService {
 
     private VoteResponseDTO convertToResponseDTO(Review review, User user) {
         Optional<Vote> vote = voteRepository.findByUserAndReview(user, review);
-        VoteType type = null;
+        String type = null;
         if (vote.isPresent()) {
-            type = vote.get().getVoteType();
+            type = vote.get().getVoteType().toString();
         }
         return VoteResponseDTO.builder()
                 .reviewId(review.getId().toString())
-                .upvoteCount(review.getUpvoteCount())
-                .downvoteCount(review.getDownvoteCount())
+                .voteCount(review.getUpvoteCount() - review.getDownvoteCount())
                 .userVote(type)
                 .build();
     }

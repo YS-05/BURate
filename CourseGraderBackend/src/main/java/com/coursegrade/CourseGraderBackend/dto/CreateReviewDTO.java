@@ -42,7 +42,7 @@ public class CreateReviewDTO {
     @Min(0) @Max(40)
     private Integer hoursPerWeek;
     @NotNull
-    @Size(max = 100)
+    @Size(max = 500)
     private String assignmentTypes; // "Essays, Problem Sets, Group Project"
     @NotNull
     private Boolean attendanceRequired;
