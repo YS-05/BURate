@@ -15,9 +15,10 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   id: string | undefined;
+  hasUserReviewed: boolean | undefined;
 }
 
-const CourseAction = ({ id }: Props) => {
+const CourseAction = ({ id, hasUserReviewed }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -179,17 +180,23 @@ const CourseAction = ({ id }: Props) => {
                   ? "Saved"
                   : "Save for Later"}
               </button>
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => navigate(`/course/${id}/review`)}
-              >
-                Write a review
-              </button>
+              {hasUserReviewed ? (
+                <div className="btn btn-success disabled">
+                  ✓ Review Complete
+                </div>
+              ) : (
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={() => navigate(`/course/${id}/review`)}
+                >
+                  Write a review
+                </button>
+              )}
             </>
           ) : (
             <div className="text-center">
               <p className="text-muted mb-3">
-                Please log in to interact with courses
+                Please log in to interact with courses and write reviews
               </p>
               <button
                 className="btn btn-outline-danger"

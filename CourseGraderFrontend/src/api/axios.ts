@@ -51,6 +51,16 @@ export const deleteReview = async (reviewId: string): Promise<{ message: string 
  return response.data;
 };
 
+export const updateReview = async (reviewId: string, reviewData: CreateReviewDTO): Promise<ReviewResponseDTO> => {
+  const response = await api.put<ReviewResponseDTO>(`/reviews/${reviewId}`, reviewData);
+  return response.data;
+};
+
+export const fetchReviewById = async (reviewId: string): Promise<ReviewResponseDTO> => {
+  const response = await api.get<ReviewResponseDTO>(`/reviews/${reviewId}`);
+  return response.data;
+};
+
 export const fetchCompletedCourses = async (): Promise<CourseDisplayDTO[]> => {
   const response = await api.get<CourseDisplayDTO[]>("/users/completed-courses");
   return response.data;
@@ -92,6 +102,16 @@ export const fetchCourseReviews = async (courseId: string, teacherName?: string)
   const response = await api.get<ReviewResponseDTO[]>(url);
   return response.data;
 }
+
+export const fetchMyReviews = async (): Promise<ReviewResponseDTO[]> => {
+  const response = await api.get<ReviewResponseDTO[]>("/reviews/my-reviews");
+  return response.data;
+};
+
+export const fetchTeacherScore = async (courseId: string, teacherName: string): Promise<number> => {
+  const response = await api.get<number>(`/reviews/course/${courseId}/teacherScore?teacherName=${encodeURIComponent(teacherName)}`);
+  return response.data;
+};
 
 export const fetchFullColleges = () => api.get("/auth/colleges");
 

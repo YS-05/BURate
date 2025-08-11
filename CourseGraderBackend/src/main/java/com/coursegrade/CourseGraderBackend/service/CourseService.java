@@ -393,6 +393,11 @@ public class CourseService {
     }
 
     public CourseDTO convertToFullDTO(Course course, User user) {
+        boolean userReviewed = false;
+        if (user != null) {
+            Optional<Review> existingReview = reviewRepository.findByCourseAndUser(course, user);
+            userReviewed = existingReview.isPresent();
+        }
         Set<HubRequirementDTO> hubs = new HashSet<>();
         for (HubRequirement hubReq : course.getHubRequirements()) {
             HubRequirementDTO hubReqDTO = new HubRequirementDTO();
@@ -421,6 +426,7 @@ public class CourseService {
                 .averageInterestRating(course.getAverageInterestRating())
                 .averageTeacherRating(course.getAverageTeacherRating())
                 .hubRequirements(hubs)
+                .userReviewed(userReviewed)
                 .build();
 
     }

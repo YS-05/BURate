@@ -28,4 +28,5 @@ public class CourseDTO {
     private Double averageInterestRating;
     private Double averageTeacherRating;
     private Set<HubRequirementDTO> hubRequirements;
+    private boolean userReviewed;
 }

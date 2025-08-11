@@ -22,7 +22,6 @@ const CoursePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>("");
 
-  // Extract loadCourse as a useCallback so it can be reused
   const loadCourse = useCallback(async () => {
     if (!courseId) {
       setError("No course Id provided");
@@ -103,7 +102,10 @@ const CoursePage = () => {
             />
             <CourseDescription description={course?.description} />
             <HubDisplay hubs={course?.hubRequirements} />
-            <CourseAction id={courseId} />
+            <CourseAction
+              id={courseId}
+              hasUserReviewed={course?.userReviewed}
+            />
             <ReviewCard id={courseId} teachers={teachers} />
           </div>
         </div>

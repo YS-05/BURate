@@ -11,15 +11,18 @@ import Downvote from "../assets/arrow-down-square.svg";
 import FillDownvote from "../assets/arrow-down-square-fill.svg";
 import Delete from "../assets/trash.svg";
 import Edit from "../assets/pencil-square.svg";
+import { deleteReview } from "../api/axios";
 
 interface Props {
   review: ReviewResponseDTO;
+  onReviewDeleted?: (reviewId: number) => void;
 }
 
-const ReviewItem = ({ review }: Props) => {
+const ReviewItem = ({ review, onReviewDeleted }: Props) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
   const [sumVote, setSumVote] = useState(0);
   const [userVote, setUserVote] = useState<string | null>(null);
@@ -40,6 +43,18 @@ const ReviewItem = ({ review }: Props) => {
     };
     loadVotes();
   }, [review.id]);
+
+  const handleDelete = async () => {
+    try {
+      setDeleting(true);
+      await deleteReview(review.id.toString());
+      onReviewDeleted?.(review.id);
+    } catch (err: any) {
+      setError(err || "Failed to delete review");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const handleVote = async (voteType: "UPVOTE" | "DOWNVOTE") => {
     if (!user) {
@@ -167,14 +182,19 @@ const ReviewItem = ({ review }: Props) => {
 
       {review.owner && (
         <>
-          <button className="btn rounded-0 btn-link">
+          <button
+            className="btn rounded-0 btn-link"
+            onClick={() =>
+              navigate(`/course/${review.courseId}/review?edit=${review.id}`)
+            }
+          >
             <img
               src={Edit}
               alt="edit"
               style={{ height: "20px", width: "20px" }}
             />
           </button>
-          <button className="btn rounded-0 btn-link">
+          <button className="btn rounded-0 btn-link" onClick={handleDelete}>
             <img
               src={Delete}
               alt="delete"

@@ -40,5 +40,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Long countByCourse(@Param("course") Course course);
 
     List<Review> findByCourseAndTeacherNameContainingIgnoreCase(Course course, String teacherName);
+
+    List<Review> findByUserOrderByCreatedAtDesc(User user);
 }
 

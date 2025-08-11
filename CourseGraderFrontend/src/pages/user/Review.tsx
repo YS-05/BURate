@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../auth/AuthProvider";
-import { createReview, fetchCourseById } from "../../api/axios";
-import { CourseDTO } from "../../auth/AuthDTOs";
+import {
+  createReview,
+  fetchCourseById,
+  fetchReviewById,
+  updateReview,
+} from "../../api/axios";
+import { CourseDTO, ReviewResponseDTO } from "../../auth/AuthDTOs";
 import Spinner from "../../components/Spinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import CourseHeader from "../../components/CourseHeader";
@@ -22,24 +27,31 @@ const schema = z.object({
   semester: z.string().min(1).max(100),
   hoursPerWeek: z.number().min(0).max(40),
   assignmentTypes: z.string().min(1).max(500),
-  attendanceRequired: z.string(),
+  attendanceRequired: z.boolean(),
 });
 
 type ReviewForm = z.infer<typeof schema>;
 
 const Review = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const editReviewId = searchParams.get("edit");
 
   const [course, setCourse] = useState<CourseDTO | null>(null);
+  const [existingReview, setExistingReview] =
+    useState<ReviewResponseDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const hasExistingReview = existingReview !== null;
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<ReviewForm>({
@@ -50,6 +62,7 @@ const Review = () => {
       workloadRating: 3,
       interestRating: 3,
       teacherRating: 3,
+      attendanceRequired: false,
     },
   });
 
@@ -67,7 +80,7 @@ const Review = () => {
       return;
     }
 
-    const loadCourses = async () => {
+    const loadData = async () => {
       if (!courseId) {
         setError("No course ID provided");
         setLoading(false);
@@ -76,21 +89,36 @@ const Review = () => {
       try {
         const courseData = await fetchCourseById(courseId);
         setCourse(courseData);
-        const userReview = courseData.courseReviews?.find(
-          (review) => review.owner
-        );
-        if (userReview) {
-          setError("You can only review this course once");
+        if (editReviewId) {
+          const reviewData = await fetchReviewById(editReviewId);
+          setExistingReview(reviewData);
+          reset({
+            usefulnessRating: reviewData.usefulnessRating,
+            difficultyRating: reviewData.difficultyRating,
+            workloadRating: reviewData.workloadRating,
+            interestRating: reviewData.interestRating,
+            teacherRating: reviewData.teacherRating,
+            teacherName: reviewData.teacherName,
+            reviewText: reviewData.reviewText,
+            semester: reviewData.semester,
+            hoursPerWeek: reviewData.hoursPerWeek,
+            assignmentTypes: reviewData.assignmentTypes,
+            attendanceRequired: reviewData.attendanceRequired,
+          });
         }
       } catch (err) {
         console.log(err);
-        setError("Failed to load course details");
+        if (editReviewId) {
+          setError("Failed to load review details");
+        } else {
+          setError("Failed to load course details");
+        }
       } finally {
         setLoading(false);
       }
     };
-    loadCourses();
-  }, [courseId, user, navigate]);
+    loadData();
+  }, [courseId, editReviewId, user, navigate, reset]);
 
   const onSubmit = async (formData: ReviewForm) => {
     if (!courseId) {
@@ -98,10 +126,17 @@ const Review = () => {
       return;
     }
     try {
-      await createReview(courseId, formData);
-      navigate(`/course/${courseId}`, {
-        state: { message: "Review submitted successfully!" },
-      });
+      if (hasExistingReview && editReviewId) {
+        await updateReview(editReviewId, formData);
+        navigate(`/course/${courseId}`, {
+          state: { message: "Review updated successfully!" },
+        });
+      } else {
+        await createReview(courseId, formData);
+        navigate(`/course/${courseId}`, {
+          state: { message: "Review submitted successfully!" },
+        });
+      }
     } catch (err: any) {
       console.log("Error submitting review:", err);
       if (err.response?.data?.message) {
@@ -342,8 +377,10 @@ const Review = () => {
                         role="status"
                         aria-hidden="true"
                       ></span>
-                      Submitting...
+                      {hasExistingReview ? "Updating..." : "Submitting..."}
                     </>
+                  ) : hasExistingReview ? (
+                    "Update Review"
                   ) : (
                     "Submit Review"
                   )}

@@ -143,7 +143,7 @@ public class ReviewService {
         return dtos;
     }
 
-    public List<String> getReviewTeachers(Long courseId, User currentUser) {
+    public List<String> getReviewTeachers(Long courseId) {
         HashSet<String> teachers = new HashSet<>();
         Course course = courseService.getCourseById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
@@ -154,8 +154,20 @@ public class ReviewService {
         return new ArrayList<>(teachers);
     }
 
+    public Double getTeacherScore(Long courseId, String teacher) {
+        Course course = courseService.getCourseById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        List<Review> reviews = reviewRepository.findByCourseAndTeacherNameContainingIgnoreCase(course, teacher);
+        Double teacherScore = 0.0;
+        for (Review review : reviews) {
+            teacherScore += review.getTeacherRating();
+        }
+        return teacherScore / reviews.size();
+    }
+
     public List<ReviewResponseDTO> getMyReviews(User currentUser) {
-        List<Review> reviews = reviewRepository.findByUser(currentUser);
+        // Add ordering by createdAt descending
+        List<Review> reviews = reviewRepository.findByUserOrderByCreatedAtDesc(currentUser);
         List<ReviewResponseDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
             dtos.add(courseService.convertToResponseDTO(review, currentUser));

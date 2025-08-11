@@ -116,7 +116,7 @@ export type CourseDTO = {
   averageInterestRating: number;
   averageTeacherRating: number;
   hubRequirements: HubRequirementDTO[];
-  courseReviews: ReviewResponseDTO[];
+  userReviewed: boolean;
 }
 
 export enum VoteType {
@@ -138,7 +138,7 @@ export type ReviewResponseDTO = {
   semester: string;
   hoursPerWeek: number;
   assignmentTypes: string; 
-  attendanceRequired: string;
+  attendanceRequired: boolean;
   createdAt: string; 
   owner: boolean;
   upvoteCount: number;
@@ -157,7 +157,7 @@ export type CreateReviewDTO = {
  semester: string; // @Size(max = 100)
  hoursPerWeek: number; // @Min(0) @Max(40)
  assignmentTypes: string; // @Size(max = 100) 
- attendanceRequired: string;
+ attendanceRequired: boolean;
 }
 
 export type VoteResponseDTO = {
