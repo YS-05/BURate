@@ -272,39 +272,26 @@ const Review = () => {
                       <span className="text-danger">*</span>
                     </label>
                     <div className="mt-2">
-                      <div className="form-check form-check-inline">
+                      <div className="form-check mb-3">
                         <input
-                          className="form-check-input"
-                          type="radio"
-                          id="attendanceYes"
-                          value="true"
-                          {...register("attendanceRequired", {
-                            setValueAs: (value) => value === "true",
-                          })}
+                          type="checkbox"
+                          className={`form-check-input ${
+                            errors.attendanceRequired ? "is-invalid" : ""
+                          }`}
+                          id="attendanceRequired"
+                          {...register("attendanceRequired")}
                         />
                         <label
                           className="form-check-label"
-                          htmlFor="attendanceYes"
+                          htmlFor="attendanceRequired"
                         >
-                          Yes
+                          Attendance Required
                         </label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          id="attendanceNo"
-                          value="false"
-                          {...register("attendanceRequired", {
-                            setValueAs: (value) => value === "false",
-                          })}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="attendanceNo"
-                        >
-                          No
-                        </label>
+                        {errors.attendanceRequired && (
+                          <div className="invalid-feedback">
+                            {errors.attendanceRequired.message}
+                          </div>
+                        )}
                       </div>
                     </div>
                     {errors.attendanceRequired && (
