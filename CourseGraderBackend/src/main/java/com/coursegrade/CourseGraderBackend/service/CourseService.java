@@ -1,9 +1,6 @@
 package com.coursegrade.CourseGraderBackend.service;
 
-import com.coursegrade.CourseGraderBackend.dto.CourseDTO;
-import com.coursegrade.CourseGraderBackend.dto.CourseDisplayDTO;
-import com.coursegrade.CourseGraderBackend.dto.HubRequirementDTO;
-import com.coursegrade.CourseGraderBackend.dto.ReviewResponseDTO;
+import com.coursegrade.CourseGraderBackend.dto.*;
 import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.HubRequirement;
 import com.coursegrade.CourseGraderBackend.model.Review;

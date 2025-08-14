@@ -30,7 +30,7 @@ public class AuthService {
     private final CourseService courseService;
 
     @Transactional
-    public void register(String email, String major, String college, Integer expectedGrad, String password) {
+    public void register(String email, String college, String major, Integer expectedGrad, String password) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered");
         }

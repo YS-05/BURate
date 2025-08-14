@@ -177,6 +177,31 @@ public class UserService {
         return inProgressCourses;
     }
 
+    public AccountDTO getAccountSettings(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return AccountDTO.builder()
+                .expectedGrad(user.getExpectedGrad())
+                .college(user.getCollege())
+                .major(user.getMajor())
+                .build();
+    }
+
+    public void updateAccountSettings(AccountDTO accountUpdateDTO, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (accountUpdateDTO.getExpectedGrad() != null) {
+            user.setExpectedGrad(accountUpdateDTO.getExpectedGrad());
+        }
+        if (accountUpdateDTO.getCollege() != null) {
+            user.setCollege(accountUpdateDTO.getCollege());
+        }
+        if (accountUpdateDTO.getMajor() != null) {
+            user.setMajor(accountUpdateDTO.getMajor());
+        }
+        userRepository.save(user);
+    }
+
     @Transactional
     public UserDashboardDTO getDashboard(User currentUser) {
         User user = userRepository.findById(currentUser.getId())

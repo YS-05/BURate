@@ -81,8 +81,8 @@ public class AuthController {
         return ResponseEntity.ok(colleges);
     }
 
-    @GetMapping("/majors/{college}")
-    public ResponseEntity<Set<String>> getMajorsByCollege(@PathVariable String college) {
+    @GetMapping("/majors")
+    public ResponseEntity<Set<String>> getMajorsByCollege(@RequestParam String college) {
         Set<String> majors = collegeService.getMajorsByCollege(college);
         return ResponseEntity.ok(majors);
     }

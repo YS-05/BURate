@@ -165,3 +165,9 @@ export type VoteResponseDTO = {
   voteCount: number;
   userVote: string | null;
 }
+
+export type AccountDTO = {
+  college: string;
+  major: string;
+  expectedGrad: number;
+}

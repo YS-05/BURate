@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -115,15 +115,25 @@ export const fetchTeacherScore = async (courseId: string, teacherName: string): 
 
 export const fetchFullColleges = () => api.get("/auth/colleges");
 
-export const fetchMajorsByFullCollege = (college: string) => api.get(`/auth/majors/${college}`);
+export const fetchMajorsByFullCollege = (college: string) => 
+  api.get(`/auth/majors?college=${encodeURIComponent(college)}`);
 
 export const fetchDepartmentsByCollege = (college: string) =>
   api.get(`/courses/departments/${college}`);
+
+export const getAccount = async (): Promise<AccountDTO> => {
+  const response = await api.get<AccountDTO>("/users/account");
+  return response.data;
+}
+
+export const updateAccount = async (accountInfo: AccountDTO) => 
+ api.put('/users/account', accountInfo);
 
 export const fetchHubProgress = async (): Promise<HubProgressDTO> => {
   const response = await api.get<HubProgressDTO>("/users/hub-progress");
   return response.data;
 };
+
 export const fetchFilteredCourses = (filters: {
   colleges?: string[];
   departments?: string[];

@@ -103,6 +103,23 @@ public class UserController {
         return ResponseEntity.ok(dashboard);
     }
 
+    @GetMapping("/account")
+    private ResponseEntity<AccountDTO> getAccountSettings(
+            @AuthenticationPrincipal User currentUser
+    ) {
+        AccountDTO account = userService.getAccountSettings(currentUser.getId());
+        return ResponseEntity.ok(account);
+    }
+
+    @PutMapping("/account")
+    private ResponseEntity<Map<String, String>> updateAccountSettings(
+            @RequestBody AccountDTO update,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        userService.updateAccountSettings(update, currentUser.getId());
+        return ResponseEntity.ok(Map.of("message", "Account settings updated successfully"));
+    }
+
     @PostMapping("/change-password")
     private ResponseEntity<Map<String, String>> changePassword(
             @AuthenticationPrincipal User currentUser,
