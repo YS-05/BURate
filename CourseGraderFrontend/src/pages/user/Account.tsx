@@ -12,6 +12,7 @@ import ErrorDisplay from "../../components/ErrorDisplay";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import ResetPassword from "../../components/ResetPassword";
 
 const schema = z.object({
   college: z.string().min(1, "Select a college"),
@@ -113,7 +114,7 @@ const Account = () => {
     >
       <div className="container">
         <h3 className="mb-4 text-center text-danger">Account Settings</h3>
-        <div className="card">
+        <div className="card mb-4">
           <div className="card-body border-danger border">
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <label className="form-label fw-semibold">Email:</label>
@@ -175,6 +176,7 @@ const Account = () => {
             </form>
           </div>
         </div>
+        <ResetPassword />
       </div>
     </div>
   );

@@ -139,6 +139,17 @@ public class AuthService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void updatePassword(String oldPassword, String newPassword, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     public UserResponseDTO getCurrentUser(String token) {
         String email = jwtService.extractEmail(token);
         User user = userRepository.findByEmail(email)

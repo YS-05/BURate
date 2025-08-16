@@ -1,16 +1,15 @@
 package com.coursegrade.CourseGraderBackend.controller;
 
 import com.coursegrade.CourseGraderBackend.dto.*;
+import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.service.AuthService;
 import com.coursegrade.CourseGraderBackend.service.CollegeService;
-import com.coursegrade.CourseGraderBackend.service.WebScraperService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import java.util.Set;
 public class AuthController {
 
     private final AuthService authService;
-    private final WebScraperService webScraperService;
     private final CollegeService collegeService;
 
     @PostMapping("/register")
@@ -72,6 +70,17 @@ public class AuthController {
         authService.resetPassword(request.getEmail(), request.getVerificationCode(), request.getNewPassword());
         return ResponseEntity.ok(Map.of(
                 "message", "Password reset successful! You can log in with your new password."
+        ));
+    }
+
+    @PutMapping("/update-password")
+    private ResponseEntity<Map<String, String>> updatePassword(
+            @RequestBody @Valid UpdatePasswordDTO updatePasswordDTO,
+            @AuthenticationPrincipal User user
+    ) {
+        authService.updatePassword(updatePasswordDTO.getOldPassword(), updatePasswordDTO.getNewPassword(), user.getId());
+        return ResponseEntity.ok(Map.of(
+                "message", "Password updated successfully"
         ));
     }
     

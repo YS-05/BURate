@@ -171,3 +171,8 @@ export type AccountDTO = {
   major: string;
   expectedGrad: number;
 }
+
+export type UpdatePasswordDTO = {
+  oldPassword: string;
+  newPassword: string;
+}
