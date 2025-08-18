@@ -4,6 +4,7 @@ import com.coursegrade.CourseGraderBackend.dto.*;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.service.AuthService;
 import com.coursegrade.CourseGraderBackend.service.CollegeService;
+import com.coursegrade.CourseGraderBackend.service.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final CollegeService collegeService;
+    private final EmailService emailService;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody @Valid RegisterUserDTO request) {
@@ -94,6 +96,14 @@ public class AuthController {
     public ResponseEntity<Set<String>> getMajorsByCollege(@RequestParam String college) {
         Set<String> majors = collegeService.getMajorsByCollege(college);
         return ResponseEntity.ok(majors);
+    }
+
+    @PostMapping("/contact")
+    public ResponseEntity<Map<String, String>> sendContactMessage(
+            @RequestBody @Valid ContactUsDTO contactDTO
+            ) {
+        emailService.sendContactUsEmail(contactDTO);
+        return ResponseEntity.ok(Map.of("message", "Message sent successfully! We will get back to you soon."));
     }
 
     @GetMapping("/me")

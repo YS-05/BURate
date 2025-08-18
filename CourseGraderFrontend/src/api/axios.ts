@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -134,8 +134,15 @@ export const fetchHubProgress = async (): Promise<HubProgressDTO> => {
   return response.data;
 };
 
+export const sendContactMessage = async (contactData: ContactUsDTO): Promise<{ message: string }> => {
+  const response = await api.post<{ message: string }>("/auth/contact", contactData);
+  return response.data;
+};
+
 export const updatePassword = async (passwordData: UpdatePasswordDTO) => 
   api.put('/auth/update-password', passwordData);
+
+export const deleteUser = async () => api.delete("/users/delete");
 
 export const fetchFilteredCourses = (filters: {
   colleges?: string[];

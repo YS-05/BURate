@@ -1,13 +1,11 @@
 package com.coursegrade.CourseGraderBackend.service;
 
 import com.coursegrade.CourseGraderBackend.dto.*;
-import com.coursegrade.CourseGraderBackend.model.Course;
-import com.coursegrade.CourseGraderBackend.model.HubRequirement;
-import com.coursegrade.CourseGraderBackend.model.Review;
-import com.coursegrade.CourseGraderBackend.model.User;
+import com.coursegrade.CourseGraderBackend.model.*;
 import com.coursegrade.CourseGraderBackend.repository.CourseRepository;
 import com.coursegrade.CourseGraderBackend.repository.ReviewRepository;
 import com.coursegrade.CourseGraderBackend.repository.UserRepository;
+import com.coursegrade.CourseGraderBackend.repository.VoteRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +25,7 @@ public class UserService {
     private final CourseRepository courseRepository;
     private final CourseService courseService;
     private final ReviewRepository reviewRepository;
+    private final VoteRepository voteRepository;
 
     @Transactional
     public HubProgressDTO getHubProgress(Long userId) {
@@ -243,5 +242,21 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(passwordResetDTO.getNewPassword()));
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser (Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        List<Vote> votes = voteRepository.findByUser(user);
+        voteRepository.deleteAll(votes);
+        List<Review> reviews = reviewRepository.findByUser(user);
+        reviewRepository.deleteAll(reviews);
+        user.getCompletedCourses().clear();
+        user.getCoursesInProgress().clear();
+        user.getSavedCourses().clear();
+        user.getHubProgress().clear();
+        userRepository.save(user);
+        userRepository.delete(user);
     }
 }

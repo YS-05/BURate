@@ -6,6 +6,7 @@ import {
   fetchMajorsByFullCollege,
   getAccount,
   updateAccount,
+  deleteUser,
 } from "../../api/axios";
 import Spinner from "../../components/Spinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
@@ -13,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import ResetPassword from "../../components/ResetPassword";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   college: z.string().min(1, "Select a college"),
@@ -29,11 +31,14 @@ const schema = z.object({
 type AccountForm = z.infer<typeof schema>;
 
 const Account = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [colleges, setColleges] = useState<string[]>([]);
   const [majors, setMajors] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const {
     register,
@@ -96,6 +101,31 @@ const Account = () => {
       await updateAccount(formData);
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to update account");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete your account?\n\nThis will permanently delete:\n• Your profile information\n• All your course reviews\n• All your saved courses\n• All your course progress\n\nThis action CANNOT be undone!"
+    );
+    if (!confirmed) return;
+    setIsDeletingAccount(true);
+    try {
+      await deleteUser();
+      localStorage.removeItem("token");
+      logout();
+      navigate("/");
+    } catch (err: any) {
+      console.error("Error deleting account:", err);
+
+      if (err.response?.status === 401) {
+        alert(
+          err.response?.data?.error ||
+            "Failed to delete account. Please try again."
+        );
+      }
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -177,6 +207,17 @@ const Account = () => {
           </div>
         </div>
         <ResetPassword />
+        <div className="text-center m-4">
+          <h4 className="text-danger mb-3">Danger Zone:</h4>
+          <button
+            type="button"
+            className="btn btn-outline-danger w-100"
+            onClick={handleDeleteAccount}
+            disabled={isDeletingAccount}
+          >
+            {isDeletingAccount ? "Deleting Account..." : "Delete My Account"}
+          </button>
+        </div>
       </div>
     </div>
   );

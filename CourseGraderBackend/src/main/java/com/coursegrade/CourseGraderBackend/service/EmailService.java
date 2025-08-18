@@ -1,5 +1,6 @@
 package com.coursegrade.CourseGraderBackend.service;
 
+import com.coursegrade.CourseGraderBackend.dto.ContactUsDTO;
 import com.coursegrade.CourseGraderBackend.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -111,5 +112,39 @@ public class EmailService { // TODO: Better description for verification email +
         }
     }
 
+    public void sendContactUsEmail(ContactUsDTO contactDTO) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(from);
+            helper.setSubject("Contact Us Request: " + contactDTO.getSubject());
+            String content = buildContactUsEmailContent(contactDTO);
+            helper.setText(content, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send contact us email", e);
+        }
+    }
 
+    private String buildContactUsEmailContent(ContactUsDTO contactDTO) {
+        return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
+                "<h2 style='color: #CC0000;'>New Contact Us Message</h2>" +
+                "<div style='background-color: #f8f9fa; padding: 20px; border-left: 4px solid #CC0000; margin: 20px 0;'>" +
+                "<p><strong>From:</strong> " + contactDTO.getEmail() + "</p>" +
+                "<p><strong>Subject:</strong> " + contactDTO.getSubject() + "</p>" +
+                "</div>" +
+                "<div style='background-color: #fff; padding: 20px; border: 1px solid #eee; margin: 20px 0;'>" +
+                "<h3 style='color: #333; margin-top: 0;'>Message:</h3>" +
+                "<p style='line-height: 1.6; color: #555;'>" +
+                contactDTO.getMessage().replace("\n", "<br>") +
+                "</p>" +
+                "</div>" +
+                "<div style='background-color: #f5f5f5; padding: 15px; margin: 20px 0; text-align: center;'>" +
+                "<p style='margin: 0; color: #666;'><strong>Reply directly to this email to respond to the user</strong></p>" +
+                "</div>" +
+                "<hr style='border: none; border-top: 1px solid #eee; margin: 30px 0;'>" +
+                "<p style='color: #999; font-size: 12px; text-align: center;'>CourseGrader - Your BU Course Review Platform</p>" +
+                "</div>";
+    }
 }

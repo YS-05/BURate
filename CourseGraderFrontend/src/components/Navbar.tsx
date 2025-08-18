@@ -30,10 +30,16 @@ const NavBar = () => {
         {/* Desktop Menu */}
         <div className="d-none d-lg-flex align-items-center gap-3">
           <Link to="/search" className="nav-link text-dark m-2 custom-nav-link">
-            Search courses
+            Search Courses
+          </Link>
+          <Link
+            to="/contact"
+            className="nav-link text-dark m-2 custom-nav-link"
+          >
+            Contact
           </Link>
           <Link to="/login" className="nav-link text-dark m-2 custom-nav-link">
-            Log in
+            Log In
           </Link>
           <Link
             to="/register"
@@ -89,14 +95,21 @@ const NavBar = () => {
                 className="nav-link text-dark custom-nav-link"
                 onClick={closeMenu}
               >
-                Search courses
+                Search Courses
+              </Link>
+              <Link
+                to="/contact"
+                className="nav-link text-dark custom-nav-link"
+                onClick={closeMenu}
+              >
+                Contact
               </Link>
               <Link
                 to="/login"
                 className="nav-link text-dark custom-nav-link"
                 onClick={closeMenu}
               >
-                Log in
+                Log In
               </Link>
               <Link
                 to="/register"

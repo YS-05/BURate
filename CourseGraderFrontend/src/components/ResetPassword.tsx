@@ -100,7 +100,7 @@ const ResetPassword = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-outline-danger w-100"
+            className="btn btn-danger w-100"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Updating..." : "Update Password"}

@@ -19,6 +19,9 @@ import Account from "./pages/user/Account";
 import "./App.css";
 import CoursePage from "./pages/shared/CoursePage";
 import Review from "./pages/user/Review";
+import Contact from "./pages/guest/Contact";
+import Privacy from "./pages/guest/Privacy";
+import Terms from "./pages/guest/Terms";
 
 function App() {
   return (
@@ -71,6 +74,9 @@ const AppRoutesBasedOnAuth = () => {
           <Route path="verify" element={<Verify />} />
           <Route path="search" element={<Search />} />
           <Route path="course/:courseId" element={<CoursePage />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="terms" element={<Terms />} />
           <Route path="*" element={<Landing />} />
         </Route>
       )}

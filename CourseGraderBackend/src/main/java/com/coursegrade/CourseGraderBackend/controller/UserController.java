@@ -128,4 +128,12 @@ public class UserController {
         userService.changePassword(currentUser, passwordDTO);
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }
+
+    @DeleteMapping("/delete")
+    private ResponseEntity<Map<String, String>> deleteAccount(
+            @AuthenticationPrincipal User currentUser
+    ) {
+        userService.deleteUser(currentUser.getId());
+        return ResponseEntity.ok(Map.of("message", "Account deleted successfully"));
+    }
 }

@@ -176,3 +176,9 @@ export type UpdatePasswordDTO = {
   oldPassword: string;
   newPassword: string;
 }
+
+export type ContactUsDTO = {
+  email: string;
+  subject: string;
+  message: string;
+}
