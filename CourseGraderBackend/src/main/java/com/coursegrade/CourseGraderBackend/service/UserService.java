@@ -250,7 +250,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         List<Vote> votes = voteRepository.findByUser(user);
         voteRepository.deleteAll(votes);
+        Set<Long> affectedCourseIds = new HashSet<>();
         List<Review> reviews = reviewRepository.findByUser(user);
+        for (Review review : reviews) {
+            affectedCourseIds.add(review.getCourse().getId());
+        }
         reviewRepository.deleteAll(reviews);
         user.getCompletedCourses().clear();
         user.getCoursesInProgress().clear();
@@ -258,5 +262,8 @@ public class UserService {
         user.getHubProgress().clear();
         userRepository.save(user);
         userRepository.delete(user);
+        for (Long courseId : affectedCourseIds) {
+            courseService.updateCourseRatings(courseId);
+        }
     }
 }

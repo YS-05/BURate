@@ -3,10 +3,9 @@ import { CourseDisplayDTO } from "../auth/AuthDTOs";
 
 interface Props {
   courses: CourseDisplayDTO[];
-  onRefresh?: () => void; // Optional refresh callback
 }
 
-const CourseGrid = ({ courses, onRefresh }: Props) => {
+const CourseGrid = ({ courses }: Props) => {
   if (courses.length === 0) {
     return (
       <div
@@ -23,8 +22,8 @@ const CourseGrid = ({ courses, onRefresh }: Props) => {
     <div className="container mt-4 mb-5">
       <div className="row g-4">
         {courses.map((course) => (
-          <div key={course.id} className="col-12 col-md-6 col-lg-4">
-            <GridCard course={course} onRefresh={onRefresh} />
+          <div key={course.id} className="col-12 col-md-6 col-xl-4">
+            <GridCard course={course} />
           </div>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Filter from "../../components/Filter";
 import { fetchFilteredCourses } from "../../api/axios";
 import CourseGrid from "../../components/CourseGrid";
@@ -23,6 +23,10 @@ const Search = () => {
     currentPage: 0,
     pageSize: 18,
   });
+
+  useEffect(() => {
+    handleSearch(filters, currentPage);
+  }, []);
 
   const handleSearch = async (searchFilters = filters, page = 0) => {
     try {

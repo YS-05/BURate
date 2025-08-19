@@ -18,10 +18,9 @@ import {
 
 interface GridCardProps {
   course: CourseDisplayDTO;
-  onRefresh?: () => void; // Optional refresh callback
 }
 
-const GridCard = ({ course, onRefresh }: GridCardProps) => {
+const GridCard = ({ course }: GridCardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -65,9 +64,6 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
         await addCompletedCourse(course.id);
         setIsCompleted(true);
       }
-      if (onRefresh) {
-        onRefresh();
-      }
     } catch (err) {
       console.log("Failed to toggle completed courses", err);
     } finally {
@@ -89,9 +85,6 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
         await addSavedCourse(course.id);
         setIsSaved(true);
       }
-      if (onRefresh) {
-        onRefresh();
-      }
     } catch (error) {
       console.error("Failed to toggle saved status:", error);
     } finally {
@@ -112,9 +105,6 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
       } else {
         await addInProgressCourse(course.id);
         setIsInProgress(true);
-      }
-      if (onRefresh) {
-        onRefresh();
       }
     } catch (error) {
       console.error("Failed to toggle in progress status:", error);
@@ -153,11 +143,12 @@ const GridCard = ({ course, onRefresh }: GridCardProps) => {
           <div className="d-flex align-items-center gap-2">
             {course.noPreReqs && (
               <span className="badge bg-success-subtle text-success">
-                No Pre-reqs
+                No reqs
               </span>
             )}
             <span className="text-muted small">
-              {course.numReviews} reviews
+              {course.numReviews}{" "}
+              {course.numReviews === 1 ? "review" : "reviews"}
             </span>
           </div>
         </div>
