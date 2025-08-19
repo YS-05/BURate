@@ -1,9 +1,11 @@
 package com.coursegrade.CourseGraderBackend.service;
 
 import com.coursegrade.CourseGraderBackend.dto.UserResponseDTO;
+import com.coursegrade.CourseGraderBackend.model.PasswordResetToken;
 import com.coursegrade.CourseGraderBackend.model.Role;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.model.VerificationToken;
+import com.coursegrade.CourseGraderBackend.repository.PasswordResetTokenRepository;
 import com.coursegrade.CourseGraderBackend.repository.UserRepository;
 import com.coursegrade.CourseGraderBackend.repository.VerificationTokenRepository;
 import com.coursegrade.CourseGraderBackend.security.JwtService;
@@ -24,6 +26,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -113,28 +116,28 @@ public class AuthService {
     @Transactional
     public void requestPasswordReset(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("No account with this email"));
-        verificationTokenRepository.findByUser(user).ifPresent(verificationTokenRepository::delete);
+                .orElseThrow(() -> new RuntimeException("No account found with this email."));
+        passwordResetTokenRepository.findByUser(user).ifPresent(passwordResetTokenRepository::delete);
         String verificationCode = generateVerificationCode();
-        VerificationToken token = new VerificationToken(verificationCode, user);
-        verificationTokenRepository.save(token);
-        emailService.sendPasswordResetEmail(user, verificationCode);
+        PasswordResetToken token = new PasswordResetToken(verificationCode, user);
+        passwordResetTokenRepository.save(token);
+        emailService.sendPasswordResetEmail(email, verificationCode);
     }
 
     @Transactional
     public void resetPassword(String email, String resetCode, String newPassword) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email not found"));
-        VerificationToken token = verificationTokenRepository.findByUser(user)
+        PasswordResetToken token = passwordResetTokenRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Verification token not found"));
         if (token.isExpired()) {
-            verificationTokenRepository.delete(token);
+            passwordResetTokenRepository.delete(token);
             throw new RuntimeException("Reset password token is expired");
         }
         if (!resetCode.equals(token.getToken())) {
             throw new RuntimeException("Reset code is incorrect");
         }
-        verificationTokenRepository.delete(token);
+        passwordResetTokenRepository.delete(token);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

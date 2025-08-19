@@ -84,13 +84,13 @@ public class EmailService { // TODO: Better description for verification email +
         }
     }
 
-    public void sendPasswordResetEmail(User user, String resetCode) {
+    public void sendPasswordResetEmail(String email, String resetCode) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom(from);
-            helper.setTo(user.getEmail());
+            helper.setTo(email);
             helper.setSubject("Reset Your CourseGrader Password");
 
             String content = "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
