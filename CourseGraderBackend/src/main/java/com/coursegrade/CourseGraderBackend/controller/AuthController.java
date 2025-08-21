@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/resend-verification")
-    public ResponseEntity<Map<String, String>> resendVerification(@RequestBody @Valid ResendVerificationOrPasswordDTO request) {
+    public ResponseEntity<Map<String, String>> resendVerification(@RequestParam @Valid ResendVerificationOrPasswordDTO request) {
         authService.resendVerificationEmail(request.getEmail());
         return ResponseEntity.ok(Map.of(
                 "message", "Verification code sent! Please check your email"
@@ -60,8 +60,8 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody @Valid ResendVerificationOrPasswordDTO request) {
-        authService.requestPasswordReset(request.getEmail());
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestParam String email) {
+        authService.requestPasswordReset(email);
         return ResponseEntity.ok(Map.of(
                 "message", "Check your email to set a new password!"
         ));

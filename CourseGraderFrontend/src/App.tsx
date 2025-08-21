@@ -22,6 +22,8 @@ import Review from "./pages/user/Review";
 import Contact from "./pages/guest/Contact";
 import Privacy from "./pages/guest/Privacy";
 import Terms from "./pages/guest/Terms";
+import Reset from "./pages/guest/Reset";
+import SetPassword from "./pages/guest/SetPassword";
 
 function App() {
   return (
@@ -72,6 +74,8 @@ const AppRoutesBasedOnAuth = () => {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="verify" element={<Verify />} />
+          <Route path="reset" element={<Reset />}></Route>
+          <Route path="reset-password" element={<SetPassword />} />
           <Route path="search" element={<Search />} />
           <Route path="course/:courseId" element={<CoursePage />} />
           <Route path="contact" element={<Contact />} />

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO, PasswordResetDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api", 
@@ -142,7 +142,13 @@ export const sendContactMessage = async (contactData: ContactUsDTO): Promise<{ m
 export const updatePassword = async (passwordData: UpdatePasswordDTO) => 
   api.put('/auth/update-password', passwordData);
 
+export const resetPassword = (data: PasswordResetDTO) => 
+  api.post("/auth/reset-password", data);
+
 export const deleteUser = async () => api.delete("/users/delete");
+
+export const forgotPassword = (email: string) => 
+  api.post(`/auth/forgot-password?email=${email}`);
 
 export const fetchFilteredCourses = (filters: {
   colleges?: string[];
