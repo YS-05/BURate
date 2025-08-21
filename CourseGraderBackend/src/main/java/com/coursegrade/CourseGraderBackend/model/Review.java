@@ -57,7 +57,9 @@ public class Review {
     }
 
     public Double getOverallRating() {
-        return (usefulnessRating + difficultyRating + workloadRating
+        int invertedDifficulty = 6 - difficultyRating;
+        int invertedWorkload = 6 - workloadRating;
+        return (usefulnessRating + invertedDifficulty + invertedWorkload
                 + interestRating + teacherRating) / 5.0;
     }
 }
