@@ -29,10 +29,8 @@ class CollegeRepositoryTest {
         // Given
         College college = createTestCollege("College of Arts & Sciences",
                 Set.of("Computer Science", "Mathematics", "Physics"));
-
         // When
         College saved = collegeRepository.save(college);
-
         // Then
         assertThat(saved.getFullName()).isEqualTo("College of Arts & Sciences");
         assertThat(saved.getMajors()).hasSize(3);
