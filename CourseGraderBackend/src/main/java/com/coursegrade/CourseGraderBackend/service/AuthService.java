@@ -30,7 +30,6 @@ public class AuthService {
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final CourseService courseService;
 
     @Transactional
     public void register(String email, String college, String major, Integer expectedGrad, String password) {
@@ -93,6 +92,12 @@ public class AuthService {
             response.put("token", token);
             response.put("user", convertToUserResponseDTO(user));
             return response;
+        } catch (RuntimeException e) {
+            if ("Please verify your email before logging in".equals(e.getMessage())) {
+                throw e;
+            }
+            System.out.println("Login error: " + e.getMessage());
+            throw new RuntimeException("Invalid username or password");
         } catch (Exception e) {
             System.out.println("Login error: " + e.getMessage());
             throw new RuntimeException("Invalid username or password");
