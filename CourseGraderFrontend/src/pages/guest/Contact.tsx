@@ -40,7 +40,7 @@ const Contact = () => {
       reset();
       setSuccess(response.message);
     } catch (err: any) {
-      console.error("Failed to send message:", err);
+      console.log(err);
       setError(
         err.response?.data?.message ||
           "Failed to send message. Please try again."

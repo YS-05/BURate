@@ -28,6 +28,7 @@ type RegisterForm = z.infer<typeof schema>;
 const Register = () => {
   const [colleges, setColleges] = useState<string[]>([]);
   const [majors, setMajors] = useState<string[]>([]);
+  const [error, setError] = useState("");
 
   const {
     register,
@@ -71,6 +72,7 @@ const Register = () => {
 
   const onSubmit = async (formData: RegisterForm) => {
     try {
+      setError(""); // Clear any previous errors
       const res = await api.post("/auth/register", formData);
       console.log(res.data.message);
       localStorage.setItem("verificationEmail", formData.email); // save email so autofills /verify email
@@ -79,7 +81,7 @@ const Register = () => {
     } catch (error: any) {
       const message =
         error.response?.data?.message || "Registration failed. Try again.";
-      console.log(message);
+      setError(message);
     }
   };
 
@@ -185,6 +187,7 @@ const Register = () => {
           >
             {isSubmitting ? "Registering..." : "Register"}
           </button>
+          {error && <div className="text-danger text-center mb-4">{error}</div>}
         </form>
         <div className="text-center">
           <span className="text-muted">Already have an account? </span>

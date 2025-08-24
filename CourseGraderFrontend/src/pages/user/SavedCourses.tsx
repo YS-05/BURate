@@ -95,7 +95,7 @@ const SavedCourses = () => {
           </div>
         </div>
       ) : (
-        <CourseGrid courses={savedCourses} onRefresh={loadSavedCourses} />
+        <CourseGrid courses={savedCourses} />
       )}
     </div>
   );

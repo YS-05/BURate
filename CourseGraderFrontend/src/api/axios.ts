@@ -20,9 +20,9 @@ api.interceptors.request.use((config) => {
 });
 
 export const fetchDashboardData = async (): Promise<UserDashboardDTO> => {
-  const response = await api.get<UserDashboardDTO>("/users/dashboard")
-  return response.data
-}
+  const response = await api.get<UserDashboardDTO>("/users/dashboard");
+  return response.data;
+};
 
 export const addCompletedCourse = (courseId: string) => api.post(`/users/completed-courses/${courseId}`);
 
@@ -37,18 +37,18 @@ export const removeSavedCourse = (courseId: string) => api.delete(`/users/saved-
 export const removeInProgressCourse = (courseId: string) => api.delete(`/users/courses-in-progress/${courseId}`);
 
 export const fetchCourseById = async (courseId: string): Promise<CourseDTO> => {
- const response = await api.get<CourseDTO>(`/courses/${courseId}`);
- return response.data;
+  const response = await api.get<CourseDTO>(`/courses/${courseId}`);
+  return response.data;
 };
 
 export const createReview = async (courseId: string, reviewData: CreateReviewDTO): Promise<ReviewResponseDTO> => {
- const response = await api.post<ReviewResponseDTO>(`/reviews/course/${courseId}`, reviewData);
- return response.data;
+  const response = await api.post<ReviewResponseDTO>(`/reviews/course/${courseId}`, reviewData);
+  return response.data;
 };
 
 export const deleteReview = async (reviewId: string): Promise<{ message: string }> => {
- const response = await api.delete<{ message: string }>(`/reviews/${reviewId}`);
- return response.data;
+  const response = await api.delete<{ message: string }>(`/reviews/${reviewId}`);
+  return response.data;
 };
 
 export const updateReview = async (reviewId: string, reviewData: CreateReviewDTO): Promise<ReviewResponseDTO> => {
@@ -91,7 +91,7 @@ export const voteOnReview = async (reviewId: string, voteType: string): Promise<
 export const fetchTeachersByCourse = async (courseId: string): Promise<string[]> => {
   const response = await api.get(`/reviews/course/${courseId}/teachers`);
   return response.data;
-}
+};
 
 export const fetchCourseReviews = async (courseId: string, teacherName?: string): Promise<ReviewResponseDTO[]> => {
   const params = new URLSearchParams();
@@ -101,7 +101,7 @@ export const fetchCourseReviews = async (courseId: string, teacherName?: string)
   const url = `/reviews/course/${courseId}${params.toString() ? `?${params.toString()}` : ''}`;
   const response = await api.get<ReviewResponseDTO[]>(url);
   return response.data;
-}
+};
 
 export const fetchMyReviews = async (): Promise<ReviewResponseDTO[]> => {
   const response = await api.get<ReviewResponseDTO[]>("/reviews/my-reviews");
@@ -124,10 +124,10 @@ export const fetchDepartmentsByCollege = (college: string) =>
 export const getAccount = async (): Promise<AccountDTO> => {
   const response = await api.get<AccountDTO>("/users/account");
   return response.data;
-}
+};
 
-export const updateAccount = async (accountInfo: AccountDTO) => 
- api.put('/users/account', accountInfo);
+export const updateAccount = (accountInfo: AccountDTO) => 
+  api.put('/users/account', accountInfo);
 
 export const fetchHubProgress = async (): Promise<HubProgressDTO> => {
   const response = await api.get<HubProgressDTO>("/users/hub-progress");
@@ -139,13 +139,13 @@ export const sendContactMessage = async (contactData: ContactUsDTO): Promise<{ m
   return response.data;
 };
 
-export const updatePassword = async (passwordData: UpdatePasswordDTO) => 
+export const updatePassword = (passwordData: UpdatePasswordDTO) => 
   api.put('/auth/update-password', passwordData);
 
 export const resetPassword = (data: PasswordResetDTO) => 
   api.post("/auth/reset-password", data);
 
-export const deleteUser = async () => api.delete("/users/delete");
+export const deleteUser = () => api.delete("/users/delete");
 
 export const forgotPassword = (email: string) => 
   api.post(`/auth/forgot-password?email=${email}`);
@@ -212,6 +212,6 @@ export const fetchFilteredCourses = (filters: {
   params.append("page", page.toString());
 
   return api.get(`/courses/search?${params.toString()}`);
-}
+};
 
 export default api;

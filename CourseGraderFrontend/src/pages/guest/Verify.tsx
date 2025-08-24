@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,6 +15,8 @@ const schema = z.object({
 type VerifyForm = z.infer<typeof schema>;
 
 const Verify = () => {
+  const [error, setError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -35,11 +37,12 @@ const Verify = () => {
   const onSubmit = async (formData: VerifyForm) => {
     try {
       const res = await api.post("/auth/verify", formData);
-      alert(res.data.message);
       localStorage.removeItem("verificationEmail"); // 🧹 clean up
       window.location.href = "/login";
-    } catch (error: any) {
-      alert("Verification failed");
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message || "Failed to verify, try again later";
+      setError(message);
     }
   };
 
@@ -88,6 +91,7 @@ const Verify = () => {
           >
             {isSubmitting ? "Verifying..." : "Verify Account"}
           </button>
+          {error && <div className="text-danger text-center mb-4">{error}</div>}
         </form>
       </div>
     </div>

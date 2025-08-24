@@ -33,9 +33,10 @@ const Reset = () => {
       await forgotPassword(data.email);
       localStorage.setItem("resetEmail", data.email);
       navigate("/reset-password");
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
-      setError("No account found with this email");
+      const message = err.response?.data?.message;
+      setError(message || "Reset failed, please try again later");
     } finally {
       setLoading(false);
     }

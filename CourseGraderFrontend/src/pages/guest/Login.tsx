@@ -36,6 +36,7 @@ const Login = () => {
       reset();
       navigate("/dashboard");
     } catch (error: any) {
+      console.log(error);
       const message =
         error.response?.data?.message || "Incorrect email or password";
       setLoginError(message);

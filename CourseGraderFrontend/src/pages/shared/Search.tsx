@@ -41,7 +41,7 @@ const Search = () => {
       });
       setCurrentPage(page);
     } catch (err) {
-      console.error("Error fetching filtered courses", err);
+      console.error("Error fetching filtered courses");
     } finally {
       setLoading(false);
     }

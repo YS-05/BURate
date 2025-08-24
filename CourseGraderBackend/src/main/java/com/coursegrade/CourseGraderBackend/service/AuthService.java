@@ -78,28 +78,32 @@ public class AuthService {
     }
 
     @Transactional
-    public Map<String, Object> login(String email, String password) { // TODO: Implement more features here and checks
+    public Map<String, Object> login(String email, String password) {
+        boolean enabledError = false;
         try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            User user = (User) auth.getPrincipal();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new RuntimeException("Invalid username or password");
+            }
+
             if (!user.isEnabled()) {
+                enabledError = true;
                 throw new RuntimeException("Please verify your email before logging in");
             }
+
             String token = jwtService.generateToken(user);
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("user", convertToUserResponseDTO(user));
             return response;
-        } catch (RuntimeException e) {
-            if ("Please verify your email before logging in".equals(e.getMessage())) {
-                throw e;
-            }
-            System.out.println("Login error: " + e.getMessage());
-            throw new RuntimeException("Invalid username or password");
         } catch (Exception e) {
-            System.out.println("Login error: " + e.getMessage());
+            if (enabledError) {
+                System.out.println("User is not enabled");
+                throw new RuntimeException("Please verify your email before logging in");
+            }
+            System.out.println("Invalid username or password is thrown");
             throw new RuntimeException("Invalid username or password");
         }
     }

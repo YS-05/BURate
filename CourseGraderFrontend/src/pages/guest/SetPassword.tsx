@@ -52,9 +52,11 @@ const SetPassword = () => {
       });
       localStorage.removeItem("resetEmail");
       navigate("/login");
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
-      setError("Invalid reset code or expired");
+      const message =
+        err.response?.data?.message || "Reset failed, try again later";
+      setError(message);
     } finally {
       setLoading(false);
     }
