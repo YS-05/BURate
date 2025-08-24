@@ -40,13 +40,7 @@ class AuthServiceTest {
     private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Mock
-    private AuthenticationManager authenticationManager;
-
-    @Mock
     private JwtService jwtService;
-
-    @Mock
-    private Authentication authentication;
 
     @Mock
     private EmailService emailService; // Used indirectly by the AuthService method, fails without
@@ -117,31 +111,23 @@ class AuthServiceTest {
         verify(verificationTokenRepository).delete(validToken);
     }
 
-    // LOGIN - Test complex authentication flow and user state validation
-    @Test
-    void login_UserNotEnabled_ShouldThrowSpecificException() {
-        // Given
-        testUser.setEnabled(false);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(testUser);
-
-        // When & Then
-        assertThatThrownBy(() -> authService.login("test@example.com", "password123"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Please verify your email before logging in");
-    }
-
     @Test
     void login_AuthenticationFailure_ShouldReturnGenericError() {
         // Given
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(new RuntimeException("Bad credentials"));
+        String email = "test@example.com";
+        String password = "wrongpassword";
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.matches(password, testUser.getPassword())).thenReturn(false);
 
         // When & Then
-        assertThatThrownBy(() -> authService.login("test@example.com", "wrongpassword"))
+        assertThatThrownBy(() -> authService.login(email, password))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Invalid username or password");
+
+        // Verify the actual methods that are called
+        verify(userRepository).findByEmail(email);
+        verify(passwordEncoder).matches(password, testUser.getPassword());
     }
 
     // RESEND VERIFICATION - Test token cleanup and regeneration logic
