@@ -58,7 +58,7 @@ public class ReviewService {
         String[] split = teacherName.split(" ");
         for (int i = 0; i < split.length; i++) {
             if (i > 0) formattedTeacher += " ";
-            String firstUpper = split[i].substring(0, 1).toUpperCase() + split[i].substring(1);
+            String firstUpper = split[i].substring(0, 1).toUpperCase() + split[i].substring(1).toLowerCase();
             formattedTeacher += firstUpper;
         }
         return formattedTeacher;
