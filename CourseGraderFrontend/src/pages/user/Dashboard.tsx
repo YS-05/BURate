@@ -203,7 +203,6 @@ const Dashboard = () => {
                   </div>
                 </div>
               )}
-            {/* Add last case here to display course names when functionality for adding courses is done */}
             {dashboardData && dashboardData.coursesToReview.size > 0 && (
               <div className="card border-4 rounded-0 border-danger">
                 <div className="card-body p-4">
@@ -219,18 +218,10 @@ const Dashboard = () => {
                           className="col-12 col-md-6 col-lg-4"
                         >
                           <div className="card bg-light border-2 border-danger rounded-0">
-                            <div className="card-body text-center p-3">
-                              <h6 className="text-muted mb-2">
+                            <div className="card-body d-flex align-items-center justify-content-center p-3">
+                              <h6 className="text-muted mb-0">
                                 Course Name: {courseId}
                               </h6>
-                              <button
-                                className="btn btn-danger btn-sm"
-                                onClick={() =>
-                                  navigate(`/course/${courseId}/review`)
-                                }
-                              >
-                                Write Review
-                              </button>
                             </div>
                           </div>
                         </div>

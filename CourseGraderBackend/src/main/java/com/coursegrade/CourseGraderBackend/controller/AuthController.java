@@ -52,8 +52,8 @@ public class AuthController {
     }
 
     @PostMapping("/resend-verification")
-    public ResponseEntity<Map<String, String>> resendVerification(@RequestParam @Valid ResendVerificationOrPasswordDTO request) {
-        authService.resendVerificationEmail(request.getEmail());
+    public ResponseEntity<Map<String, String>> resendVerification(@RequestParam String email) {
+        authService.resendVerificationEmail(email);
         return ResponseEntity.ok(Map.of(
                 "message", "Verification code sent! Please check your email"
         ));

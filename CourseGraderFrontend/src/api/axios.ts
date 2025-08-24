@@ -26,6 +26,12 @@ export const fetchDashboardData = async (): Promise<UserDashboardDTO> => {
 
 export const addCompletedCourse = (courseId: string) => api.post(`/users/completed-courses/${courseId}`);
 
+export const verifyAccount = (verificationData: { email: string; verificationCode: string }) => 
+  api.post("/auth/verify", verificationData);
+
+export const resendVerification = (email: string) => 
+  api.post(`/auth/resend-verification?email=${email}`);
+
 export const addSavedCourse = (courseId: string) => api.post(`/users/saved-courses/${courseId}`);
 
 export const addInProgressCourse = (courseId: string) => api.post(`/users/courses-in-progress/${courseId}`);
