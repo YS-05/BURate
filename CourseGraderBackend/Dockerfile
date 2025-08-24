@@ -12,8 +12,8 @@ RUN chmod +x ./gradlew
 # Copy source code
 COPY src/ src/
 
-# Build the application
-RUN ./gradlew clean build
+# Build the application WITHOUT running tests as DB not setup when deploying backend
+RUN ./gradlew clean build -x test
 
 # Copy the JAR file (not the plain one)
 RUN cp build/libs/CourseGraderBackend-*-SNAPSHOT.jar app.jar
