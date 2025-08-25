@@ -2,19 +2,13 @@ package com.coursegrade.CourseGraderBackend.service;
 
 import com.coursegrade.CourseGraderBackend.dto.*;
 import com.coursegrade.CourseGraderBackend.model.*;
-import com.coursegrade.CourseGraderBackend.repository.CourseRepository;
-import com.coursegrade.CourseGraderBackend.repository.ReviewRepository;
-import com.coursegrade.CourseGraderBackend.repository.UserRepository;
-import com.coursegrade.CourseGraderBackend.repository.VoteRepository;
+import com.coursegrade.CourseGraderBackend.repository.*;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +20,7 @@ public class UserService {
     private final CourseService courseService;
     private final ReviewRepository reviewRepository;
     private final VoteRepository voteRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Transactional
     public HubProgressDTO getHubProgress(Long userId) {
@@ -256,6 +251,8 @@ public class UserService {
             affectedCourseIds.add(review.getCourse().getId());
         }
         reviewRepository.deleteAll(reviews);
+        Optional<PasswordResetToken> token = passwordResetTokenRepository.findByUser(user);
+        token.ifPresent(passwordResetTokenRepository::delete);
         user.getCompletedCourses().clear();
         user.getCoursesInProgress().clear();
         user.getSavedCourses().clear();

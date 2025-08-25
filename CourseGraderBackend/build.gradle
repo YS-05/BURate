@@ -42,6 +42,9 @@ dependencies {
 	implementation "org.jsoup:jsoup:1.15.3"
 	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 	testImplementation 'com.h2database:h2' // For JUnit Testing only
+	implementation 'com.resend:resend-java:3.0.0'
+	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
 }
 
 tasks.named('test') {
