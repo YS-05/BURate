@@ -59,9 +59,9 @@ public class EmailService {
 
     public void sendVerificationEmail(User user, String verificationCode) {
         String content = "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
-                "<h2 style='color: #4f46e5;'>Welcome to BU Rate! 🎓</h2>" +
+                "<h2 style='color: #dc2626;'>Welcome to BU Rate! 🎓</h2>" +
                 "<p>Thank you for registering. Please use the verification code below to complete your registration:</p>" +
-                "<div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; font-size: 32px; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0; border-radius: 10px;'>" +
+                "<div style='background: linear-gradient(135deg, #ffffff 0%, #dc2626 100%); color: #1f2937; padding: 20px; font-size: 32px; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0; border-radius: 10px;'>" +
                 verificationCode +
                 "</div>" +
                 "<p style='color: #dc2626; font-weight: bold;'>⏰ This code will expire in 15 minutes.</p>" +
@@ -74,11 +74,12 @@ public class EmailService {
     }
 
     public void resendVerificationEmail(User user, String verificationCode) {
+
         String content = "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
-                "<h2 style='color: #ec4899;'>Verification Code Resent 📧</h2>" +
+                "<h2 style='color: #dc2626;'>Verification Code Resent 📧</h2>" +
                 "<p>Hi there,</p>" +
                 "<p>You requested a new verification code. Please use the code below to complete your registration:</p>" +
-                "<div style='background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; font-size: 32px; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0; border-radius: 10px;'>" +
+                "<div style='background: linear-gradient(135deg, #ffffff 0%, #dc2626 100%); color: #1f2937; padding: 20px; font-size: 32px; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0; border-radius: 10px;'>" +
                 verificationCode +
                 "</div>" +
                 "<p style='color: #dc2626; font-weight: bold;'>⏰ This code will expire in 15 minutes.</p>" +
@@ -98,7 +99,7 @@ public class EmailService {
                 "<div style='background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 20px; font-size: 32px; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0; border-radius: 10px;'>" +
                 resetCode +
                 "</div>" +
-                "<p style='color: #dc2626; font-weight: bold;'>⏰ This code will expire in 1 hour for security reasons.</p>" +
+                "<p style='color: #dc2626; font-weight: bold;'>⏰ This code will expire in 15 minutes for security reasons.</p>" +
                 "<p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>" +
                 "<hr style='border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;'>" +
                 "<p style='color: #6b7280; font-size: 12px; text-align: center;'>© 2025 BU Rate - Your BU Course Review Platform</p>" +
