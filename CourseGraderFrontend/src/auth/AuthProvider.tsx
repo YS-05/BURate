@@ -25,14 +25,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("token", token);
     try {
       const res = await api.get("/auth/me");
-
-      // Your original function checked res.ok, but axios throws on non-2xx status codes
-      // so if we get here, the request was successful
       const data: User = res.data;
       setUser(data);
     } catch (err) {
       console.log("Failed to log in", err);
-      logout(); // This handles the same cleanup as your original
+      logout();
     }
   };
 
