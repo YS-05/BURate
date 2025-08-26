@@ -24,7 +24,7 @@ public class WebScraperService {
         scrapeMajors();
         List<String> courseUrls = new ArrayList<>();
         courseNames(courseUrls, "https://www.bu.edu/academics/cas/courses/",  "CAS"); // For College of Arts & Sciences
-       /* courseNames(courseUrls, "https://www.bu.edu/academics/khc/courses/", "KHC"); // For Arvind & Chandan Nandlal Kilachand Honors College
+        courseNames(courseUrls, "https://www.bu.edu/academics/khc/courses/", "KHC"); // For Arvind & Chandan Nandlal Kilachand Honors College
         courseNames(courseUrls, "https://www.bu.edu/academics/hub/courses/",  "HUB"); // For BU Hub
         courseNames(courseUrls, "https://www.bu.edu/academics/camed/courses/", "MED"); // For Chobanian & Avedisian School of Medicine
         courseNames(courseUrls, "https://www.bu.edu/academics/com/courses/", "COM"); // For College of Communications
