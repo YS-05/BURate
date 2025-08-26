@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { CourseDisplayDTO, HubRequirement } from "./AuthDTOs";
+import api from "../api/axios";
 
 export type User = {
   id: number;
@@ -23,26 +24,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (token: string) => {
     localStorage.setItem("token", token);
     try {
-      const res = await fetch("http://localhost:8080/api/auth/me", {
-        // Replace with actual url when deploying instead of localhost
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get("/auth/me");
 
-      if (!res.ok) {
-        // Checks if response is 200-299 status code
-        logout();
-        return;
-      }
-
-      const data: User = await res.json();
+      // Your original function checked res.ok, but axios throws on non-2xx status codes
+      // so if we get here, the request was successful
+      const data: User = res.data;
       setUser(data);
     } catch (err) {
       console.log("Failed to log in", err);
-      logout();
+      logout(); // This handles the same cleanup as your original
     }
   };
+
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
