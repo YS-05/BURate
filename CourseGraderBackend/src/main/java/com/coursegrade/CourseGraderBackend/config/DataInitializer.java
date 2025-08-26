@@ -19,7 +19,7 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if (courseService.getAllCourses().size() < 2000 || collegeRepository.count() == 0L) {
+        if (courseService.getAllCourses().size() < 7500 || collegeRepository.count() == 0L) {
             System.out.println("Missing data. Starting scraping...");
             webScraperService.wrapperScrape();
             System.out.println("Data initialization completed.");

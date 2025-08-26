@@ -43,7 +43,7 @@ public class WebScraperService {
         courseNames(courseUrls, "https://www.bu.edu/academics/sph/courses/", "SPH"); // For School of Public Health
         courseNames(courseUrls, "https://www.bu.edu/academics/ssw/courses/", "SSW"); // For School of Social Work
         courseNames(courseUrls, "https://www.bu.edu/academics/sth/courses/", "STH"); // For School of Theology
-        courseNames(courseUrls, "https://www.bu.edu/academics/wheelock/courses/", "WED"); // For Wheelock College of Education & Human Development */
+        courseNames(courseUrls, "https://www.bu.edu/academics/wheelock/courses/", "WED"); // For Wheelock College of Education & Human Development
         courseHubsAndDescription(courseUrls);
     }
 
@@ -99,6 +99,7 @@ public class WebScraperService {
         else return college.get();
     }
 
+    @Transactional
     public void courseNames(List<String> courseUrls, String baseUrl, String college) {
         int numPages = getPageCount(baseUrl);
         System.out.println("Number of pages: " + numPages);
