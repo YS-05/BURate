@@ -143,7 +143,7 @@ const GridCard = ({ course }: GridCardProps) => {
           <div className="d-flex align-items-center gap-2">
             {course.noPreReqs && (
               <span className="badge bg-success-subtle text-success">
-                No reqs
+                No prereq
               </span>
             )}
             <span className="text-muted small">
