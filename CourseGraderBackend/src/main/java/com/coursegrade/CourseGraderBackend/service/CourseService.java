@@ -290,10 +290,12 @@ public class CourseService {
                 course.getAverageTeacherRating()) / 5.0;
     }
 
+    @Transactional
     public Course saveScrapedCourse(String college, String department, String courseNum, String title, String baseUrl) {
         return createCourse(title, college, department, courseNum, baseUrl);
     }
 
+    @Transactional
     public Course updateCourseWithHubReqsAndDescription(String baseUrl, List<String> hubNames, String description) {
         Optional<Course> courseOptional = courseRepository.findByBaseUrl(baseUrl);
         if (courseOptional.isEmpty()) {

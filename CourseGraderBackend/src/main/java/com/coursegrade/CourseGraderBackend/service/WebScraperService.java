@@ -35,7 +35,7 @@ public class WebScraperService {
         courseNames(courseUrls, "https://www.bu.edu/academics/gms/courses/", "GMS"); // For Graduate Medical Sciences
         courseNames(courseUrls, "https://www.bu.edu/academics/grs/courses/", "CAS"); // For Graduate School of Arts & Sciences
         courseNames(courseUrls, "https://www.bu.edu/academics/sdm/courses/", "SDM"); // For Henry M. Goldman School of Dental Medicine
-        courseNames(courseUrls, "https://www.bu.edu/academics/met/courses/", "GMS"); // For Metropolitan College & Extended Education
+        courseNames(courseUrls, "https://www.bu.edu/academics/met/courses/", "MET"); // For Metropolitan College & Extended Education
         courseNames(courseUrls, "https://www.bu.edu/academics/questrom/courses/", "QST"); // For Questrom School of Business
         courseNames(courseUrls, "https://www.bu.edu/academics/sar/courses/", "SAR"); // For Sargent College of Health & Rehabilitation Sciences
         courseNames(courseUrls, "https://www.bu.edu/academics/sha/courses/", "SHA"); // For School of Hospitality Administration
@@ -112,7 +112,7 @@ public class WebScraperService {
                 doc.select("a").forEach(element -> {
                     String title = element.text();
                     String href = element.attr("href");
-                    if ((title.contains(college) || title.contains("MET")) && href.contains("/courses/")) {
+                    if ((title.contains(college) || title.contains("GMS")) && href.contains("/courses/")) {
                         String fullUrl = "https://www.bu.edu" + href;
                         courseUrls.add(fullUrl);
                         System.out.println(title);
@@ -156,6 +156,7 @@ public class WebScraperService {
         return 1;
     }
 
+    @Transactional
     public void courseHubsAndDescription(List<String> courseUrls) {
         for (String courseUrl : courseUrls) {
             try {
@@ -196,6 +197,7 @@ public class WebScraperService {
         }
     }
 
+    @Transactional
     public void courseDetailsSave(String title, String url) {
         String[] sub = title.split(" ");
         System.out.println("College: " + sub[0]);
