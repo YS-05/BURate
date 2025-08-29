@@ -92,6 +92,14 @@ const Register = () => {
     >
       <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
         <h2 className="text-center mb-4">Sign up to start rating BU courses</h2>
+
+        <div className="alert mb-4" role="alert">
+          <div className="text-muted text-center">
+            Recommended: Register with your personal account as you might not
+            get the verification code at bu email
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mb-2">
             <label className="form-label">Email address:</label>

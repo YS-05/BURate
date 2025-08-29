@@ -361,7 +361,7 @@ const Terms = () => {
                       We respect intellectual property rights and expect users
                       to do the same. If you believe your intellectual property
                       has been infringed, please contact us at
-                      yash23sharma05@gmail.com.
+                      bucourserate@gmail.com.
                     </p>
                   </section>
 
@@ -460,8 +460,8 @@ const Terms = () => {
                     </p>
                     <div className="alert alert-light">
                       <strong>Email:</strong>{" "}
-                      <a href="mailto:yash23sharma05@gmail.com">
-                        yash23sharma05@gmail.com
+                      <a href="mailto:bucourserate@gmail.com">
+                        bucourserate@gmail.com
                       </a>
                       <br />
                       <strong>Subject Line:</strong> Terms of Service Inquiry

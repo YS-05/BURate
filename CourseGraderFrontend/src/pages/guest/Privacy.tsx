@@ -389,8 +389,8 @@ const Privacy = () => {
                     </p>
                     <div className="alert alert-light">
                       <strong>Email:</strong>{" "}
-                      <a href="mailto:yash23sharma05@gmail.com">
-                        yash23sharma05@gmail.com
+                      <a href="mailto:bucourserate@gmail.com">
+                        bucourserate@gmail.com
                       </a>
                       <br />
                       <strong>Subject Line:</strong> Privacy Policy Inquiry

@@ -56,7 +56,7 @@ const Contact = () => {
       <div className="container mt-4 mb-4" style={{ width: "80%" }}>
         <h2 className="text-center mb-4">Contact</h2>
         <p className="text-muted text-center mb-4">
-          I'm always eager to hear from CourseGrader users! Whether you have
+          I'm always eager to hear from BU Rate users! Whether you have
           questions, suggestions for improvements, or just want to share your
           experience, I'd love to connect. Your feedback helps make this
           platform better for the entire BU community.
