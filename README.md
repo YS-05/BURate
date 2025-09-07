@@ -140,12 +140,10 @@ npm start
 
 ## Contact
 
-**Yash Sharma** - [ysharma@bu.edu](mailto:ysharma@bu.edu)
+**Yash Sharma** - [ysharma@bu.edu](mailto:ysharma@bu.edu) - [LinkedIn] [https://www.linkedin.com/in/yash-sharma-ys05/]
 
 **Project Link**: [https://github.com/YS-05/BURate](https://github.com/YS-05/BURate)
 
 **Live Application**: [burate.org](https://burate.org)
 
 ---
-
-Built with ❤️ for the BU community
