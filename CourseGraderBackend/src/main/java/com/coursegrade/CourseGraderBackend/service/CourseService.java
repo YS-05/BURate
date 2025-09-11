@@ -237,6 +237,74 @@ public class CourseService {
         return new PageImpl<>(dtos.subList(start, end), pageable, dtos.size());
     }
 
+    public Page<CourseDisplayDTO> searchQuery(String query, Pageable pageable) {
+        if (query == null || query.isEmpty()) {
+            return getAllCoursesPaginated(pageable);
+        }
+        String normalizedQuery = query.trim().toUpperCase();
+        String[] queryParts = normalizedQuery.split("\\s+"); // Split on whitespaces
+        List<Course> allCourses = getAllCourses();
+        List<Course> matchingCourses = new ArrayList<>();
+        if (queryParts.length == 3) {
+            if (queryParts[0].length() == 3 && queryParts[1].length() == 2) {
+                String college = queryParts[0];
+                String department = queryParts[1];
+                String courseCode = queryParts[2];
+                for (Course course : allCourses) {
+                    if (course.getCollege().equals(college) && course.getDepartment().equals(department) && course.getCourseCode().equals(courseCode)) {
+                        matchingCourses.add(course);
+                        break;
+                    }
+                }
+            }
+        }
+        if (queryParts.length == 2) {
+            if (queryParts[0].length() == 2 && queryParts[1].length() == 3) {
+                String department = queryParts[0];
+                String courseCode = queryParts[1];
+                for (Course course : allCourses) {
+                    if (course.getDepartment().equals(department) && course.getCourseCode().equals(courseCode)) {
+                        matchingCourses.add(course);
+                    }
+                }
+            }
+        }
+        if (queryParts.length == 1) {
+            String courseCode = queryParts[0];
+            for (Course course : allCourses) {
+                if (course.getCourseCode().equals(courseCode)) {
+                    matchingCourses.add(course);
+                }
+            }
+        }
+        for (Course course : allCourses) {
+            String courseTitle = course.getTitle().toUpperCase();
+            if (courseTitle.contains(normalizedQuery)) {
+                matchingCourses.add(course);
+            }
+        }
+        List<CourseDisplayDTO> dtos = new ArrayList<>();
+        for (Course course : matchingCourses) {
+            CourseDisplayDTO dto = convertToDisplayDTO(course);
+            dtos.add(dto);
+        }
+        dtos.sort((a, b) -> {
+            try {
+                int aCode = Integer.parseInt(a.getCourseCode());
+                int bCode = Integer.parseInt(b.getCourseCode());
+                return Integer.compare(aCode, bCode);
+            } catch (NumberFormatException e) {
+                return a.getCourseCode().compareTo(b.getCourseCode());
+            }
+        });
+        int start = (int) pageable.getOffset();
+        int end = Math.min(pageable.getPageSize() + start, dtos.size());
+        if (start > dtos.size()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, dtos.size());
+        }
+        return new PageImpl<>(dtos.subList(start, end), pageable, dtos.size());
+    }
+
     public List<String> getAllColleges() {
         return List.of("CAS", "KHC", "HUB", "MED", "COM", "ENG", "CFA", "CGS",
                 "CDS", "GMS", "SDM", "GMS", "MET", "QST", "SAR", "SHA", "LAW", "SPH", "SSW",

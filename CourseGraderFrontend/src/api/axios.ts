@@ -109,6 +109,16 @@ export const fetchCourseReviews = async (courseId: string, teacherName?: string)
   return response.data;
 };
 
+export const fetchCourseByQuery = async (query: string, page = 0, size = 18) => {
+  return await api.get('/courses/query', {
+    params: {
+      query: query.trim(),
+      page,
+      size
+    }
+  });
+}
+
 export const fetchMyReviews = async (): Promise<ReviewResponseDTO[]> => {
   const response = await api.get<ReviewResponseDTO[]>("/reviews/my-reviews");
   return response.data;

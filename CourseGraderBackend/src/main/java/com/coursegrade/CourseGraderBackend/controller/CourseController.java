@@ -75,6 +75,17 @@ public class CourseController {
         return ResponseEntity.ok(colleges);
     }
 
+    @GetMapping("/query")
+    public ResponseEntity<Page<CourseDisplayDTO>> searchQuery(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "18") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CourseDisplayDTO> courses = courseService.searchQuery(query, pageable);
+        return ResponseEntity.ok(courses);
+    }
+
     @GetMapping("/departments/{college}")
     public ResponseEntity<List<String>> getDepartmentsByCollege(@PathVariable String college) {
         List<String> departments = courseService.getDepartmentsByCollege(college);
