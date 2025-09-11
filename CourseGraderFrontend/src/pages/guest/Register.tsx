@@ -95,8 +95,9 @@ const Register = () => {
 
         <div className="alert mb-4" role="alert">
           <div className="text-muted text-center">
-            Recommended: Register with your personal account as you might not
-            get the verification code at bu email
+            Recommendation: Please register using your personal email address,
+            as verification codes may not be delivered reliably to university
+            email accounts
           </div>
         </div>
 
