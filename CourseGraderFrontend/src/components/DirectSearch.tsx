@@ -58,7 +58,7 @@ const DirectSearch = ({
           <input
             type="text"
             className="form-control flex-grow-1"
-            placeholder="Type in full course code or title"
+            placeholder="Type in course code or title"
             value={courseSearchQuery}
             onChange={(e) => setCourseSearchQuery(e.target.value)}
           />

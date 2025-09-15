@@ -242,44 +242,15 @@ public class CourseService {
             return getAllCoursesPaginated(pageable);
         }
         String normalizedQuery = query.trim().toUpperCase();
-        String[] queryParts = normalizedQuery.split("\\s+"); // Split on whitespaces
         List<Course> allCourses = getAllCourses();
         List<Course> matchingCourses = new ArrayList<>();
-        if (queryParts.length == 3) {
-            if (queryParts[0].length() == 3 && queryParts[1].length() == 2) {
-                String college = queryParts[0];
-                String department = queryParts[1];
-                String courseCode = queryParts[2];
-                for (Course course : allCourses) {
-                    if (course.getCollege().equals(college) && course.getDepartment().equals(department) && course.getCourseCode().equals(courseCode)) {
-                        matchingCourses.add(course);
-                        break;
-                    }
-                }
-            }
-        }
-        if (queryParts.length == 2) {
-            if (queryParts[0].length() == 2 && queryParts[1].length() == 3) {
-                String department = queryParts[0];
-                String courseCode = queryParts[1];
-                for (Course course : allCourses) {
-                    if (course.getDepartment().equals(department) && course.getCourseCode().equals(courseCode)) {
-                        matchingCourses.add(course);
-                    }
-                }
-            }
-        }
-        if (queryParts.length == 1) {
-            String courseCode = queryParts[0];
-            for (Course course : allCourses) {
-                if (course.getCourseCode().equals(courseCode)) {
-                    matchingCourses.add(course);
-                }
-            }
-        }
         for (Course course : allCourses) {
+            String courseName = course.courseDisplay().toUpperCase();
             String courseTitle = course.getTitle().toUpperCase();
-            if (courseTitle.contains(normalizedQuery)) {
+            if (courseName.contains(normalizedQuery)) {
+                matchingCourses.add(course);
+            }
+            else if (courseTitle.contains(normalizedQuery)) {
                 matchingCourses.add(course);
             }
         }
