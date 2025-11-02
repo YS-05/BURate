@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,13 +24,13 @@ const Verify = () => {
   const {
     register,
     handleSubmit,
-    setValue, //  used to prefill email
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<VerifyForm>({
     resolver: zodResolver(schema),
   });
 
-  // Pre-fill email from localStorage
+  // Prefill email from localStorage
   useEffect(() => {
     const savedEmail = localStorage.getItem("verificationEmail");
     if (savedEmail) {
@@ -37,13 +38,11 @@ const Verify = () => {
     }
   }, [setValue]);
 
-  // For cooldown
+  // Handle resend cooldown
   useEffect(() => {
     let timer: number;
     if (resendCooldown > 0) {
-      timer = setTimeout(() => {
-        setResendCooldown(resendCooldown - 1);
-      }, 1000);
+      timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
     }
     return () => clearTimeout(timer);
   }, [resendCooldown]);
@@ -51,7 +50,7 @@ const Verify = () => {
   const onSubmit = async (formData: VerifyForm) => {
     try {
       await verifyAccount(formData);
-      localStorage.removeItem("verificationEmail"); // 🧹 clean up
+      localStorage.removeItem("verificationEmail");
       window.location.href = "/login";
     } catch (err: any) {
       const message =
@@ -73,7 +72,6 @@ const Verify = () => {
       await resendVerification(savedEmail);
       setResendCooldown(60);
     } catch (err: any) {
-      console.log(err);
       const message =
         err.response?.data?.message ||
         "Failed to resend email, try again later";
@@ -84,74 +82,119 @@ const Verify = () => {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
-    >
-      <div className="container" style={{ maxWidth: "480px" }}>
-        <h2 className="text-center mb-4">
-          Please check your email for the verification code
-        </h2>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="mb-3">
-            <label className="form-label">Email address:</label>
-            <input
-              type="email"
-              disabled
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
-              placeholder="you@example.com"
-              {...register("email")}
-            />
-            {errors.email && (
-              <div className="invalid-feedback">{errors.email.message}</div>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="form-label">Verification code:</label>
-            <input
-              type="text"
-              className={`form-control ${
-                errors.verificationCode ? "is-invalid" : ""
-              }`}
-              placeholder="6-digit code"
-              {...register("verificationCode")}
-            />
-            {errors.verificationCode && (
-              <div className="invalid-feedback">
-                {errors.verificationCode.message}
-              </div>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="btn btn-success w-100"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Verifying..." : "Verify Account"}
-          </button>
-          {error && <div className="text-danger text-center mb-4">{error}</div>}
+    <>
+      {/* SEO Metadata */}
+      <Helmet>
+        <title>Email Verification | BU Rate</title>
+        <meta
+          name="description"
+          content="Verify your BU Rate account by entering the 6-digit code sent to your email. Secure access to Boston University course reviews and personalized planning."
+        />
+        <meta
+          name="keywords"
+          content="BU Rate verify account, BU Rate email verification, BU Rate confirm account, Boston University course reviews verification"
+        />
+        <link rel="canonical" href="https://burate.com/verify" />
 
-          <div className="text-center my-4">
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Email Verification | BU Rate" />
+        <meta
+          property="og:description"
+          content="Enter your 6-digit verification code to activate your BU Rate account and start reviewing Boston University courses."
+        />
+        <meta property="og:url" content="https://burate.com/verify" />
+        <meta
+          property="og:image"
+          content="https://burate.com/images/og-banner.png"
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Email Verification | BU Rate" />
+        <meta
+          name="twitter:description"
+          content="Verify your BU Rate account securely and start reviewing Boston University courses."
+        />
+        <meta
+          name="twitter:image"
+          content="https://burate.com/images/og-banner.png"
+        />
+      </Helmet>
+
+      {/* Page Content */}
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
+      >
+        <div className="container" style={{ maxWidth: "480px" }}>
+          <h2 className="text-center mb-4">
+            Please check your email for the verification code
+          </h2>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <div className="mb-3">
+              <label className="form-label">Email address:</label>
+              <input
+                type="email"
+                disabled
+                className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                placeholder="you@example.com"
+                {...register("email")}
+              />
+              {errors.email && (
+                <div className="invalid-feedback">{errors.email.message}</div>
+              )}
+            </div>
+
+            <div className="mb-4">
+              <label className="form-label">Verification code:</label>
+              <input
+                type="text"
+                className={`form-control ${
+                  errors.verificationCode ? "is-invalid" : ""
+                }`}
+                placeholder="6-digit code"
+                {...register("verificationCode")}
+              />
+              {errors.verificationCode && (
+                <div className="invalid-feedback">
+                  {errors.verificationCode.message}
+                </div>
+              )}
+            </div>
+
             <button
-              type="button"
-              className="btn btn-link text-decoration-none p-0"
-              onClick={handleResendEmail}
-              disabled={isResending || resendCooldown > 0}
+              type="submit"
+              className="btn btn-success w-100"
+              disabled={isSubmitting}
             >
-              {isResending
-                ? "Sending..."
-                : resendCooldown > 0
-                ? `Resend verification email (${resendCooldown}s)`
-                : "Resend verification email"}
+              {isSubmitting ? "Verifying..." : "Verify Account"}
             </button>
-          </div>
 
-          {resendError && (
-            <div className="text-danger text-center mb-2">{resendError}</div>
-          )}
-        </form>
+            {error && (
+              <div className="text-danger text-center mb-4">{error}</div>
+            )}
+
+            <div className="text-center my-4">
+              <button
+                type="button"
+                className="btn btn-link text-decoration-none p-0"
+                onClick={handleResendEmail}
+                disabled={isResending || resendCooldown > 0}
+              >
+                {isResending
+                  ? "Sending..."
+                  : resendCooldown > 0
+                  ? `Resend verification email (${resendCooldown}s)`
+                  : "Resend verification email"}
+              </button>
+            </div>
+
+            {resendError && (
+              <div className="text-danger text-center mb-2">{resendError}</div>
+            )}
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

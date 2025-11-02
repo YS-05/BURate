@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,6 +16,7 @@ const schema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
 type SetPasswordForm = z.infer<typeof schema>;
 
 const SetPassword = () => {
@@ -43,7 +45,6 @@ const SetPassword = () => {
   const onSubmit = async (data: SetPasswordForm) => {
     setLoading(true);
     setError("");
-
     try {
       await resetPassword({
         email,
@@ -63,76 +64,120 @@ const SetPassword = () => {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center p-5"
-      style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
-    >
-      <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
-        <h2 className="text-center mb-4">Set New Password</h2>
-        <p className="text-center text-muted mb-4">
-          Enter the reset code sent to {email}
-        </p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <input
-              type="text"
-              className={`form-control ${errors.resetCode ? "is-invalid" : ""}`}
-              placeholder="Reset code"
-              {...register("resetCode")}
-            />
-            {errors.resetCode && (
-              <div className="invalid-feedback">{errors.resetCode.message}</div>
-            )}
-          </div>
+    <>
+      {/* SEO Metadata */}
+      <Helmet>
+        <title>Set New Password | BU Rate</title>
+        <meta
+          name="description"
+          content="Securely set a new BU Rate password after receiving your reset code. Regain access to your Boston University course review account."
+        />
+        <meta
+          name="keywords"
+          content="BU Rate set password, BU Rate reset password, BU Rate change password, BU Rate recover account, Boston University course reviews"
+        />
+        <link rel="canonical" href="https://burate.com/reset-password" />
 
-          <div className="mb-3">
-            <input
-              type="password"
-              className={`form-control ${
-                errors.newPassword ? "is-invalid" : ""
-              }`}
-              placeholder="New password"
-              {...register("newPassword")}
-            />
-            {errors.newPassword && (
-              <div className="invalid-feedback">
-                {errors.newPassword.message}
-              </div>
-            )}
-          </div>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Set New Password | BU Rate" />
+        <meta
+          property="og:description"
+          content="Enter your verification code and set a new BU Rate password to continue exploring Boston University course reviews."
+        />
+        <meta property="og:url" content="https://burate.com/reset-password" />
+        <meta
+          property="og:image"
+          content="https://burate.com/images/og-banner.png"
+        />
 
-          <div className="mb-3">
-            <input
-              type="password"
-              className={`form-control ${
-                errors.confirmPassword ? "is-invalid" : ""
-              }`}
-              placeholder="Confirm new password"
-              {...register("confirmPassword")}
-            />
-            {errors.confirmPassword && (
-              <div className="invalid-feedback">
-                {errors.confirmPassword.message}
-              </div>
-            )}
-          </div>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Set New Password | BU Rate" />
+        <meta
+          name="twitter:description"
+          content="Reset your BU Rate password and continue accessing course reviews, Hub tracking, and more."
+        />
+        <meta
+          name="twitter:image"
+          content="https://burate.com/images/og-banner.png"
+        />
+      </Helmet>
 
-          {error && (
-            <div className="alert alert-danger" role="alert">
-              {error}
+      {/* Page Content */}
+      <div
+        className="d-flex justify-content-center align-items-center p-5"
+        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
+      >
+        <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
+          <h2 className="text-center mb-4">Set New Password</h2>
+          <p className="text-center text-muted mb-4">
+            Enter the reset code sent to {email}
+          </p>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-3">
+              <input
+                type="text"
+                className={`form-control ${
+                  errors.resetCode ? "is-invalid" : ""
+                }`}
+                placeholder="Reset code"
+                {...register("resetCode")}
+              />
+              {errors.resetCode && (
+                <div className="invalid-feedback">
+                  {errors.resetCode.message}
+                </div>
+              )}
             </div>
-          )}
 
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={loading}
-          >
-            {loading ? "Resetting..." : "Reset Password"}
-          </button>
-        </form>
+            <div className="mb-3">
+              <input
+                type="password"
+                className={`form-control ${
+                  errors.newPassword ? "is-invalid" : ""
+                }`}
+                placeholder="New password"
+                {...register("newPassword")}
+              />
+              {errors.newPassword && (
+                <div className="invalid-feedback">
+                  {errors.newPassword.message}
+                </div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <input
+                type="password"
+                className={`form-control ${
+                  errors.confirmPassword ? "is-invalid" : ""
+                }`}
+                placeholder="Confirm new password"
+                {...register("confirmPassword")}
+              />
+              {errors.confirmPassword && (
+                <div className="invalid-feedback">
+                  {errors.confirmPassword.message}
+                </div>
+              )}
+            </div>
+
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={loading}
+            >
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
