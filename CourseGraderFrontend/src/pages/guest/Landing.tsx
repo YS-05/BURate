@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import LandingHeader from "../../components/LandingHeader";
 import WhyChoose from "../../components/WhyChoose";
-import CallToAction from "../../components/CalltoAction";
+import CallToAction from "../../components/CallToAction";
 
 const Landing = () => {
   return (
