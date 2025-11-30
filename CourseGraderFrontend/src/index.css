@@ -7,9 +7,51 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* outline: 1px solid red !important; */
+}
+
+.bu-red {
+  color: #d70400;
+}
+
+.btn-bu-red {
+  background-color: #d70400;
+  color: white;
+  border: 1px solid #d70400;
+}
+
+.btn-bu-red:hover {
+  background-color: #b80300; /* slightly darker */
+  border-color: #b80300;
+  color: white;
+}
+
+.btn-outline-bu-red {
+  color: #d70400;
+  border: 1px solid #d70400;
+  background-color: transparent;
+}
+
+.btn-outline-bu-red:hover {
+  background-color: #d70400;
+  color: white;
+}
+
+.bg-bu-red {
+  background-color: #d70400 !important;
+  color: white !important; /* ensures readable text */
+}
+
+.nav-small {
+  font-size: 0.9rem;
 }
 
 html {
   margin: 0;
   padding: 0;
+}
+
+.row {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
 }

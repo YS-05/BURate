@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
-import LandingImageText from "../../components/LandingImageText";
-import AccountPerksGrid from "../../components/AccountPerksGrid";
+import LandingHeader from "../../components/LandingHeader";
+import WhyChoose from "../../components/WhyChoose";
+import CallToAction from "../../components/CalltoAction";
 
 const Landing = () => {
   return (
@@ -52,8 +53,9 @@ const Landing = () => {
       </Helmet>
 
       {/* Page Content */}
-      <LandingImageText />
-      <AccountPerksGrid />
+      <LandingHeader />
+      <WhyChoose />
+      <CallToAction />
     </>
   );
 };

@@ -3,21 +3,77 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-center py-4" style={{ height: "140px" }}>
-      <div className="d-flex justify-content-center flex-wrap gap-4 mb-2">
-        <Link to="/contact" className="text-secondary text-decoration-none">
-          Contact Us
-        </Link>
-        <Link to="/privacy" className="text-secondary text-decoration-none">
-          Privacy Policy
-        </Link>
-        <Link to="/terms" className="text-secondary text-decoration-none">
-          Terms of Service
-        </Link>
-      </div>
+    <div className="container pt-5">
+      <div className="row">
+        <div className="col-md-6">
+          <h5 className="mb-3">BU Rate</h5>
+          <p className="text-muted">
+            Empowering BU students to make informed course decisions.
+          </p>
 
-      <small className="text-white mt-3 d-block">© 2025 BU Rate</small>
-    </footer>
+          <h5 className="mb-3">Contact Information</h5>
+          <ul className="list-unstyled">
+            <li className="mt-1">
+              <a
+                href="https://www.linkedin.com/in/yash-sharma-ys05/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-decoration-none text-muted"
+              >
+                <i className="fab fa-linkedin me-1"></i>
+                LinkedIn
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div className="col-md-3">
+          <h5 className="mb-3">Quick Links</h5>
+          <ul className="list-unstyled">
+            <li className="mt-1">
+              <Link to="/" className="text-decoration-none text-muted">
+                Home
+              </Link>
+            </li>
+            <li className="mt-1">
+              <Link to="/search" className="text-decoration-none text-muted">
+                Search
+              </Link>
+            </li>
+            <li className="mt-1">
+              <Link to="/register" className="text-decoration-none text-muted">
+                Register
+              </Link>
+            </li>
+            <li className="mt-1">
+              <Link to="/login" className="text-decoration-none text-muted">
+                Login
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div className="col-md-3">
+          <h5 className="mb-3">Legal</h5>
+          <ul className="list-unstyled">
+            <li className="mt-1">
+              <Link to="/privacy" className="text-decoration-none text-muted">
+                Privacy
+              </Link>
+            </li>
+            <li className="mt-1">
+              <Link to="/terms" className="text-decoration-none text-muted">
+                Terms
+              </Link>
+            </li>
+            <li className="mt-1">
+              <Link to="/contact" className="text-decoration-none text-muted">
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p className="text-center my-4">© 2025 BU Rate. All rights reserved.</p>
+    </div>
   );
 };
 

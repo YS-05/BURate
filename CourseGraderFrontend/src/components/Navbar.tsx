@@ -1,125 +1,78 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import Logo from "../assets/BURateLogo.svg";
+import Logo from "../assets/buratelogo.png";
 import "./Navbar.css";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="navbar shadow-sm" style={{ backgroundColor: "#f5f5f5" }}>
-      <div className="container d-flex justify-content-between align-items-center">
-        <Link to="/" className="navbar-brand">
-          <img
-            src={Logo}
-            alt="logo"
-            style={{
-              height: "60px",
-            }}
-          />
+    <nav className="navbar bg-white border-bottom sticky-top m-0 p-0">
+      {/* NAVBAR HEADER */}
+      <div className="container-fluid d-flex justify-content-between align-items-center py-2">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="text-decoration-none d-flex align-items-center"
+          onClick={closeMenu}
+        >
+          <img src={Logo} className="me-2" style={{ height: 30 }} />
+          <span className="fw-bold h5 bu-red mb-0">BU Rate</span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/* Hamburger (mobile only) */}
+        <button
+          className="btn d-lg-none"
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          <i
+            className={`bi ${isMenuOpen ? "bi-x-lg" : "bi-list"}`}
+            style={{ fontSize: 28 }}
+          ></i>
+        </button>
+
+        {/* Desktop menu */}
         <div className="d-none d-lg-flex align-items-center gap-3">
-          <Link to="/search" className="nav-link text-dark m-2 custom-nav-link">
+          <Link to="/search" className="nav-link text-dark custom-nav-link">
             Search Courses
           </Link>
-          <Link
-            to="/contact"
-            className="nav-link text-dark m-2 custom-nav-link"
-          >
-            Contact
+          <Link to="/login" className="nav-link text-dark custom-nav-link">
+            Login
           </Link>
-          <Link to="/login" className="nav-link text-dark m-2 custom-nav-link">
-            Log In
-          </Link>
-          <Link
-            to="/register"
-            className="btn btn-outline-danger m-2"
-            style={{ width: "120px", height: "40px" }}
-          >
+          <Link to="/register" className="btn btn-bu-red px-4">
             Sign Up
           </Link>
         </div>
-
-        {/* Mobile Burger Menu Button */}
-        <button
-          className="d-lg-none btn btn-link p-0 border-0 bg-transparent text-danger"
-          type="button"
-          onClick={toggleMenu}
-          aria-label="Toggle navigation"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {isMenuOpen ? (
-              // X icon when menu is open
-              <>
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </>
-            ) : (
-              // Hamburger icon when menu is closed
-              <>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </>
-            )}
-          </svg>
-        </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* MOBILE MENU (FULL WIDTH) */}
       {isMenuOpen && (
-        <div className="d-lg-none" style={{ backgroundColor: "#f5f5f5" }}>
-          <div className="container py-3">
-            <div className="d-flex flex-column gap-3">
-              <Link
-                to="/search"
-                className="nav-link text-dark custom-nav-link"
-                onClick={closeMenu}
-              >
-                Search Courses
-              </Link>
-              <Link
-                to="/contact"
-                className="nav-link text-dark custom-nav-link"
-                onClick={closeMenu}
-              >
-                Contact
-              </Link>
-              <Link
-                to="/login"
-                className="nav-link text-dark custom-nav-link"
-                onClick={closeMenu}
-              >
-                Log In
-              </Link>
-              <Link
-                to="/register"
-                className="nav-link text-dark custom-nav-link"
-                onClick={closeMenu}
-              >
-                Sign Up
-              </Link>
-            </div>
-          </div>
+        <div className="mobile-menu bg-white border-bottom d-lg-none w-100 px-4 py-3">
+          <Link
+            to="/search"
+            className="d-block mb-3 text-dark"
+            onClick={closeMenu}
+          >
+            Search Courses
+          </Link>
+          <Link
+            to="/login"
+            className="d-block mb-3 text-dark"
+            onClick={closeMenu}
+          >
+            Login
+          </Link>
+          <Link
+            to="/register"
+            className="btn btn-bu-red w-100"
+            onClick={closeMenu}
+          >
+            Sign Up
+          </Link>
         </div>
       )}
     </nav>
