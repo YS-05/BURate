@@ -36,7 +36,7 @@ const NavBar = () => {
         </button>
 
         {/* Desktop menu */}
-        <div className="d-none d-lg-flex align-items-center gap-3">
+        <div className="d-none d-lg-flex align-items-center gap-4">
           <Link to="/search" className="nav-link text-dark custom-nav-link">
             Search Courses
           </Link>
