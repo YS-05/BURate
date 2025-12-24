@@ -237,6 +237,125 @@ public class CourseService {
         return new PageImpl<>(dtos.subList(start, end), pageable, dtos.size());
     }
 
+    public Page<CourseDisplayDTO> searchCourses2(
+            Set<String> colleges, Set<String> departments, Set<String> hubReqs, Boolean noPreReqs,
+            Double minRating, String sortBy, String searchQuery, Pageable pageable
+    ) {
+        List<Course> courses = new ArrayList<>(getAllCourses());
+        if (colleges != null && !colleges.isEmpty()) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (!colleges.contains(course.getCollege())) {
+                    iterator.remove();
+                }
+            }
+        }
+        HashSet<HubRequirement> hubRequirements = new HashSet<>(); // initialze the hashset
+        if (hubReqs != null && !hubReqs.isEmpty()) {
+            for (String req : hubReqs) {
+                for (HubRequirement hubRequirement : HubRequirement.values()) {
+                    if (req.equals(hubRequirement.name())) {
+                        hubRequirements.add(hubRequirement);
+                        break;
+                    }
+                }
+            }
+        }
+        if (!hubRequirements.isEmpty()) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                Set<HubRequirement> courseHubReqs = course.getHubRequirements();
+                if (courseHubReqs == null || courseHubReqs.isEmpty()) {
+                    iterator.remove();
+                    continue;
+                }
+                boolean hasAllRequiredHubs = true;
+                for (HubRequirement hub : hubRequirements) {
+                    if (!courseHubReqs.contains(hub)) {
+                        hasAllRequiredHubs = false;
+                        break;
+                    }
+                }
+                if (!hasAllRequiredHubs) {
+                    iterator.remove();
+                }
+            }
+        }
+        if (departments != null && !departments.isEmpty()) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                String courseDepart = course.getDepartment();
+                if (!departments.contains(courseDepart)) {
+                    iterator.remove();
+                }
+            }
+        }
+        if (noPreReqs != null && noPreReqs) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getNoPreReqs() == null || !course.getNoPreReqs()) {
+                    iterator.remove();
+                }
+            }
+        }
+        if (minRating != null && minRating > 0) {
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                if (course.getAverageOverallRating() == null || course.getAverageOverallRating() < minRating) {
+                    iterator.remove();
+                }
+            }
+        }
+        // search query handling
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            String normalizedQuery = searchQuery.trim().toUpperCase();
+            Iterator<Course> iterator = courses.iterator();
+            while (iterator.hasNext()) {
+                Course course = iterator.next();
+                String courseName = course.courseDisplay().toUpperCase();
+                String courseTitle = course.getTitle().toUpperCase();
+                if (!courseName.contains(normalizedQuery) && !courseTitle.contains(normalizedQuery)) {
+                    iterator.remove();
+                }
+            }
+        }
+        List<CourseDisplayDTO> dtos = new ArrayList<>();
+        for (Course course : courses) {
+            CourseDisplayDTO dto = convertToDisplayDTO(course);
+            dtos.add(dto);
+        }
+        if (sortBy != null) {
+            if (sortBy.equals("byCourseCode")) {
+                dtos.sort((a, b) -> {
+                    try {
+                        int aCode = Integer.parseInt(a.getCourseCode());
+                        int bCode = Integer.parseInt(b.getCourseCode());
+                        return Integer.compare(aCode, bCode);
+                    } catch (NumberFormatException e) {
+                        return a.getCourseCode().compareTo(b.getCourseCode());
+                    }
+                });
+            }
+            else if (sortBy.equals("byRating")) {
+                dtos.sort((a,b) -> Double.compare(b.getAverageOverallRating(), a.getAverageOverallRating())); // Descending order
+            }
+            else if (sortBy.equals("byReviews")) {
+                dtos.sort((a, b) -> Integer.compare(b.getNumReviews(), a.getNumReviews())); // Descending
+            }
+        }
+        int start = (int) pageable.getOffset();
+        int end = Math.min(pageable.getPageSize() + start, dtos.size());
+        if (start > dtos.size()) { // Error handling
+            return new PageImpl<>(new ArrayList<>(), pageable, dtos.size());
+        }
+        return new PageImpl<>(dtos.subList(start, end), pageable, dtos.size());
+    }
+
     public Page<CourseDisplayDTO> searchQuery(String query, Pageable pageable) {
         if (query == null || query.isEmpty()) {
             return getAllCoursesPaginated(pageable);
@@ -288,7 +407,9 @@ public class CourseService {
         for (Course course : courses) {
             departments.add(course.getDepartment());
         }
-        return new ArrayList<>(departments);
+        return departments.stream()
+                .sorted()
+                .toList();
     }
 
     public List<Course> findCoursesByHubReqs(Set<HubRequirement> requirements) {
@@ -427,6 +548,7 @@ public class CourseService {
                 .averageInterestRating(course.getAverageInterestRating())
                 .averageTeacherRating(course.getAverageTeacherRating())
                 .hubRequirements(hubs)
+                .description(course.getCourseDesc())
                 .build();
     }
 

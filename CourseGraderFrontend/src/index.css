@@ -42,6 +42,66 @@ body {
   color: white !important; /* ensures readable text */
 }
 
+.badge-bu {
+  background-color: rgba(215, 4, 0, 0.1);
+  color: #d70400;
+  border: 1px solid rgba(215, 4, 0, 0.25);
+  font-weight: 500;
+}
+
+.badge-bu-outline {
+  background-color: transparent;
+  color: #d70400;
+  border: 1px solid #d70400;
+  font-weight: 500;
+}
+
+.pagination-bu {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0.5rem;
+}
+
+.pagination-bu .page-link {
+  border-radius: 10px;
+  padding: 0.45rem 0.75rem;
+  min-width: 42px;
+  text-align: center;
+  border: 1px solid #e5e7eb; /* light gray */
+  background-color: white;
+  color: #374151; /* neutral dark gray */
+  font-weight: 500;
+}
+
+.pagination-bu .page-link:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+
+.pagination-bu .page-item.active .page-link {
+  background-color: white;
+  border-color: #9ca3af;
+  color: #111827;
+  box-shadow: 0 0 0 1px #9ca3af inset;
+}
+
+.pagination-bu .page-item.disabled .page-link {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.pagination-bu .ellipsis {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: default;
+}
+
+
 .nav-small {
   font-size: 0.9rem;
 }
@@ -49,9 +109,4 @@ body {
 html {
   margin: 0;
   padding: 0;
-}
-
-.row {
-  margin-right: 0 !important;
-  margin-left: 0 !important;
 }

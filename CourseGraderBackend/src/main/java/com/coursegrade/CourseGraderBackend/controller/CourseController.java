@@ -69,6 +69,25 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
+    @GetMapping("/search2")
+    public ResponseEntity<Page<CourseDisplayDTO>> searchCourses2(
+            @RequestParam(required = false) Set<String> colleges,
+            @RequestParam(required = false) Set<String> departments,
+            @RequestParam(required = false) Set<String> hubReqs,
+            @RequestParam(required = false) Boolean noPreReqs,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(defaultValue = "byCourseCode") String sortBy,
+            @RequestParam(required = false) String searchQuery,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
+            ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CourseDisplayDTO> courses = courseService.searchCourses2(
+                colleges, departments, hubReqs, noPreReqs, minRating, sortBy, searchQuery, pageable
+        );
+        return ResponseEntity.ok(courses);
+    }
+
     @GetMapping("/colleges")
     public ResponseEntity<List<String>> getAllColleges() {
         List<String> colleges = courseService.getAllColleges();

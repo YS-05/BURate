@@ -27,4 +27,5 @@ public class CourseDisplayDTO {
     private Double averageInterestRating;
     private Double averageTeacherRating;
     private Set<HubRequirementDTO> hubRequirements;
+    private String description;
 }

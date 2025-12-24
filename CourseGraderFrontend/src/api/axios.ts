@@ -2,7 +2,7 @@ import axios from "axios";
 import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO, PasswordResetDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: "http://localhost:8080/api", //import.meta.env.VITE_API_URL 
   headers: {
     "Content-Type": "application/json",
   },
@@ -228,6 +228,43 @@ export const fetchFilteredCourses = (filters: {
   params.append("page", page.toString());
 
   return api.get(`/courses/search?${params.toString()}`);
+};
+
+export const fetchCoursesSearch2 = async (
+  filters: {
+    colleges?: string[];
+    departments?: string[];
+    hubReqs?: string[];
+    noPreReqs?: boolean;
+    minRating?: number;
+    sortBy?: string;
+    searchQuery?: string;
+  },
+  page: number = 0,
+  size: number = 12
+) => {
+  const params = new URLSearchParams();
+
+  filters.colleges?.forEach(c => params.append("colleges", c));
+  filters.departments?.forEach(d => params.append("departments", d));
+  filters.hubReqs?.forEach(h => params.append("hubReqs", h));
+
+  if (filters.noPreReqs !== undefined)
+    params.append("noPreReqs", String(filters.noPreReqs));
+
+  if (filters.minRating !== undefined)
+    params.append("minRating", String(filters.minRating));
+
+  if (filters.sortBy)
+    params.append("sortBy", filters.sortBy);
+
+  if (filters.searchQuery)
+    params.append("searchQuery", filters.searchQuery);
+
+  params.append("page", String(page));
+  params.append("size", String(size));
+
+  return api.get(`/courses/search2?${params.toString()}`);
 };
 
 export default api;

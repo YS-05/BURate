@@ -68,6 +68,7 @@ export type CourseDisplayDTO = {
   averageInterestRating: number;
   averageTeacherRating: number;
   hubRequirements: HubRequirementDTO[];
+  description: string;
 }
 
 export type UserDashboardDTO = {
