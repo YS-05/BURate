@@ -12,9 +12,7 @@ import Search from "./pages/shared/Search";
 
 import Dashboard from "./pages/user/Dashboard";
 import HubProgress from "./pages/user/HubProgress";
-import MyCourses from "./pages/user/MyCourses";
 import MyReviews from "./pages/user/MyReviews";
-import SavedCourses from "./pages/user/SavedCourses";
 import Account from "./pages/user/Account";
 import "./App.css";
 import CoursePage from "./pages/shared/CoursePage";
@@ -59,8 +57,6 @@ const AppRoutesBasedOnAuth = () => {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="hub-progress" element={<HubProgress />} />
-          <Route path="my-courses" element={<MyCourses />} />
-          <Route path="saved-courses" element={<SavedCourses />} />
           <Route path="my-reviews" element={<MyReviews />} />
           <Route path="search" element={<Search />} />
           <Route path="course/:courseId" element={<CoursePage />} />

@@ -37,14 +37,6 @@ const Sidebar = () => {
       path: "/hub-progress",
     },
     {
-      name: "My Courses",
-      path: "/my-courses",
-    },
-    {
-      name: "Saved Courses",
-      path: "/saved-courses",
-    },
-    {
       name: "My Reviews",
       path: "/my-reviews",
     },
