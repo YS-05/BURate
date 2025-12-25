@@ -2,7 +2,7 @@ import axios from "axios";
 import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO, PasswordResetDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api", //import.meta.env.VITE_API_URL 
+  baseURL: import.meta.env.VITE_API_URL, // baseURL: "http://localhost:8080/api" for local
   headers: {
     "Content-Type": "application/json",
   },
