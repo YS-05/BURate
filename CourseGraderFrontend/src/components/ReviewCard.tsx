@@ -1,101 +1,162 @@
-import { ReviewResponseDTO } from "../auth/AuthDTOs";
-import ReviewItem from "./ReviewItem";
 import { useEffect, useState } from "react";
-import { fetchCourseReviews, fetchTeacherScore } from "../api/axios";
-import Spinner from "./Spinner";
+import { useNavigate } from "react-router-dom";
+import { voteOnReview, fetchReviewVotes, deleteReview } from "../api/axios";
+import { useAuth } from "../auth/AuthProvider";
+import StarRating from "../components/StarRating";
 
-interface Props {
-  id: string | undefined;
-  teachers: string[];
-}
+type ReviewCardProps = {
+  review: any;
+};
 
-const ReviewCard = ({ id, teachers }: Props) => {
-  const [loading, setLoading] = useState(false);
-  const [reviews, setReviews] = useState<ReviewResponseDTO[]>([]);
-  const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [teacherScore, setTeacherScore] = useState<number | null>(null);
+const ReviewCard = ({ review }: ReviewCardProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const hasUserReviewed = reviews?.some((review) => review.owner) ?? false;
+  const [sumVote, setSumVote] = useState(0);
+  const [userVote, setUserVote] = useState<string | null>(null);
+  const [voting, setVoting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const loadReviews = async () => {
-      if (!id) return;
-      setLoading(true);
+    const loadVotes = async () => {
       try {
-        const reviewData = await fetchCourseReviews(id, selectedTeacher);
-        setReviews(reviewData);
-        if (selectedTeacher !== "") {
-          const teacherData = await fetchTeacherScore(id, selectedTeacher);
-          setTeacherScore(teacherData);
-        } else {
-          setTeacherScore(null);
-        }
-      } catch (err: any) {
-        console.log(err);
-      } finally {
-        setLoading(false);
+        const data = await fetchReviewVotes(review.id.toString());
+        setSumVote(data.voteCount);
+        setUserVote(data.userVote);
+      } catch (err) {
+        console.error("Failed to load votes", err);
       }
     };
-    loadReviews();
-  }, [id, selectedTeacher]);
 
-  const handleTeacherChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTeacher(event.target.value);
+    loadVotes();
+  }, [review.id]);
+
+  const handleVote = async (type: "UPVOTE" | "DOWNVOTE") => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setVoting(true);
+      const res = await voteOnReview(review.id.toString(), type);
+      setSumVote(res.voteCount);
+      setUserVote(res.userVote);
+    } finally {
+      setVoting(false);
+    }
   };
 
-  const handleDeletedReview = (reviewId: number) => {
-    setReviews((prevReviews) =>
-      prevReviews.filter((review) => review.id !== reviewId)
-    );
+  const handleDelete = async () => {
+    if (!window.confirm("Delete this review? This cannot be undone.")) return;
+
+    try {
+      setDeleting(true);
+      await deleteReview(review.id.toString());
+      window.location.reload(); // simple + safe
+    } catch (err) {
+      console.error("Delete failed", err);
+    } finally {
+      setDeleting(false);
+    }
   };
 
-  if (loading) {
-    return <Spinner />;
-  }
+  const isOwner = review.owner === true;
 
   return (
-    <div className="card border-danger rounded-0 mb-4">
-      <div className="card-header">
-        <div className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">Reviews: {reviews?.length || 0}</h5>
-          <div className="dropdown-container">
-            <select
-              className="form-select"
-              value={selectedTeacher}
-              onChange={handleTeacherChange}
-              style={{ minWidth: "200px" }}
-            >
-              <option value="">All Teachers</option>
-              {teachers.map((teacher, index) => (
-                <option key={index} value={teacher}>
-                  {teacher}
-                </option>
-              ))}
-            </select>
-          </div>
+    <div className="border-top py-4">
+      {/* Header */}
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <div className="fw-bold">{review.teacherName}</div>
+        <div className="text-muted">
+          {new Date(review.createdAt).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
         </div>
-        {teacherScore && (
-          <div>
-            Professor {selectedTeacher} has an average rating of{" "}
-            <span className="fw-bold">{teacherScore.toFixed(1)}</span> when
-            teaching this course
-          </div>
-        )}
       </div>
 
-      <div className="card-body">
-        {reviews && reviews.length > 0 ? (
-          <div className="d-grid gap-3">
-            {reviews.map((review) => (
-              <ReviewItem
-                key={review.id}
-                review={review}
-                onReviewDeleted={handleDeletedReview}
-              />
-            ))}
+      {/* Rating */}
+      <div className="mb-2">
+        <StarRating rating={review.overallRating ?? 0} />
+        <span className="ms-2">{review.overallRating}/5</span>
+      </div>
+
+      {/* Category ratings */}
+      <div className="d-flex justify-content-between mb-2 flex-wrap">
+        <div>Usefulness: {review.usefulnessRating}/5</div>
+        <div>Difficulty: {review.difficultyRating}/5</div>
+        <div>Workload: {review.workloadRating}/5</div>
+        <div>Interest: {review.interestRating}/5</div>
+        <div>Teacher: {review.teacherRating}/5</div>
+      </div>
+
+      {/* Assignment types */}
+      {review.assignmentTypes && (
+        <div className="mb-3">Assignment Types: {review.assignmentTypes}</div>
+      )}
+
+      {/* Review text */}
+      <div className="mb-3">{review.reviewText}</div>
+
+      {/* Footer */}
+      <div className="d-flex align-items-center justify-content-between">
+        {/* Voting */}
+        <div className="d-flex align-items-center gap-2">
+          <button
+            className="btn p-0 border-0 bg-transparent"
+            disabled={voting}
+            onClick={() => handleVote("UPVOTE")}
+          >
+            <i
+              className={`bi ${
+                userVote === "UPVOTE"
+                  ? "bi-arrow-up-square-fill bu-red"
+                  : "bi-arrow-up-square bu-red"
+              } fs-4`}
+            />
+          </button>
+
+          <span className="fw-semibold">{sumVote}</span>
+
+          <button
+            className="btn p-0 border-0 bg-transparent"
+            disabled={voting}
+            onClick={() => handleVote("DOWNVOTE")}
+          >
+            <i
+              className={`bi ${
+                userVote === "DOWNVOTE"
+                  ? "bi-arrow-down-square-fill bu-red"
+                  : "bi-arrow-down-square bu-red"
+              } fs-4`}
+            />
+          </button>
+        </div>
+
+        {/* Owner actions */}
+        {isOwner && (
+          <div className="d-flex gap-3">
+            <button
+              className="btn p-0 border-0 bg-transparent"
+              title="Edit review"
+              onClick={() =>
+                navigate(`/course/${review.courseId}/review?edit=${review.id}`)
+              }
+            >
+              <i className="bi bi-pencil-square fs-5 text-secondary" />
+            </button>
+
+            <button
+              className="btn p-0 border-0 bg-transparent"
+              title="Delete review"
+              disabled={deleting}
+              onClick={handleDelete}
+            >
+              <i className="bi bi-trash fs-5 text-danger" />
+            </button>
           </div>
-        ) : (
-          <div className="text-muted">No reviews yet.</div>
         )}
       </div>
     </div>

@@ -83,7 +83,7 @@ const Reset = () => {
       {/* Page Content */}
       <div
         className="d-flex justify-content-center align-items-center p-5"
-        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
+        style={{ minHeight: "calc(100vh - 225px)" }}
       >
         <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
           <h2 className="text-center mb-4">
@@ -110,7 +110,7 @@ const Reset = () => {
 
             <button
               type="submit"
-              className="btn btn-primary w-100"
+              className="btn btn-bu-red w-100"
               disabled={loading}
             >
               {loading ? "Sending..." : "Send Reset Code"}

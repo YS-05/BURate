@@ -126,22 +126,11 @@ const Register = () => {
       </Helmet>
 
       {/* Page Content */}
-      <div
-        className="d-flex justify-content-center align-items-center p-5"
-        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
-      >
+      <div className="d-flex justify-content-center align-items-center p-5">
         <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
           <h2 className="text-center mb-4">
-            Sign up to start rating BU courses
+            Sign up with your BU email to start rating courses
           </h2>
-
-          <div className="alert mb-4" role="alert">
-            <div className="text-muted text-center">
-              Recommendation: Please register using your personal email address,
-              as verification codes may not be delivered reliably to university
-              email accounts
-            </div>
-          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="mb-2">

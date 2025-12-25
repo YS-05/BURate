@@ -10,7 +10,7 @@ const NavBar = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="navbar bg-white border-bottom sticky-top m-0 p-0">
+    <nav className="navbar bg-white border-bottom sticky-top m-0 p-0 px-lg-5">
       {/* NAVBAR HEADER */}
       <div className="container-fluid d-flex justify-content-between align-items-center py-2">
         {/* Logo */}

@@ -6,6 +6,7 @@ import {
 import { CourseDisplayDTO } from "../../auth/AuthDTOs";
 import StarRating from "../../components/StarRating";
 import { Link } from "react-router-dom";
+import Spinner from "../../components/Spinner";
 
 const COLLEGES = [
   "CAS",
@@ -325,117 +326,130 @@ const Search = () => {
           <p className="text-muted p-0 my-3 ms-2">{totalCourses} results</p>
 
           {/* Grid for displaying courses */}
+
           <div>
-            {courses.map((course) => (
-              <div key={course.id} className="border rounded-3 p-3 mb-4">
-                {/* Tablet or larger viewports */}
-                <div className="d-none d-md-flex justify-content-between align-items-stretch">
-                  <div>
-                    <h5>
-                      {course.college} {course.department} {course.courseCode}:{" "}
-                      {course.title}
-                    </h5>
-                    <p className="mt-3">
-                      {truncateWords(course.description, 30)}
-                    </p>
-                    {course.hubRequirements.length === 0 ? (
-                      <span className="badge badge-bu me-2">No hub reqs</span>
-                    ) : (
-                      course.hubRequirements.map((hubReq) => (
-                        <span className="badge badge-bu me-2">
-                          {hubReq.name}
-                        </span>
-                      ))
-                    )}
-                    <div className="mt-2">
-                      <span className="text-muted small">Difficulty: </span>
-                      <span className="fw-bold me-3 small">
-                        {course.averageDifficultyRating}/5
-                      </span>
-                      {course.noPreReqs === true ? (
-                        <span className="text-muted small">
-                          No prerequisites required
-                        </span>
-                      ) : (
-                        <span className="text-muted small">
-                          Prerequisites required
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="d-flex flex-column align-items-end text-end">
+            {loadingCourses ? (
+              <div className="d-flex justify-content-center align-items-center py-5">
+                <Spinner />
+              </div>
+            ) : courses.length === 0 ? (
+              <div className="text-center text-muted py-5">
+                No courses match your filters.
+              </div>
+            ) : (
+              courses.map((course) => (
+                <div key={course.id} className="border rounded-3 p-3 mb-4">
+                  {/* Tablet or larger viewports */}
+                  <div className="d-none d-md-flex justify-content-between align-items-stretch">
                     <div>
-                      <div className="d-flex align-items-center justify-content-end gap-1 flex-nowrap">
-                        <StarRating rating={course.averageOverallRating ?? 0} />
-                        <span className="text-nowrap fw-bold">
-                          {course.averageOverallRating?.toFixed(1) ?? "N/A"}
+                      <h5>
+                        {course.college} {course.department} {course.courseCode}
+                        : {course.title}
+                      </h5>
+                      <p className="mt-3">
+                        {truncateWords(course.description, 30)}
+                      </p>
+                      {course.hubRequirements.length === 0 ? (
+                        <span className="badge badge-bu me-2">No hub reqs</span>
+                      ) : (
+                        course.hubRequirements.map((hubReq) => (
+                          <span className="badge badge-bu me-2">
+                            {hubReq.name}
+                          </span>
+                        ))
+                      )}
+                      <div className="mt-2">
+                        <span className="text-muted small">Difficulty: </span>
+                        <span className="fw-bold me-3 small">
+                          {course.averageDifficultyRating}/5
                         </span>
+                        {course.noPreReqs === true ? (
+                          <span className="text-muted small">
+                            No prerequisites required
+                          </span>
+                        ) : (
+                          <span className="text-muted small">
+                            Prerequisites required
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="d-flex flex-column align-items-end text-end">
+                      <div>
+                        <div className="d-flex align-items-center justify-content-end gap-1 flex-nowrap">
+                          <StarRating
+                            rating={course.averageOverallRating ?? 0}
+                          />
+                          <span className="text-nowrap fw-bold">
+                            {course.averageOverallRating?.toFixed(1) ?? "N/A"}
+                          </span>
+                        </div>
+
+                        <p className="text-muted m-0 p-0 text-nowrap">
+                          {course.numReviews} reviews
+                        </p>
                       </div>
 
-                      <p className="text-muted m-0 p-0 text-nowrap">
-                        {course.numReviews} reviews
-                      </p>
+                      <Link
+                        to={`/course/${course.id}`}
+                        className="btn btn-bu-red mt-auto text-nowrap"
+                      >
+                        View Details
+                      </Link>
                     </div>
-
-                    <Link
-                      to={`/course/${course.id}`}
-                      className="btn btn-bu-red mt-auto text-nowrap"
-                    >
-                      View Details
-                    </Link>
                   </div>
-                </div>
-                {/* Mobile viewport */}
-                <div className="d-flex d-md-none justify-content-between align-items-stretch">
-                  <div>
-                    <h5 className="mb-3">
-                      {course.college} {course.department} {course.courseCode}
-                    </h5>
-                    {course.hubRequirements.length === 0 ? (
-                      <span className="badge badge-bu me-2">No hub reqs</span>
-                    ) : (
-                      course.hubRequirements.map((hubReq) => (
-                        <span className="badge badge-bu me-2">
-                          {hubReq.name}
-                        </span>
-                      ))
-                    )}
-                    <div className="mt-3">
-                      <span className="text-muted small">Difficulty: </span>
-                      <span className="fw-bold me-3 small">
-                        {course.averageDifficultyRating}/5
-                      </span>
-                    </div>
-                    <div className="mt-0">
-                      {course.noPreReqs === true ? (
-                        <span className="text-muted small">
-                          No prerequisites required
-                        </span>
+                  {/* Mobile viewport */}
+                  <div className="d-flex d-md-none justify-content-between align-items-stretch">
+                    <div>
+                      <h5 className="mb-3">
+                        {course.college} {course.department} {course.courseCode}
+                      </h5>
+                      {course.hubRequirements.length === 0 ? (
+                        <span className="badge badge-bu me-2">No hub reqs</span>
                       ) : (
-                        <span className="text-muted small">
-                          Prerequisites required
-                        </span>
+                        course.hubRequirements.map((hubReq) => (
+                          <span className="badge badge-bu me-2">
+                            {hubReq.name}
+                          </span>
+                        ))
                       )}
+                      <div className="mt-3">
+                        <span className="text-muted small">Difficulty: </span>
+                        <span className="fw-bold me-3 small">
+                          {course.averageDifficultyRating}/5
+                        </span>
+                      </div>
+                      <div className="mt-0">
+                        {course.noPreReqs === true ? (
+                          <span className="text-muted small">
+                            No prerequisites required
+                          </span>
+                        ) : (
+                          <span className="text-muted small">
+                            Prerequisites required
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="d-flex flex-column align-items-end text-end">
-                    <StarRating rating={course.averageOverallRating ?? 0} />
-                    <div className="text-nowrap fw-bold me-2">
-                      {course.averageOverallRating?.toFixed(1) ?? "N/A"}
+                    <div className="d-flex flex-column align-items-end text-end">
+                      <StarRating rating={course.averageOverallRating ?? 0} />
+                      <div className="text-nowrap fw-bold me-2">
+                        {course.averageOverallRating?.toFixed(1) ?? "N/A"}
+                      </div>
+                      <span className="text-muted m-0 p-0 text-nowrap">
+                        {course.numReviews} reviews
+                      </span>
+                      <Link
+                        to={`/course/${course.id}`}
+                        className="btn btn-bu-red mt-auto text-nowrap"
+                      >
+                        View Details
+                      </Link>
                     </div>
-                    <span className="text-muted m-0 p-0 text-nowrap">
-                      {course.numReviews} reviews
-                    </span>
-                    <Link
-                      to={`/course/${course.id}`}
-                      className="btn btn-bu-red mt-auto text-nowrap"
-                    >
-                      View Details
-                    </Link>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

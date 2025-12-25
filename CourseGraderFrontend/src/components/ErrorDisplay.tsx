@@ -7,7 +7,7 @@ interface Props {
 const ErrorDisplay = ({ error }: Props) => {
   return (
     <div className="container mt-5">
-      <div className="alert alert-danger" role="alert">
+      <div className="alert alert-bu-red" role="alert">
         Error loading: {error}
       </div>
     </div>

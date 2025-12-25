@@ -86,7 +86,7 @@ const Login = () => {
       {/* Page Content */}
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
+        style={{ minHeight: "calc(100vh - 225px)" }}
       >
         <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
           <h2 className="text-center mb-4">Log in to BU Rate</h2>
@@ -121,7 +121,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="btn btn-danger w-100 mb-4"
+              className="btn btn-bu-red w-100 mb-4"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Logging In" : "Log In"}
