@@ -86,9 +86,9 @@ const Reset = () => {
         style={{ minHeight: "calc(100vh - 225px)" }}
       >
         <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
-          <h2 className="text-center mb-4">
+          <h1 className="text-center mb-5 fw-bold">
             Enter your email to receive the password reset code
-          </h2>
+          </h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="my-4">
               <input

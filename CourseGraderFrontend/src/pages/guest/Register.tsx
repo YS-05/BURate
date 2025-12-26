@@ -133,9 +133,9 @@ const Register = () => {
       {/* Page Content */}
       <div className="d-flex justify-content-center align-items-center p-5">
         <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
-          <h2 className="text-center mb-4">
-            Sign up with your BU email to start rating courses
-          </h2>
+          <h1 className="text-center mb-5 fw-bold">
+            Sign up with your BU email to get started
+          </h1>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="mb-2">

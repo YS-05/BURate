@@ -123,10 +123,10 @@ const Verify = () => {
       {/* Page Content */}
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
+        style={{ minHeight: "calc(100vh - 225px)" }}
       >
         <div className="container" style={{ maxWidth: "480px" }}>
-          <h2 className="text-center mb-4">
+          <h2 className="text-center mb-5 fw-bold">
             Please check your email for the verification code
           </h2>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -134,7 +134,6 @@ const Verify = () => {
               <label className="form-label">Email address:</label>
               <input
                 type="email"
-                disabled
                 className={`form-control ${errors.email ? "is-invalid" : ""}`}
                 placeholder="you@example.com"
                 {...register("email")}

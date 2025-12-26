@@ -42,22 +42,13 @@ const Privacy = () => {
       </Helmet>
 
       {/* Page Content */}
-      <div
-        className="min-vh-100"
-        style={{
-          backgroundColor: "#f5f5f5",
-          paddingTop: "2rem",
-          paddingBottom: "2rem",
-        }}
-      >
+      <div>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-12">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-5">
-                  <h1 className="text-danger mb-4 text-center">
-                    Privacy Policy
-                  </h1>
+              <div className="card border-0">
+                <div className="card-body py-5">
+                  <h1 className="bu-red mb-4 text-center">Privacy Policy</h1>
 
                   <div className="text-muted mb-4 text-center">
                     <strong>Effective Date:</strong> August 20, 2025
@@ -67,7 +58,7 @@ const Privacy = () => {
 
                   <div className="privacy-content">
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">1. Introduction</h2>
+                      <h2 className="h4 bu-red mb-3">1. Introduction</h2>
                       <p>
                         Welcome to CourseGrader ("we," "our," or "us"). This
                         Privacy Policy explains how we collect, use, disclose,
@@ -82,7 +73,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         2. Information We Collect
                       </h2>
 
@@ -145,7 +136,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         3. How We Use Your Information
                       </h2>
                       <p>
@@ -205,7 +196,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         4. Information Sharing and Disclosure
                       </h2>
 
@@ -259,7 +250,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">5. Data Security</h2>
+                      <h2 className="h4 bu-red mb-3">5. Data Security</h2>
                       <p>
                         We implement appropriate technical and organizational
                         security measures to protect your personal information:
@@ -283,7 +274,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">6. Data Retention</h2>
+                      <h2 className="h4 bu-red mb-3">6. Data Retention</h2>
                       <ul>
                         <li>
                           <strong>Account Information:</strong> Deleted
@@ -310,7 +301,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         7. Your Rights and Choices
                       </h2>
 
@@ -366,7 +357,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         8. Cookies and Tracking
                       </h2>
                       <p>We use cookies and similar technologies to:</p>
@@ -385,7 +376,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         9. Third-Party Services
                       </h2>
                       <p>
@@ -397,9 +388,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
-                        10. Children's Privacy
-                      </h2>
+                      <h2 className="h4 bu-red mb-3">10. Children's Privacy</h2>
                       <p>
                         Our Service is intended for college students and is not
                         designed for children under 13. We do not knowingly
@@ -408,7 +397,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         11. Changes to This Privacy Policy
                       </h2>
                       <p>
@@ -430,7 +419,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         12. Contact Information
                       </h2>
                       <p>
@@ -449,7 +438,7 @@ const Privacy = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         13. University Relationship and Project Status
                       </h2>
                       <p>

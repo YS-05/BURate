@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   fetchDepartmentsByCollege,
   fetchCoursesSearch2,
@@ -73,6 +73,8 @@ const Search = () => {
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [totalCourses, setTotalCourses] = useState(0);
 
+  const requestIdRef = useRef(0); // to get rid of async race condition
+
   const [isMobile, setIsMobile] = useState(
     window.matchMedia("(max-width: 767px)").matches
   );
@@ -98,6 +100,7 @@ const Search = () => {
   };
 
   const fetchCourses = async () => {
+    const requestId = ++requestIdRef.current;
     setLoadingCourses(true);
     try {
       const res = await fetchCoursesSearch2(
@@ -113,13 +116,17 @@ const Search = () => {
         page,
         12
       );
+      if (requestId !== requestIdRef.current) return; // not outdated
       setCourses(res.data.content);
       setTotalPages(res.data.totalPages);
       setTotalCourses(res.data.totalElements);
     } catch {
+      if (requestId !== requestIdRef.current) return;
       setCourses([]);
     } finally {
-      setLoadingCourses(false);
+      if (requestId === requestIdRef.current) {
+        setLoadingCourses(false);
+      }
     }
   };
 

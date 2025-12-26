@@ -89,7 +89,7 @@ const Login = () => {
         style={{ minHeight: "calc(100vh - 225px)" }}
       >
         <div className="container" style={{ maxWidth: "480px", width: "100%" }}>
-          <h2 className="text-center mb-4">Log in to BU Rate</h2>
+          <h1 className="text-center mb-5 fw-bold">Log in to BU Rate</h1>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="mb-3">
               <label className="form-label">Email address:</label>
@@ -128,16 +128,22 @@ const Login = () => {
             </button>
           </form>
           <div className="text-center">
-            <div className="text-muted mb-2">
+            <div className="text-muted mb-1">
               Forgot password?{" "}
               <Link className="text-decoration-none" to="/reset">
-                Reset here
+                Reset
               </Link>
             </div>
             <span className="text-muted">Don't have an account? </span>
             <Link to="/register" className="text-decoration-none">
-              Sign up here
+              Sign up
             </Link>
+            <div className="mt-1">
+              <span className="text-muted">Need to verify your email? </span>
+              <Link to="/verify" className="text-decoration-none">
+                Verify
+              </Link>
+            </div>
           </div>
         </div>
       </div>

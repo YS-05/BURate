@@ -42,22 +42,13 @@ const Terms = () => {
       </Helmet>
 
       {/* Page Content */}
-      <div
-        className="min-vh-100"
-        style={{
-          backgroundColor: "#f5f5f5",
-          paddingTop: "2rem",
-          paddingBottom: "2rem",
-        }}
-      >
+      <div>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-12">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-5">
-                  <h1 className="text-danger mb-4 text-center">
-                    Terms of Service
-                  </h1>
+              <div className="card border-0">
+                <div className="card-body py-5">
+                  <h1 className="bu-red mb-4 text-center">Terms of Service</h1>
 
                   <div className="text-muted mb-4 text-center">
                     <strong>Effective Date:</strong> August 20, 2025
@@ -67,9 +58,7 @@ const Terms = () => {
 
                   <div className="terms-content">
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
-                        1. Acceptance of Terms
-                      </h2>
+                      <h2 className="h4 bu-red mb-3">1. Acceptance of Terms</h2>
                       <p>
                         Welcome to CourseGrader ("we," "our," or "us"). These
                         Terms of Service ("Terms") govern your use of our course
@@ -84,7 +73,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         2. Description of Service
                       </h2>
                       <p>
@@ -103,7 +92,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         3. Eligibility and Account Registration
                       </h2>
 
@@ -142,7 +131,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         4. User Content and Conduct
                       </h2>
 
@@ -216,7 +205,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         5. Platform Rules and Restrictions
                       </h2>
 
@@ -268,7 +257,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         6. Content Moderation and Enforcement
                       </h2>
 
@@ -299,13 +288,13 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         7. Privacy and Data Protection
                       </h2>
                       <p>
                         Your privacy is important to us. Our collection and use
                         of personal information is governed by our
-                        <a href="/privacy" className="text-danger">
+                        <a href="/privacy" className="bu-red">
                           {" "}
                           Privacy Policy
                         </a>
@@ -316,7 +305,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         8. Disclaimers and Limitations
                       </h2>
 
@@ -374,7 +363,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         9. Limitation of Liability
                       </h2>
                       <p>To the fullest extent permitted by law:</p>
@@ -391,7 +380,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         10. Intellectual Property
                       </h2>
 
@@ -413,7 +402,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">11. Termination</h2>
+                      <h2 className="h4 bu-red mb-3">11. Termination</h2>
 
                       <h3 className="h5 mb-2">11.1 Your Right to Terminate</h3>
                       <p>
@@ -456,9 +445,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
-                        12. Changes to Terms
-                      </h2>
+                      <h2 className="h4 bu-red mb-3">12. Changes to Terms</h2>
                       <p>
                         We may modify these Terms from time to time. We will
                         notify you of material changes by:
@@ -478,7 +465,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         13. Governing Law and Disputes
                       </h2>
 
@@ -500,7 +487,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         14. Contact Information
                       </h2>
                       <p>
@@ -518,7 +505,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
+                      <h2 className="h4 bu-red mb-3">
                         15. Student Project Disclaimer
                       </h2>
                       <div className="alert alert-primary">
@@ -539,9 +526,7 @@ const Terms = () => {
                     </section>
 
                     <section className="mb-4">
-                      <h2 className="h4 text-danger mb-3">
-                        16. Acknowledgment
-                      </h2>
+                      <h2 className="h4 bu-red mb-3">16. Acknowledgment</h2>
                       <p>
                         By using CourseGrader, you acknowledge that you have
                         read, understood, and agree to be bound by these Terms
