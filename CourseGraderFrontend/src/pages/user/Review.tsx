@@ -168,213 +168,192 @@ const Review = () => {
   }
 
   return (
-    <div
-      className="min-vh-100"
-      style={{ backgroundColor: "#f5f5f5", padding: "30px" }}
-    >
-      <div className="container">
-        <div className="mb-4">
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => navigate(`/course/${courseId}`)}
-          >
-            ← Back
-          </button>
-        </div>
-        <CourseHeader
-          courseCode={course?.courseCode}
-          courseCollege={course?.college}
-          courseDepartment={course?.department}
-          numReviews={course?.numReviews}
-          noPreReqs={course?.noPreReqs}
-          courseTitle={course?.title}
-        />
-        <div className="card border-danger rounded-0">
-          <div className="card-body">
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
-              <CourseRatings
-                ratings={ratings}
-                onRatingChange={handleRatingChange}
-              />
-              <div className="mb-5">
-                <h5 className="mb-5" style={{ color: "#e57373" }}>
-                  Course Details
-                </h5>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      Professor Name <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className={`form-control ${
-                        errors.teacherName ? "is-invalid" : ""
-                      }`}
-                      id="teacherName"
-                      {...register("teacherName")}
-                    />
-                    {errors.teacherName && (
-                      <div className="invalid-feedback">
-                        {errors.teacherName.message}
-                      </div>
-                    )}
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label
-                      htmlFor="semester"
-                      className="form-label fw-semibold"
-                    >
-                      Semester Taken <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className={`form-control ${
-                        errors.semester ? "is-invalid" : ""
-                      }`}
-                      id="semester"
-                      placeholder="e.g. Fall 2024"
-                      {...register("semester")}
-                    />
-                    {errors.semester && (
-                      <div className="invalid-feedback">
-                        {errors.semester.message}
-                      </div>
-                    )}
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label
-                      htmlFor="hoursPerWeek"
-                      className="form-label fw-semibold"
-                    >
-                      Hours per Week <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      className={`form-control ${
-                        errors.hoursPerWeek ? "is-invalid" : ""
-                      }`}
-                      id="hoursPerWeek"
-                      placeholder="0-40"
-                      {...register("hoursPerWeek", { valueAsNumber: true })}
-                    />
-                    <div className="form-text">
-                      Time spent on this course per week
-                    </div>
-                    {errors.hoursPerWeek && (
-                      <div className="invalid-feedback">
-                        {errors.hoursPerWeek.message}
-                      </div>
-                    )}
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      Attendance Required?{" "}
-                      <span className="text-danger">*</span>
-                    </label>
-                    <div className="mt-2">
-                      <div className="form-check mb-3">
-                        <input
-                          type="checkbox"
-                          className={`form-check-input ${
-                            errors.attendanceRequired ? "is-invalid" : ""
-                          }`}
-                          id="attendanceRequired"
-                          {...register("attendanceRequired")}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="attendanceRequired"
-                        >
-                          Attendance Required
-                        </label>
-                        {errors.attendanceRequired && (
-                          <div className="invalid-feedback">
-                            {errors.attendanceRequired.message}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    {errors.attendanceRequired && (
-                      <div className="text-danger small mt-1">
-                        {errors.attendanceRequired.message}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <label
-                    htmlFor="assignmentTypes"
-                    className="form-label fw-semibold"
-                  >
-                    Assignment Types <span className="text-danger">*</span>
+    <div className="container my-5">
+      <div className="mb-5">
+        <button
+          className="btn btn-outline-bu-red"
+          onClick={() => navigate(`/course/${courseId}`)}
+        >
+          ← Back to course
+        </button>
+      </div>
+      <h1 className="fw-bold mb-4">
+        {" "}
+        {course?.college} {course?.courseCode} {course?.department}:{" "}
+        {course?.title}
+      </h1>
+      <div className="card border border-dark rounded-3">
+        <div className="card-body p-2 p-lg-4">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <CourseRatings
+              ratings={ratings}
+              onRatingChange={handleRatingChange}
+            />
+            <div>
+              <h5 className="my-5 fw-bold">Course Details</h5>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label className="form-label fw-semibold">
+                    Professor Name <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
                     className={`form-control ${
-                      errors.assignmentTypes ? "is-invalid" : ""
+                      errors.teacherName ? "is-invalid" : ""
                     }`}
-                    id="assignmentTypes"
-                    placeholder="e.g., Essays, Problem Sets, Group Projects, Exams"
-                    {...register("assignmentTypes")}
+                    id="teacherName"
+                    {...register("teacherName")}
                   />
-                  {errors.assignmentTypes && (
+                  {errors.teacherName && (
                     <div className="invalid-feedback">
-                      {errors.assignmentTypes.message}
+                      {errors.teacherName.message}
                     </div>
                   )}
                 </div>
-                <div className="mb-5">
-                  <h5 className="mb-4" style={{ color: "#e57373" }}>
-                    Written Review
-                  </h5>
-
-                  <div className="mb-3">
-                    <label
-                      htmlFor="reviewText"
-                      className="form-label fw-semibold"
-                    >
-                      Your Review <span className="text-danger">*</span>
-                    </label>
-                    <textarea
-                      className={`form-control ${
-                        errors.reviewText ? "is-invalid" : ""
-                      }`}
-                      id="reviewText"
-                      rows={6}
-                      placeholder="Share your thoughts about the course, professor, assignments, what you learned, tips for future students, etc."
-                      {...register("reviewText")}
-                    />
-                    <div className="form-text">Character limit: 2000</div>
-                    {errors.reviewText && (
-                      <div className="invalid-feedback">
-                        {errors.reviewText.message}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-danger btn-lg"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      {hasExistingReview ? "Updating..." : "Submitting..."}
-                    </>
-                  ) : hasExistingReview ? (
-                    "Update Review"
-                  ) : (
-                    "Submit Review"
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="semester" className="form-label fw-semibold">
+                    Semester Taken <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={`form-control ${
+                      errors.semester ? "is-invalid" : ""
+                    }`}
+                    id="semester"
+                    placeholder="e.g. Fall 2024"
+                    {...register("semester")}
+                  />
+                  {errors.semester && (
+                    <div className="invalid-feedback">
+                      {errors.semester.message}
+                    </div>
                   )}
-                </button>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label
+                    htmlFor="hoursPerWeek"
+                    className="form-label fw-semibold"
+                  >
+                    Hours per Week <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    className={`form-control ${
+                      errors.hoursPerWeek ? "is-invalid" : ""
+                    }`}
+                    id="hoursPerWeek"
+                    placeholder="0-40"
+                    {...register("hoursPerWeek", { valueAsNumber: true })}
+                  />
+                  <div className="form-text">
+                    Time spent on this course per week
+                  </div>
+                  {errors.hoursPerWeek && (
+                    <div className="invalid-feedback">
+                      {errors.hoursPerWeek.message}
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label className="form-label fw-semibold">
+                    Attendance Required? <span className="text-danger">*</span>
+                  </label>
+                  <div className="mt-2">
+                    <div className="form-check mb-3">
+                      <input
+                        type="checkbox"
+                        className={`form-check-input ${
+                          errors.attendanceRequired ? "is-invalid" : ""
+                        }`}
+                        id="attendanceRequired"
+                        {...register("attendanceRequired")}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="attendanceRequired"
+                      >
+                        Attendance Required
+                      </label>
+                      {errors.attendanceRequired && (
+                        <div className="invalid-feedback">
+                          {errors.attendanceRequired.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {errors.attendanceRequired && (
+                    <div className="text-danger small mt-1">
+                      {errors.attendanceRequired.message}
+                    </div>
+                  )}
+                </div>
               </div>
-            </form>
-          </div>
+              <div className="mb-3">
+                <label
+                  htmlFor="assignmentTypes"
+                  className="form-label fw-semibold"
+                >
+                  Assignment Types <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  className={`form-control ${
+                    errors.assignmentTypes ? "is-invalid" : ""
+                  }`}
+                  id="assignmentTypes"
+                  placeholder="e.g., Essays, Problem Sets, Group Projects, Exams"
+                  {...register("assignmentTypes")}
+                />
+                {errors.assignmentTypes && (
+                  <div className="invalid-feedback">
+                    {errors.assignmentTypes.message}
+                  </div>
+                )}
+              </div>
+              <div>
+                <h5 className="mt-5">
+                  Written Review <span className="text-danger">*</span>
+                </h5>
+                <div>
+                  <textarea
+                    className={`form-control ${
+                      errors.reviewText ? "is-invalid" : ""
+                    }`}
+                    id="reviewText"
+                    rows={6}
+                    placeholder="Share your thoughts about the course, professor, assignments, what you learned, tips for future students, etc."
+                    {...register("reviewText")}
+                  />
+                  <div className="form-text">Character limit: 2000</div>
+                  {errors.reviewText && (
+                    <div className="invalid-feedback">
+                      {errors.reviewText.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="btn btn-bu-red mt-3"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    {hasExistingReview ? "Updating..." : "Submitting..."}
+                  </>
+                ) : hasExistingReview ? (
+                  "Update Review"
+                ) : (
+                  "Submit Review"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

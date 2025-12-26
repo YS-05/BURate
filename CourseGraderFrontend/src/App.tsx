@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 
 import NavbarLayout from "./layouts/NavbarLayout";
-import SidebarLayout from "./layouts/SidebarLayout";
+import UserNavbarLayout from "./layouts/UserNavbarLayout";
 
 import Landing from "./pages/guest/Landing";
 import Login from "./pages/guest/Login";
@@ -53,7 +53,7 @@ const AppRoutesBasedOnAuth = () => {
   return (
     <Routes>
       {user && user.enabled ? (
-        <Route path="/" element={<SidebarLayout />}>
+        <Route path="/" element={<UserNavbarLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="hub-progress" element={<HubProgress />} />

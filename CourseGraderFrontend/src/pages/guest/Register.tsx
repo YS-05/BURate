@@ -8,7 +8,12 @@ import { fetchFullColleges, fetchMajorsByFullCollege } from "../../api/axios";
 import { useEffect, useState } from "react";
 
 const schema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z
+    .string()
+    .email("Invalid email address")
+    .refine((email) => email.endsWith("@bu.edu"), {
+      message: "You must use your BU email (@bu.edu)",
+    }),
   college: z.string().min(1, "Select a college"),
   major: z.string().min(1, "Select a major, can be undecided"),
   expectedGrad: z
@@ -138,7 +143,7 @@ const Register = () => {
               <input
                 type="email"
                 className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                placeholder="you@example.com"
+                placeholder="username@bu.edu"
                 {...register("email")}
               />
               {errors.email && (
@@ -226,7 +231,7 @@ const Register = () => {
             </div>
             <button
               type="submit"
-              className="btn btn-danger w-100 mb-4"
+              className="btn btn-bu-red w-100 mb-4"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Registering..." : "Register"}

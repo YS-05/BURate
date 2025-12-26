@@ -7,18 +7,16 @@ interface Props {
 
 const CourseRatings = ({ ratings, onRatingChange }: Props) => {
   const ratingLabels = [
-    "Usefulness:",
-    "Difficulty:",
-    "Workload:",
-    "Interest:",
-    "Teacher Score:",
+    "Usefulness",
+    "Difficulty",
+    "Workload",
+    "Interest",
+    "Teacher Score",
   ];
 
   return (
     <>
-      <h5 className="mb-5" style={{ color: "#e57373" }}>
-        Course Ratings
-      </h5>
+      <h5 className="mb-5 fw-bold">Course Ratings</h5>
       {ratingLabels.map((label, index) => (
         <div key={label} className="mb-0">
           <label className="form-label fw-semibold">{label}</label>
@@ -30,8 +28,8 @@ const CourseRatings = ({ ratings, onRatingChange }: Props) => {
                   type="button"
                   className={`btn mx-md-4 ${
                     ratings[index] === rating
-                      ? "btn-danger"
-                      : "btn-outline-secondary"
+                      ? "btn-bu-red"
+                      : "btn-outline-bu-red"
                   }`}
                   onClick={() => onRatingChange(index, rating)}
                   style={{ width: "40px", height: "40px" }}

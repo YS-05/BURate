@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
-import { UserDashboardDTO } from "../../auth/AuthDTOs";
-import { fetchDashboardData, fetchCompletedCourses } from "../../api/axios";
+import { UserDashboardDTO, ReviewResponseDTO } from "../../auth/AuthDTOs";
+import { fetchDashboardData, fetchMyReviews } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
+import ReviewCard from "../../components/ReviewCard";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -14,27 +15,37 @@ const Dashboard = () => {
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState<ReviewResponseDTO[]>([]);
 
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const loadDashboard = async () => {
       try {
-        const data = await fetchDashboardData();
-        const convertedData = {
-          ...data,
-          coursesToReview: new Set(data.coursesToReview),
-        };
-        setDashboardData(convertedData);
+        setLoading(true);
+
+        const [dashboard, reviewData] = await Promise.all([
+          fetchDashboardData(),
+          fetchMyReviews(),
+        ]);
+
+        setDashboardData({
+          ...dashboard,
+          coursesToReview: new Set(dashboard.coursesToReview),
+        });
+
+        setReviews(reviewData);
       } catch (err) {
+        console.error(err);
         setError("Failed to load dashboard data");
       } finally {
         setLoading(false);
       }
     };
-    loadDashboardData();
+
+    loadDashboard();
   }, []);
 
   if (loading) {
-    <Spinner />;
+    return <Spinner />;
   }
 
   if (error) {
@@ -42,209 +53,54 @@ const Dashboard = () => {
   }
 
   return (
-    <div
-      className="p-5"
-      style={{
-        backgroundColor: "#f5f5f5",
-        minHeight: "100vh",
-      }}
-    >
-      <div className="container">
-        <div className="row mb-4">
-          <div className="col-12">
-            <h2
-              className="text-center mb-4"
-              style={{
-                fontSize: "clamp(1rem, 2.5vw, 2.5rem)",
-                lineHeight: "1.2",
-              }}
+    <div className="container my-5">
+      <h1 className="fw-bold">Dashboard</h1>
+      <p className="text-muted">View and manage your course reviews</p>
+      <div className="row g-4">
+        <div className="col-lg-4">
+          <div className="border rounded-2 p-3 fw-bold">
+            Total course reviews
+            <h4 className="mt-3 fw-bold">{dashboardData?.coursesReviewed}</h4>
+          </div>
+        </div>
+        <div className="col-lg-4">
+          <div className="border rounded-2 p-3 fw-bold">
+            Total upvotes from reviews
+            <h4 className="mt-3 fw-bold">{dashboardData?.totalUpvotes}</h4>
+          </div>
+        </div>
+        <div className="col-lg-4">
+          <div className="border rounded-2 p-3 fw-bold">
+            Average review score
+            <h4 className="mt-3 fw-bold">
+              {dashboardData?.averageReviewScore}
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div className="border rounded-2 p-3 mt-4">
+        <h3 className="fw-bold">Your Reviews</h3>
+
+        {reviews.length === 0 ? (
+          <div className="text-center py-5">
+            <h5 className="fw-bold mb-2">
+              You haven’t written any reviews yet
+            </h5>
+            <p className="text-muted mb-4">
+              Start helping other students by reviewing courses you’ve taken.
+            </p>
+            <button
+              className="btn btn-outline-bu-red"
+              onClick={() => navigate("/search")}
             >
-              Overview of your metrics,{" "}
-              <span style={{ color: "#e57373" }}>{dashboardData?.email}</span>
-            </h2>
-            <div className="text-center text-muted">
-              {dashboardData?.college && dashboardData?.major && (
-                <p className="mb-1">
-                  {dashboardData.major} • {dashboardData.college}
-                </p>
-              )}
-              {dashboardData?.expectedGrad && (
-                <p className="mb-0">
-                  Expected Graduation: {dashboardData.expectedGrad}
-                </p>
-              )}
-            </div>
+              Browse courses
+            </button>
           </div>
-        </div>
-        <div className="row g-4 mb-4">
-          <h2
-            className="mb-2"
-            style={{
-              fontSize: "clamp(1rem, 1.5vw, 1.5rem)",
-              lineHeight: "1.2",
-            }}
-          >
-            Courses and reviews info:
-          </h2>
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100 rounded-0 border-danger">
-              <div className="card-body text-center p-4">
-                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
-                  {dashboardData?.coursesCompleted || 0}
-                </h2>
-                <h4>Number of courses completed</h4>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100 rounded-0 border-danger">
-              <div className="card-body text-center p-4">
-                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
-                  {dashboardData?.coursesInProgress || 0}
-                </h2>
-                <h4>Number of future courses planned</h4>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100 rounded-0 border-danger">
-              <div className="card-body text-center p-4">
-                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
-                  {dashboardData?.coursesSaved || 0}
-                </h2>
-                <h4>Number of courses bookmarked</h4>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100 rounded-0 border-danger">
-              <div className="card-body text-center p-4">
-                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
-                  {dashboardData?.coursesReviewed || 0}
-                </h2>
-                <h4>Number of courses Reviewed</h4>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100 rounded-0 border-danger">
-              <div className="card-body text-center p-4">
-                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
-                  {dashboardData?.totalUpvotes || 0}
-                </h2>
-                <h4>Total upvotes from your reviews</h4>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="card border-4 h-100 rounded-0 border-danger">
-              <div className="card-body text-center p-4">
-                <h2 className="fw-bold mb-2" style={{ color: "#e57373" }}>
-                  {dashboardData?.averageReviewScore !== undefined &&
-                  dashboardData?.averageReviewScore !== null
-                    ? dashboardData.averageReviewScore.toFixed(1)
-                    : "0.0"}
-                </h2>
-                <h4>Average review score by votes</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row g-4 mb-3">
-          <h2
-            className="mb-2"
-            style={{
-              fontSize: "clamp(1rem, 1.5vw, 1.5rem)",
-              lineHeight: "1.2",
-            }}
-          >
-            Next courses to review:
-          </h2>
-          <div className="col">
-            {dashboardData &&
-              dashboardData.coursesCompleted < 5 &&
-              dashboardData.coursesToReview.size === 0 && (
-                <div className="card border-4 rounded-0 border-danger">
-                  <div className="card-body text-center p-5">
-                    <h4 className="text-muted mb-3">
-                      Start your course journey!
-                    </h4>
-                    <p className="text-muted mb-4">
-                      Search for courses and add them to your completed list to
-                      start reviewing.
-                    </p>
-                    <button
-                      className="btn btn-outline-danger btn-lg"
-                      onClick={() => navigate("/search")}
-                    >
-                      Add more courses
-                    </button>
-                  </div>
-                </div>
-              )}
-            {dashboardData &&
-              dashboardData.coursesCompleted >= 5 &&
-              dashboardData.coursesToReview.size === 0 && (
-                <div className="card border-4 rounded-0 border-danger">
-                  <div className="card-body text-center p-5">
-                    <h4 style={{ color: "#20c997" }} className="mb-3">
-                      All caught up!
-                    </h4>
-                    <p className="text-muted mb-4">
-                      You've reviewed all your completed courses. Great job
-                      helping the community!
-                    </p>
-                    <button
-                      className="btn btn-outline-danger btn-lg"
-                      onClick={() => navigate("/search")}
-                    >
-                      Add More Courses
-                    </button>
-                  </div>
-                </div>
-              )}
-            {dashboardData && dashboardData.coursesToReview.size > 0 && (
-              <div className="card border-4 rounded-0 border-danger">
-                <div className="card-body p-4">
-                  <h4 className="text-center mb-4">
-                    Courses ready for review (
-                    {dashboardData.coursesToReview.size})
-                  </h4>
-                  <div className="row g-3">
-                    {Array.from(dashboardData.coursesToReview).map(
-                      (courseId, index) => (
-                        <div
-                          key={courseId}
-                          className="col-12 col-md-6 col-lg-4"
-                        >
-                          <div className="card bg-light border-2 border-danger rounded-0">
-                            <div className="card-body d-flex align-items-center justify-content-center p-3">
-                              <h6 className="text-muted mb-0">
-                                Course Name: {courseId}
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                  <div className="text-center mt-4">
-                    <p className="text-muted mb-3">
-                      Help other students by sharing your experience with these
-                      courses!
-                    </p>
-                    <button
-                      className="btn btn-outline-danger"
-                      onClick={() => navigate("/my-courses")}
-                    >
-                      View All My Courses
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        ) : (
+          reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))
+        )}
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ const ResetPassword = () => {
 
   return (
     <div className="card">
-      <div className="card-body border-danger border">
+      <div className="card-body border border-dark rounded-2">
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mb-3">
             <label className="form-label fw-semibold">Current Password:</label>
@@ -100,7 +100,7 @@ const ResetPassword = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-danger w-100"
+            className="btn btn-bu-red w-100"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Updating..." : "Update Password"}

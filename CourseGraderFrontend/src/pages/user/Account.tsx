@@ -138,14 +138,11 @@ const Account = () => {
   }
 
   return (
-    <div
-      className="min-vh-100"
-      style={{ backgroundColor: "#f5f5f5", padding: "30px" }}
-    >
-      <div className="container">
-        <h3 className="mb-4 text-center text-danger">Account Settings</h3>
-        <div className="card mb-4">
-          <div className="card-body border-danger border">
+    <div className="container my-5">
+      <div className="mx-auto" style={{ maxWidth: "720px" }}>
+        <h1 className="mb-5 fw-bold">Account Settings</h1>
+        <div className="card mb-5">
+          <div className="card-body border border-dark rounded-2">
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <label className="form-label fw-semibold">Email:</label>
               <input
@@ -198,7 +195,7 @@ const Account = () => {
 
               <button
                 type="submit"
-                className="btn btn-danger w-100"
+                className="btn btn-bu-red w-100"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Updating..." : "Update Account"}
@@ -207,11 +204,11 @@ const Account = () => {
           </div>
         </div>
         <ResetPassword />
-        <div className="text-center m-4">
-          <h4 className="text-danger mb-3">Danger Zone:</h4>
+        <div className="mt-5">
+          <h4 className="mb-3 fw-bold">Danger Zone</h4>
           <button
             type="button"
-            className="btn btn-outline-danger w-100"
+            className="btn btn-outline-bu-red w-100"
             onClick={handleDeleteAccount}
             disabled={isDeletingAccount}
           >

@@ -57,15 +57,15 @@ const HUB_REQUIREMENTS = [
 
 const Search = () => {
   const [departments, setDepartments] = useState<string[]>([]);
-  const [selectedCollege, setSelectedCollege] = useState<string>("");
+  const [selectedCollege, setSelectedCollege] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [loadingDepartments, setLoadingDepartments] = useState(false);
   const [selectedHubReqs, setSelectedHubReqs] = useState<string[]>([]);
   const [noPreReqs, setNoPreReqs] = useState(false);
-  const [minRating, setMinRating] = useState<number>(0);
-  const [sortBy, setSortBy] = useState<string>("byCourseCode");
-  const [searchInput, setSearchInput] = useState(""); // typing
-  const [searchQuery, setSearchQuery] = useState(""); // after user presses enter or search
+  const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState("byCourseCode");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [courses, setCourses] = useState<CourseDisplayDTO[]>([]);
   const [page, setPage] = useState(0);
@@ -73,7 +73,18 @@ const Search = () => {
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [totalCourses, setTotalCourses] = useState(0);
 
-  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+  const [isMobile, setIsMobile] = useState(
+    window.matchMedia("(max-width: 767px)").matches
+  );
+
+  // make isMobile reactive
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const handler = () => setIsMobile(media.matches);
+    media.addEventListener("change", handler);
+    return () => media.removeEventListener("change", handler);
+  }, []);
+
   const MAX_VISIBLE_PAGES = isMobile ? 3 : 5;
   const startPage = Math.max(0, page - Math.floor(MAX_VISIBLE_PAGES / 2));
   const endPage = Math.min(totalPages, startPage + MAX_VISIBLE_PAGES);
@@ -105,14 +116,27 @@ const Search = () => {
       setCourses(res.data.content);
       setTotalPages(res.data.totalPages);
       setTotalCourses(res.data.totalElements);
-    } catch (err) {
-      console.error("Failed to fetch courses", err);
+    } catch {
       setCourses([]);
     } finally {
       setLoadingCourses(false);
     }
   };
 
+  // reset page when filters change
+  useEffect(() => {
+    setPage(0);
+  }, [
+    selectedCollege,
+    selectedDepartment,
+    selectedHubReqs,
+    noPreReqs,
+    minRating,
+    sortBy,
+    searchQuery,
+  ]);
+
+  // fetch when page or filters change
   useEffect(() => {
     fetchCourses();
   }, [
@@ -127,42 +151,21 @@ const Search = () => {
   ]);
 
   useEffect(() => {
-    if (page !== 0) {
-      setPage(0);
-      return;
-    }
-  }, [
-    selectedCollege,
-    selectedDepartment,
-    selectedHubReqs,
-    noPreReqs,
-    minRating,
-    sortBy,
-    searchQuery,
-  ]);
-
-  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 
+  // department fetch — reset immediately
   useEffect(() => {
-    if (!selectedCollege) {
-      setDepartments([]);
-      setSelectedDepartment("");
-      return;
-    }
+    setDepartments([]);
+    setSelectedDepartment("");
+
+    if (!selectedCollege) return;
+
     setLoadingDepartments(true);
     fetchDepartmentsByCollege(selectedCollege)
-      .then((res) => {
-        setDepartments(res.data);
-      })
-      .catch(() => {
-        setDepartments([]);
-      })
-      .finally(() => {
-        setLoadingDepartments(false);
-        console.log(departments);
-      });
+      .then((res) => setDepartments(res.data))
+      .catch(() => setDepartments([]))
+      .finally(() => setLoadingDepartments(false));
   }, [selectedCollege]);
 
   const resetFilters = () => {
@@ -174,15 +177,15 @@ const Search = () => {
     setSortBy("byCourseCode");
     setSearchInput("");
     setSearchQuery("");
+    setPage(0);
   };
 
   function truncateWords(text: string, maxWords: number): string {
     if (!text) return "No description available.";
-
     const words = text.split(/\s+/);
-    if (words.length <= maxWords) return text;
-
-    return words.slice(0, maxWords).join(" ") + "…";
+    return words.length <= maxWords
+      ? text
+      : words.slice(0, maxWords).join(" ") + "…";
   }
 
   return (

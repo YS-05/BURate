@@ -64,7 +64,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
   const isOwner = review.owner === true;
 
   return (
-    <div className="border-top py-4">
+    <div className="border-top pt-4 pb-3">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div className="fw-bold">{review.teacherName}</div>

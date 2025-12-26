@@ -127,7 +127,11 @@ const CoursePage = () => {
               {course?.college} {course?.department} {course?.courseCode}:{" "}
               {course?.title}
             </h3>
-            <p className="text-muted">{course?.description}</p>
+            {course?.description && course.description.length > 0 ? (
+              <p className="text-muted">{course?.description}</p>
+            ) : (
+              <p className="text-muted">No description available</p>
+            )}
             {course?.hubRequirements.length === 0 ? (
               <span className="badge badge-bu me-2">No hub reqs</span>
             ) : (
