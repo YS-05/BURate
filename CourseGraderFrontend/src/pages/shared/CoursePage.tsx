@@ -1,10 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { CourseDTO } from "../../auth/AuthDTOs";
+import { CourseDisplayDTO, CourseDTO } from "../../auth/AuthDTOs";
 import {
   fetchCourseById,
   fetchTeachersByCourse,
   fetchCourseReviews,
   fetchTeacherScore,
+  addCompletedCourse,
+  fetchCompletedCourses,
+  removeCompletedCourse,
 } from "../../api/axios";
 import Spinner from "../../components/Spinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
@@ -28,7 +31,66 @@ const CoursePage = () => {
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [teacherScore, setTeacherScore] = useState<number | null>(null);
 
+  const [completedCourses, setCompletedCourses] = useState<CourseDisplayDTO[]>(
+    []
+  );
+  const [completed, setCompleted] = useState(false);
+  const [togglingCompleted, setTogglingCompleted] = useState(false);
+
   const hasUserReviewed = reviews?.some((review) => review.owner) ?? false;
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadCompletedCourses = async () => {
+      try {
+        const data = await fetchCompletedCourses();
+        setCompletedCourses(data);
+      } catch (err) {
+        console.error("Failed to fetch completed courses", err);
+      }
+    };
+
+    loadCompletedCourses();
+  }, [user]);
+
+  useEffect(() => {
+    if (!course?.id) return;
+
+    const isCompleted = completedCourses.some((c) => c.id === course.id);
+
+    setCompleted(isCompleted);
+  }, [completedCourses, course?.id]);
+
+  const handleToggleCompleted = async () => {
+    if (!user || !course?.id || togglingCompleted) return;
+
+    try {
+      setTogglingCompleted(true);
+
+      if (completed) {
+        await removeCompletedCourse(course.id.toString());
+        setCompletedCourses((prev) => prev.filter((c) => c.id !== course.id));
+      } else {
+        await addCompletedCourse(course.id.toString());
+        setCompletedCourses((prev) => [
+          ...prev,
+          {
+            id: course.id,
+            college: course.college,
+            department: course.department,
+            courseCode: course.courseCode,
+            title: course.title,
+            averageOverallRating: course.averageOverallRating,
+          } as CourseDisplayDTO,
+        ]);
+      }
+    } catch (err) {
+      console.error("Failed to toggle completed course", err);
+    } finally {
+      setTogglingCompleted(false);
+    }
+  };
 
   useEffect(() => {
     const loadReviews = async () => {
@@ -161,7 +223,7 @@ const CoursePage = () => {
             <p className="text-muted">
               Based on {course?.numReviews} review(s)
             </p>
-            <div className="border-top text-start py-3">
+            <div className="border-top text-start pt-3">
               <div className="fw-bold">Taken this course?</div>
               {!user ? (
                 <div>
@@ -195,6 +257,13 @@ const CoursePage = () => {
                   </button>
                 </div>
               )}
+              <button
+                className="btn btn-outline-bu-red w-100 mt-3"
+                onClick={handleToggleCompleted}
+                disabled={togglingCompleted}
+              >
+                {completed ? "Completed" : "Mark completed"}
+              </button>
             </div>
           </div>
         </div>
