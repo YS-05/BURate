@@ -98,14 +98,13 @@ const Dashboard = () => {
               You haven’t marked any courses as completed yet.
             </p>
           ) : (
-            <p className="m-0 mt-2">
-              {completedCourses
-                .map(
-                  (course) =>
-                    `${course.college} ${course.department} ${course.courseCode}`
-                )
-                .join(", ")}
-            </p>
+            <div className="m-0 mt-2">
+              {completedCourses.map((course) => (
+                <span className="badge badge-bu me-2">
+                  {course.college} {course.department} {course.courseCode}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 

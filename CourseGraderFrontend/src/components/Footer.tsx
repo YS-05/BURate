@@ -13,6 +13,7 @@ const Footer = () => {
 
           <h5 className="mb-3">Contact Information</h5>
           <ul className="list-unstyled">
+            <li className="mt-1 text-muted">buratesupport@gmail.com</li>
             <li className="mt-1">
               <a
                 href="https://www.linkedin.com/in/yash-sharma-ys05/"
@@ -20,7 +21,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="text-decoration-none text-muted"
               >
-                <i className="fab fa-linkedin me-1"></i>
+                <i className="fab fa-linkedin"></i>
                 LinkedIn
               </a>
             </li>

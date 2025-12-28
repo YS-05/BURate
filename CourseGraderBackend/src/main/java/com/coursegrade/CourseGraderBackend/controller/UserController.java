@@ -34,24 +34,6 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "Course added to completed courses"));
     }
 
-    @PostMapping("/saved-courses/{courseId}")
-    private ResponseEntity<Map<String, String>> addSavedCourse(
-            @PathVariable Long courseId,
-            @AuthenticationPrincipal User currentUser
-    ) {
-        userService.addSavedCourse(courseId, currentUser.getId());
-        return ResponseEntity.ok(Map.of("message", "Course added to saved courses"));
-    }
-
-    @PostMapping("courses-in-progress/{courseId}")
-    private ResponseEntity<Map<String, String>> addInProgressCourse(
-            @PathVariable Long courseId,
-            @AuthenticationPrincipal User currentUser
-    ) {
-        userService.addInProgressCourse(courseId, currentUser.getId());
-        return ResponseEntity.ok(Map.of("message", "Course added to courses in progress"));
-    }
-
     @DeleteMapping("/completed-courses/{courseId}")
     private ResponseEntity<Map<String, String>> removeCompletedCourse(
             @PathVariable Long courseId,
@@ -61,39 +43,9 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "Course removed from completed courses"));
     }
 
-    @DeleteMapping("/saved-courses/{courseId}")
-    private ResponseEntity<Map<String, String>> removeSavedCourse(
-            @PathVariable Long courseId,
-            @AuthenticationPrincipal User currentUser
-    ) {
-        userService.removeSavedCourse(courseId, currentUser.getId());
-        return ResponseEntity.ok(Map.of("message", "Course removed from saved courses"));
-    }
-
-    @DeleteMapping("/courses-in-progress/{courseId}")
-    private ResponseEntity<Map<String, String>> removeInProgressCourse(
-            @PathVariable Long courseId,
-            @AuthenticationPrincipal User currentUser
-    ) {
-        userService.removeInProgressCourse(courseId, currentUser.getId());
-        return ResponseEntity.ok(Map.of("message", "Course removed from courses in progress"));
-    }
-
     @GetMapping("/completed-courses")
     private ResponseEntity<List<CourseDisplayDTO>> getCompletedCourses(@AuthenticationPrincipal User currentUser) {
         List<CourseDisplayDTO> courses = userService.getCompletedCourses(currentUser);
-        return ResponseEntity.ok(courses);
-    }
-
-    @GetMapping("/saved-courses")
-    private ResponseEntity<List<CourseDisplayDTO>> getSavedCourses(@AuthenticationPrincipal User currentUser) {
-        List<CourseDisplayDTO> courses = userService.getSavedCourses(currentUser);
-        return ResponseEntity.ok(courses);
-    }
-
-    @GetMapping("/courses-in-progress")
-    private ResponseEntity<List<CourseDisplayDTO>> getCoursesInProgress(@AuthenticationPrincipal User currentUser) {
-        List<CourseDisplayDTO> courses = userService.getInProgressCourses(currentUser);
         return ResponseEntity.ok(courses);
     }
 

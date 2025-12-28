@@ -45,11 +45,19 @@ const UserNavBar = () => {
 
         {/* Desktop menu */}
         <div className="d-none d-lg-flex align-items-center gap-4">
-          <Link to="/dashboard" className="nav-link text-dark custom-nav-link">
-            Dashboard
-          </Link>
+          {user?.role === "ADMIN" && (
+            <Link
+              to="/all-reviews"
+              className="nav-link text-dark custom-nav-link"
+            >
+              All Reviews
+            </Link>
+          )}
           <Link to="/search" className="nav-link text-dark custom-nav-link">
             Search Courses
+          </Link>
+          <Link to="/ask-ai" className="nav-link text-dark custom-nav-link">
+            Ask AI
           </Link>
           <Link to="/account" className="nav-link text-dark custom-nav-link">
             Account
@@ -71,11 +79,25 @@ const UserNavBar = () => {
             Search Courses
           </Link>
           <Link
-            to="/login"
+            to="/ask-ai"
             className="d-block mb-3 text-dark"
             onClick={closeMenu}
           >
-            Login
+            Ask AI
+          </Link>
+          <Link
+            to="/account"
+            className="d-block mb-3 text-dark"
+            onClick={closeMenu}
+          >
+            Account
+          </Link>
+          <Link
+            to="/"
+            className="d-block mb-3 text-dark"
+            onClick={handleSignOut}
+          >
+            Sign Out
           </Link>
           <Link
             to="/register"

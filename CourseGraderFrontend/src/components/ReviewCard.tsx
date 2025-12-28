@@ -17,6 +17,8 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
   const [voting, setVoting] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  const isAdmin = user?.role === "ADMIN";
+
   useEffect(() => {
     const loadVotes = async () => {
       try {
@@ -135,8 +137,8 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
           </button>
         </div>
 
-        {/* Owner actions */}
-        {isOwner && (
+        {/* Owner/ADMIN actions */}
+        {(isOwner || isAdmin) && (
           <div className="d-flex gap-3">
             <button
               className="btn p-0 border-0 bg-transparent"

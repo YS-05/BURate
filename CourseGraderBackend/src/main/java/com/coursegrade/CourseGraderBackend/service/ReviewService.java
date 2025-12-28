@@ -4,6 +4,7 @@ import com.coursegrade.CourseGraderBackend.dto.CreateReviewDTO;
 import com.coursegrade.CourseGraderBackend.dto.ReviewResponseDTO;
 import com.coursegrade.CourseGraderBackend.model.Course;
 import com.coursegrade.CourseGraderBackend.model.Review;
+import com.coursegrade.CourseGraderBackend.model.Role;
 import com.coursegrade.CourseGraderBackend.model.User;
 import com.coursegrade.CourseGraderBackend.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
@@ -69,8 +70,8 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
 
-        if (!review.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Can only update own reviews");
+        if (!review.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Can only update own reviews or need admin");
         }
 
         review.setDifficultyRating(reviewDTO.getDifficultyRating());
@@ -104,8 +105,8 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
 
-        if (!review.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Can only delete own reviews");
+        if (!review.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Can only delete own reviews or need admin");
         }
 
         Course course = review.getCourse();
@@ -168,6 +169,18 @@ public class ReviewService {
     public List<ReviewResponseDTO> getMyReviews(User currentUser) {
         // Add ordering by createdAt descending
         List<Review> reviews = reviewRepository.findByUserOrderByCreatedAtDesc(currentUser);
+        List<ReviewResponseDTO> dtos = new ArrayList<>();
+        for (Review review : reviews) {
+            dtos.add(courseService.convertToResponseDTO(review, currentUser));
+        }
+        return dtos;
+    }
+
+    public List<ReviewResponseDTO> getAllReviews(User currentUser) {
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Only admins can view all reviews together");
+        }
+        List<Review> reviews = reviewRepository.findAll();
         List<ReviewResponseDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
             dtos.add(courseService.convertToResponseDTO(review, currentUser));

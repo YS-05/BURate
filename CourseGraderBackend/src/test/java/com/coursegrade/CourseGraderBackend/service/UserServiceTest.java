@@ -51,7 +51,6 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        testUser = createTestUser();
         testCourse1 = createTestCourse("CS101", Set.of(HubRequirement.QR1));
         testCourse2 = createTestCourse("CS102", Set.of(HubRequirement.WIN));
     }
@@ -110,7 +109,8 @@ class UserServiceTest {
         assertThat(result.getCoursesReviewed()).isEqualTo(2);
         assertThat(result.getTotalUpvotes()).isEqualTo(8); // 5 + 3
 
-        // Average review score = (upvotes - downvotes) / review count = (8 - 3) / 2 = 2.5
+        // Average review score = (upvotes - downvotes) / review count = (8 - 3) / 2 =
+        // 2.5
         assertThat(result.getAverageReviewScore()).isEqualTo(2.5);
 
         // Courses to review should be empty since both courses are reviewed
@@ -138,22 +138,6 @@ class UserServiceTest {
         // Then
         assertThat(result.getCoursesToReview()).hasSize(1);
         assertThat(result.getCoursesToReview()).contains("CAS CS CS103");
-    }
-
-    // Helper methods
-    private User createTestUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("test@example.com");
-        user.setCollege("CAS");
-        user.setMajor("Computer Science");
-        user.setExpectedGrad(2025);
-        user.setCompletedCourses(new HashSet<>());
-        user.setCoursesInProgress(new HashSet<>());
-        user.setSavedCourses(new HashSet<>());
-        user.setHubProgress(new HashMap<>());
-        // No setProjectedHubProgress - it's a calculated method, not a field
-        return user;
     }
 
     private Course createTestCourse(String courseCode, Set<HubRequirement> hubReqs) {

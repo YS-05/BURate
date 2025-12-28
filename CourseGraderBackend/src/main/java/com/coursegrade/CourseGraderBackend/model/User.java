@@ -42,22 +42,6 @@ public class User implements UserDetails {
     )
     private Set<Course> completedCourses = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "saved_courses",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> savedCourses = new HashSet<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "courses_in_progress",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> coursesInProgress = new HashSet<>();
-
     @ElementCollection
     @CollectionTable(name = "user_hub_progress",
             joinColumns = @JoinColumn(name = "user_id"))
@@ -75,22 +59,6 @@ public class User implements UserDetails {
                 hubProgress.put(hub, hubProgress.getOrDefault(hub, 0) + 1);
             }
         }
-    }
-
-    public Map<HubRequirement, Integer> getProjectedHubProgress() {
-        Map<HubRequirement, Integer> projected = new HashMap<>(hubProgress); // includes completed courses
-        for (Course course : coursesInProgress) {
-            for (HubRequirement hub : course.getHubRequirements()) {
-                projected.put(hub, projected.getOrDefault(hub, 0) + 1);
-            }
-        }
-        return projected;
-    }
-
-    public boolean isHubProjectedToFulfill(HubRequirement hub) {
-        Map<HubRequirement, Integer> projected = getProjectedHubProgress();
-        Integer count = projected.get(hub);
-        return count != null && count >= hub.getReqCount();
     }
 
     public boolean isHubFulfilled(HubRequirement hub) {

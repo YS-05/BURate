@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  fetchDepartmentsByCollege,
-  fetchCoursesSearch2,
-} from "../../api/axios";
+import { fetchDepartmentsByCollege, fetchCoursesSearch } from "../../api/axios";
 import { CourseDisplayDTO } from "../../auth/AuthDTOs";
 import StarRating from "../../components/StarRating";
 import { Link } from "react-router-dom";
@@ -103,7 +100,7 @@ const Search = () => {
     const requestId = ++requestIdRef.current;
     setLoadingCourses(true);
     try {
-      const res = await fetchCoursesSearch2(
+      const res = await fetchCoursesSearch(
         {
           colleges: selectedCollege ? [selectedCollege] : undefined,
           departments: selectedDepartment ? [selectedDepartment] : undefined,

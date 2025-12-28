@@ -32,15 +32,8 @@ export const verifyAccount = (verificationData: { email: string; verificationCod
 export const resendVerification = (email: string) => 
   api.post(`/auth/resend-verification?email=${email}`);
 
-export const addSavedCourse = (courseId: string) => api.post(`/users/saved-courses/${courseId}`);
-
-export const addInProgressCourse = (courseId: string) => api.post(`/users/courses-in-progress/${courseId}`);
 
 export const removeCompletedCourse = (courseId: string) => api.delete(`/users/completed-courses/${courseId}`);
-
-export const removeSavedCourse = (courseId: string) => api.delete(`/users/saved-courses/${courseId}`);
-
-export const removeInProgressCourse = (courseId: string) => api.delete(`/users/courses-in-progress/${courseId}`);
 
 export const fetchCourseById = async (courseId: string): Promise<CourseDTO> => {
   const response = await api.get<CourseDTO>(`/courses/${courseId}`);
@@ -109,20 +102,15 @@ export const fetchCourseReviews = async (courseId: string, teacherName?: string)
   return response.data;
 };
 
-export const fetchCourseByQuery = async (query: string, page = 0, size = 18) => {
-  return await api.get('/courses/query', {
-    params: {
-      query: query.trim(),
-      page,
-      size
-    }
-  });
-}
-
 export const fetchMyReviews = async (): Promise<ReviewResponseDTO[]> => {
   const response = await api.get<ReviewResponseDTO[]>("/reviews/my-reviews");
   return response.data;
 };
+
+export const fetchAllReviews = async (): Promise<ReviewResponseDTO[]> => {
+  const response = await api.get<ReviewResponseDTO[]>("/reviews/all-reviews");
+  return response.data;
+}
 
 export const fetchTeacherScore = async (courseId: string, teacherName: string): Promise<number> => {
   const response = await api.get<number>(`/reviews/course/${courseId}/teacherScore?teacherName=${encodeURIComponent(teacherName)}`);
@@ -166,71 +154,8 @@ export const deleteUser = () => api.delete("/users/delete");
 export const forgotPassword = (email: string) => 
   api.post(`/auth/forgot-password?email=${email}`);
 
-export const fetchFilteredCourses = (filters: {
-  colleges?: string[];
-  departments?: string[];
-  hubReqs?: string[];
-  minRating?: number;
-  maxDifficulty?: number;
-  maxWorkload?: number;
-  minUsefulness?: number;
-  minInterest?: number;
-  minTeacher?: number;
-  noPreReqs?: boolean;
-  minCourseCode?: number;
-  reviewCount?: number;
-  sortBy?: string;
-}, page: number = 0) => {
-  const params = new URLSearchParams();
 
-  if (filters.colleges) {
-    filters.colleges.forEach((college) => params.append("colleges", college));
-  }
-
-  if (filters.departments) {
-    filters.departments.forEach((dept) => params.append("departments", dept));
-  }
-
-  if (filters.hubReqs) {
-    filters.hubReqs.forEach((hub) => params.append("hubReqs", hub));
-  }
-
-  if (filters.minRating !== undefined)
-    params.append("minRating", filters.minRating.toString());
-
-  if (filters.maxDifficulty !== undefined)
-    params.append("maxDifficulty", filters.maxDifficulty.toString());
-
-  if (filters.maxWorkload !== undefined)
-    params.append("maxWorkload", filters.maxWorkload.toString());
-
-  if (filters.minUsefulness !== undefined)
-    params.append("minUsefulness", filters.minUsefulness.toString());
-
-  if (filters.minInterest !== undefined)
-    params.append("minInterest", filters.minInterest.toString());
-
-  if (filters.minTeacher !== undefined)
-    params.append("minTeacher", filters.minTeacher.toString());
-
-  if (filters.minCourseCode !== undefined)
-    params.append("minCourseCode", filters.minCourseCode.toString());
-
-  if (filters.reviewCount !== undefined)
-    params.append("reviewCount", filters.reviewCount.toString());
-
-  if (filters.noPreReqs !== undefined)
-    params.append("noPreReqs", filters.noPreReqs.toString());
-
-  if (filters.sortBy)
-    params.append("sortBy", filters.sortBy);
-
-  params.append("page", page.toString());
-
-  return api.get(`/courses/search?${params.toString()}`);
-};
-
-export const fetchCoursesSearch2 = async (
+export const fetchCoursesSearch = async (
   filters: {
     colleges?: string[];
     departments?: string[];
@@ -264,7 +189,7 @@ export const fetchCoursesSearch2 = async (
   params.append("page", String(page));
   params.append("size", String(size));
 
-  return api.get(`/courses/search2?${params.toString()}`);
+  return api.get(`/courses/search?${params.toString()}`);
 };
 
 export default api;

@@ -104,4 +104,12 @@ public class ReviewController {
         List<ReviewResponseDTO> reviews = reviewService.getMyReviews(currentUser);
         return ResponseEntity.ok(reviews);
     }
+
+    @GetMapping("/all-reviews")
+    public ResponseEntity<List<ReviewResponseDTO>> getAllReviews(
+            @AuthenticationPrincipal User currentUser
+    ) {
+        List<ReviewResponseDTO> reviews = reviewService.getAllReviews(currentUser);
+        return ResponseEntity.ok(reviews);
+    }
 }

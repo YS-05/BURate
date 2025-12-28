@@ -4,12 +4,12 @@ const features = [
   {
     icon: "search",
     title: "Smart Course Search",
-    desc: "Quickly find courses by typing the course code, name or various filters.",
+    desc: "Quickly find courses by typing the course code, name, or various filters.",
   },
   {
     icon: "graph-up-arrow",
-    title: "Trending Courses",
-    desc: "Discover the most popular and highly-rated courses each semester.",
+    title: "Verified Reviews",
+    desc: "All reviews are fully guarenteed to be from BU Students",
   },
   {
     icon: "shield",

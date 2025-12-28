@@ -185,10 +185,10 @@ const CoursePage = () => {
       <div className="row g-4">
         <div className="col-lg-9">
           <div className="border rounded-3 p-4">
-            <h3 className="fw-bold mb-3">
+            <h1 className="fw-bold mb-4">
               {course?.college} {course?.department} {course?.courseCode}:{" "}
               {course?.title}
-            </h3>
+            </h1>
             {course?.description && course.description.length > 0 ? (
               <p className="text-muted">{course?.description}</p>
             ) : (
@@ -202,16 +202,31 @@ const CoursePage = () => {
               ))
             )}
             {course?.noPreReqs === true ? (
-              <div className="text-muted mt-2">No prerequisites required</div>
+              <div className="text-muted mt-3">No prerequisites required</div>
             ) : (
-              <div className="text-muted mt-2">Prerequisites required</div>
+              <div className="text-muted mt-3">Prerequisites required</div>
             )}
-            <div className="border-top border-bottom d-flex flex-wrap justify-content-between mt-3 p-3">
-              <div>Usefulness: {course?.averageUsefulnessRating}/5</div>
-              <div>Difficulty: {course?.averageDifficultyRating}/5</div>
-              <div>Workload: {course?.averageWorkloadRating}/5</div>
-              <div>Interest: {course?.averageInterestRating}/5</div>
-              <div>Teacher: {course?.averageTeacherRating}/5</div>
+            <div className="border-top border-bottom d-flex flex-wrap gap-4 justify-content-between mt-3 p-3">
+              <div className="text-center">
+                Usefulness
+                <h2 className="fw-bold">{course?.averageUsefulnessRating}/5</h2>
+              </div>
+              <div className="text-center">
+                Difficulty
+                <h2 className="fw-bold">{course?.averageDifficultyRating}/5</h2>
+              </div>
+              <div className="text-center">
+                Workload
+                <h2 className="fw-bold">{course?.averageWorkloadRating}/5</h2>
+              </div>
+              <div className="text-center">
+                Interest
+                <h2 className="fw-bold">{course?.averageInterestRating}/5</h2>
+              </div>
+              <div className="text-center">
+                Teacher
+                <h2 className="fw-bold">{course?.averageTeacherRating}/5</h2>
+              </div>
             </div>
           </div>
         </div>
@@ -285,9 +300,24 @@ const CoursePage = () => {
                 ))}
               </select>
             </div>
-            {reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
+            {reviews.length === 0 ? (
+              <div className="p-5 text-center">
+                <div className="text-muted">
+                  No reviews yet. Be the first to write a review for this
+                  course!
+                </div>
+                <button
+                  className="btn btn-bu-red mt-3"
+                  onClick={() => navigate(`/course/${course?.id}/review`)}
+                >
+                  Write a review
+                </button>
+              </div>
+            ) : (
+              reviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))
+            )}
           </div>
         </div>
       </div>

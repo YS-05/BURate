@@ -39,7 +39,12 @@ public class AuthService {
         user.setCollege(college);
         user.setExpectedGrad(expectedGrad);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole(Role.STUDENT);
+        if (user.getEmail().equals("ysharma@bu.edu")) {
+            user.setRole(Role.ADMIN);
+        }
+        else {
+            user.setRole(Role.STUDENT);
+        }
         user.setEnabled(false);
 
         userRepository.save(user);

@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updatePassword } from "../api/axios";
-import ErrorDisplay from "./ErrorDisplay";
 
 const passwordSchema = z
   .object({

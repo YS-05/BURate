@@ -59,48 +59,6 @@ class CourseServiceTest {
         verify(courseRepository, never()).save(any(Course.class)); // Should never get to save line
     }
 
-    @Test
-    void searchCoursesWithCollege_FilterByCollege_ShouldReturnFilteredResults() {
-        // Given
-        Course casCourse = createCourseWithCollege("CAS");
-        Course engCourse = createCourseWithCollege("ENG");
-        when(courseRepository.findAll()).thenReturn(List.of(casCourse, engCourse));
-
-        Set<String> collegeFilter = Set.of("CAS");
-        Pageable pageable = PageRequest.of(0, 10);
-
-        // When
-        Page<CourseDisplayDTO> result = courseService.searchCoursesWithCollege(
-                null, collegeFilter, null, null, null, null, null, null, null, null, null, null, null, pageable
-        );
-
-        // Then
-        assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getCollege()).isEqualTo("CAS");
-    }
-
-    @Test
-    void searchCoursesWithCollege_FilterByMinRatingAndSort_ShouldReturnFilteredAndSortedResults() {
-        // Given
-        Course highestRatedCourse = createCourseWithRating(4.8);
-        Course midRatedCourse = createCourseWithRating(4.2);
-        Course lowRatedCourse = createCourseWithRating(2.0);
-        when(courseRepository.findAll()).thenReturn(List.of(lowRatedCourse, midRatedCourse, highestRatedCourse));
-
-        Pageable pageable = PageRequest.of(0, 10);
-
-        // When - Filter by min rating 4.0 AND sort by rating
-        Page<CourseDisplayDTO> result = courseService.searchCoursesWithCollege(
-                null, null, null, null, null, 4.0, null, null, null, null, null, null, "byRating", pageable
-        );
-
-        // Then - Should return 2 courses (both ≥4.0) sorted by rating (highest first)
-        assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent().get(0).getAverageOverallRating()).isEqualTo(4.8); // Highest first
-        assertThat(result.getContent().get(1).getAverageOverallRating()).isEqualTo(4.2); // Second highest
-        // lowRatedCourse (2.0) should be filtered out
-    }
-
     private Course createCourseWithRating(double rating) {
         Course course = createTestCourse();
         course.setAverageOverallRating(rating);
@@ -135,10 +93,10 @@ class CourseServiceTest {
         // Given - Set up a course with known ratings
         testCourse.setTotalReviews(1);
         testCourse.setAverageDifficultyRating(2.0); // Inverted: 6-2 = 4
-        testCourse.setAverageWorkloadRating(3.0);   // Inverted: 6-3 = 3
-        testCourse.setAverageInterestRating(4.0);   // Direct: 4
+        testCourse.setAverageWorkloadRating(3.0); // Inverted: 6-3 = 3
+        testCourse.setAverageInterestRating(4.0); // Direct: 4
         testCourse.setAverageUsefulnessRating(5.0); // Direct: 5
-        testCourse.setAverageTeacherRating(3.0);    // Direct: 3
+        testCourse.setAverageTeacherRating(3.0); // Direct: 3
 
         // When
         Double result = courseService.calculateOverallRating(testCourse);

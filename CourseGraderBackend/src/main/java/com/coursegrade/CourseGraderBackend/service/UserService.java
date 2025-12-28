@@ -25,7 +25,7 @@ public class UserService {
     @Transactional
     public HubProgressDTO getHubProgress(Long userId) {
         User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         user.updateHubProgress();
         HubProgressDTO hubProgressDTO = new HubProgressDTO();
         List<HubProgressItem> items = new ArrayList<>();
@@ -36,8 +36,6 @@ public class UserService {
             item.setHubCode(hub.getCode());
             item.setRequired(hub.getReqCount());
             item.setFulfilled(user.isHubFulfilled(hub));
-            item.setProjected(user.getProjectedHubProgress().getOrDefault(hub, 0));
-            item.setProjectedFulfilled(user.isHubProjectedToFulfill(hub));
 
             int completed = user.getHubProgress().getOrDefault(hub, 0);
             item.setCompleted(completed);
@@ -73,32 +71,6 @@ public class UserService {
     }
 
     @Transactional
-    public void addSavedCourse(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        if (currentUser.getSavedCourses().contains(course)) {
-            throw new RuntimeException("Course already saved");
-        }
-        currentUser.getSavedCourses().add(course);
-        userRepository.save(currentUser);
-    }
-
-    @Transactional
-    public void addInProgressCourse(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        if (currentUser.getCoursesInProgress().contains(course)) {
-            throw new RuntimeException("Course already in progress");
-        }
-        currentUser.getCoursesInProgress().add(course);
-        userRepository.save(currentUser);
-    }
-
-    @Transactional
     public void removeCompletedCourse(Long courseId, Long userId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
@@ -112,32 +84,6 @@ public class UserService {
         userRepository.save(currentUser);
     }
 
-    @Transactional
-    public void removeSavedCourse(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!currentUser.getSavedCourses().contains(course)) {
-            throw new RuntimeException("Course not in saved list");
-        }
-        currentUser.getSavedCourses().remove(course);
-        userRepository.save(currentUser);
-    }
-
-    @Transactional
-    public void removeInProgressCourse(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!currentUser.getCoursesInProgress().contains(course)) {
-            throw new RuntimeException("Course not in in progress list");
-        }
-        currentUser.getCoursesInProgress().remove(course);
-        userRepository.save(currentUser);
-    }
-
     public List<CourseDisplayDTO> getCompletedCourses(User currentUser) {
         User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -147,28 +93,6 @@ public class UserService {
             completedCourses.add(courseDTO);
         }
         return completedCourses;
-    }
-
-    public List<CourseDisplayDTO> getSavedCourses(User currentUser) {
-        User user = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        List<CourseDisplayDTO> savedCourses = new ArrayList<>();
-        for (Course course : user.getSavedCourses()) {
-            CourseDisplayDTO courseDTO = courseService.convertToDisplayDTO(course);
-            savedCourses.add(courseDTO);
-        }
-        return savedCourses;
-    }
-
-    public List<CourseDisplayDTO> getInProgressCourses(User currentUser) {
-        User user = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        List<CourseDisplayDTO> inProgressCourses = new ArrayList<>();
-        for (Course course : user.getCoursesInProgress()) {
-            CourseDisplayDTO courseDTO = courseService.convertToDisplayDTO(course);
-            inProgressCourses.add(courseDTO);
-        }
-        return inProgressCourses;
     }
 
     public AccountDTO getAccountSettings(Long userId) {
@@ -218,11 +142,9 @@ public class UserService {
                 .college(user.getCollege())
                 .major(user.getMajor())
                 .coursesCompleted(user.getCompletedCourses().size())
-                .coursesInProgress(user.getCoursesInProgress().size())
                 .coursesReviewed(reviews.size())
-                .coursesSaved(user.getSavedCourses().size())
                 .totalUpvotes(upVotes)
-                .averageReviewScore(reviews.isEmpty() ? 0.0 : (double)(upVotes - downVotes) / reviews.size())
+                .averageReviewScore(reviews.isEmpty() ? 0.0 : (double) (upVotes - downVotes) / reviews.size())
                 .coursesToReview(coursesToReview)
                 .build();
     }
@@ -240,7 +162,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser (Long userId) {
+    public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         List<Vote> votes = voteRepository.findByUser(user);
@@ -254,8 +176,6 @@ public class UserService {
         Optional<PasswordResetToken> token = passwordResetTokenRepository.findByUser(user);
         token.ifPresent(passwordResetTokenRepository::delete);
         user.getCompletedCourses().clear();
-        user.getCoursesInProgress().clear();
-        user.getSavedCourses().clear();
         user.getHubProgress().clear();
         userRepository.save(user);
         userRepository.delete(user);

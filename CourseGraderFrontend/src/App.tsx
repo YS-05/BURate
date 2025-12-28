@@ -11,7 +11,6 @@ import Verify from "./pages/guest/Verify";
 import Search from "./pages/shared/Search";
 
 import Dashboard from "./pages/user/Dashboard";
-import HubProgress from "./pages/user/HubProgress";
 import MyReviews from "./pages/user/MyReviews";
 import Account from "./pages/user/Account";
 import "./App.css";
@@ -22,6 +21,8 @@ import Privacy from "./pages/guest/Privacy";
 import Terms from "./pages/guest/Terms";
 import Reset from "./pages/guest/Reset";
 import SetPassword from "./pages/guest/SetPassword";
+import AskAi from "./pages/user/AskAi";
+import AllReviews from "./pages/admin/AllReviews";
 
 function App() {
   return (
@@ -52,13 +53,26 @@ const AppRoutesBasedOnAuth = () => {
 
   return (
     <Routes>
-      {user && user.enabled ? (
+      {user && user.role === "ADMIN" ? (
         <Route path="/" element={<UserNavbarLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="hub-progress" element={<HubProgress />} />
+          <Route path="all-reviews" element={<AllReviews />} />
           <Route path="my-reviews" element={<MyReviews />} />
           <Route path="search" element={<Search />} />
+          <Route path="ask-ai" element={<AskAi />} />
+          <Route path="course/:courseId" element={<CoursePage />} />
+          <Route path="course/:courseId/review" element={<Review />} />
+          <Route path="account" element={<Account />} />
+          <Route path="*" element={<Dashboard />} />
+        </Route>
+      ) : user && user.enabled ? (
+        <Route path="/" element={<UserNavbarLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="my-reviews" element={<MyReviews />} />
+          <Route path="search" element={<Search />} />
+          <Route path="ask-ai" element={<AskAi />} />
           <Route path="course/:courseId" element={<CoursePage />} />
           <Route path="course/:courseId/review" element={<Review />} />
           <Route path="account" element={<Account />} />

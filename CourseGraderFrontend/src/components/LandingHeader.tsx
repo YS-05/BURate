@@ -11,7 +11,7 @@ const LandingHeader = () => {
             Find the Best <span className="bu-red">Courses at BU</span>
           </h1>
           <p className="text-muted mb-4">
-            Read honest reviews from fellow Terriers. Make informed decisions
+            Read honest reviews from fellow BU Students. Make informed decisions
             about your courses with insights from students who've been there.
           </p>
           <Link to="/search" className="btn btn-bu-red px-4 m-2 ms-0">

@@ -28,6 +28,8 @@ const ReviewItem = ({ review, onReviewDeleted }: Props) => {
   const [userVote, setUserVote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const isAdmin = user?.role === "ADMIN";
+
   useEffect(() => {
     const loadVotes = async () => {
       setLoading(true);
@@ -180,7 +182,7 @@ const ReviewItem = ({ review, onReviewDeleted }: Props) => {
         </button>
       </div>
 
-      {review.owner && (
+      {(review.owner || isAdmin) && (
         <>
           <button
             className="btn rounded-0 btn-link"

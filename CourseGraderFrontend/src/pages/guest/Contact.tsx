@@ -49,6 +49,10 @@ const Contact = () => {
     }
   };
 
+  if (error) {
+    return <ErrorDisplay error={error} />;
+  }
+
   return (
     <>
       {/* SEO Metadata */}
@@ -92,10 +96,10 @@ const Contact = () => {
       {/* Page Content */}
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "calc(100vh - 225px)", backgroundColor: "#f5f5f5" }}
+        style={{ minHeight: "calc(100vh - 225px)" }}
       >
-        <div className="container mt-4 mb-4" style={{ width: "80%" }}>
-          <h1 className="text-center mb-4">Contact</h1>
+        <div className="container my-5" style={{ width: "80%" }}>
+          <h1 className="text-center mb-4 fw-bold">Contact</h1>
           <p className="text-muted text-center mb-4">
             I'm always eager to hear from BU Rate users! Whether you have
             questions, suggestions for improvements, or just want to share your
@@ -131,7 +135,7 @@ const Contact = () => {
                   </div>
                 )}
               </div>
-              <div className="col-12 mb-3">
+              <div className="col-12 mb-4">
                 <label className="form-label">Message:</label>
                 <textarea
                   className={`form-control ${
@@ -151,18 +155,18 @@ const Contact = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className="btn btn-danger"
+                className="btn btn-bu-red"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </div>
 
-            {error && <p className="text-danger mt-2">{error}</p>}
+            {error && <p className="bu-red mt-2">{error}</p>}
             {success && <p className="text-success mt-2">{success}</p>}
           </form>
 
-          <div className="mt-4 pt-3 text-center">
+          <div className="mt-2 pt-3 text-center">
             <p className="text-muted mb-2">Or reach out directly:</p>
             <div className="d-flex justify-content-center gap-3">
               <a
