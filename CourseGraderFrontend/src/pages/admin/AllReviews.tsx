@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ReviewResponseDTO } from "../../auth/AuthDTOs";
 import { fetchAllReviews } from "../../api/axios";
 import ErrorDisplay from "../../components/ErrorDisplay";
-import { Spinner } from "react-bootstrap";
+import Spinner from "../../components/Spinner";
 import ReviewCard from "../../components/ReviewCard";
 
 const AllReviews = () => {
