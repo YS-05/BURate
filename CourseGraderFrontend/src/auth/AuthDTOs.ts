@@ -183,3 +183,7 @@ export type ContactUsDTO = {
   subject: string;
   message: string;
 }
+
+export type ChatRequestDTO = {
+  message: string;
+};

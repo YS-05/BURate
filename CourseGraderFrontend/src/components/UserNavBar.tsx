@@ -46,12 +46,20 @@ const UserNavBar = () => {
         {/* Desktop menu */}
         <div className="d-none d-lg-flex align-items-center gap-4">
           {user?.role === "ADMIN" && (
-            <Link
-              to="/all-reviews"
-              className="nav-link text-dark custom-nav-link"
-            >
-              All Reviews
-            </Link>
+            <>
+              <Link
+                to="/all-reviews"
+                className="nav-link text-dark custom-nav-link"
+              >
+                All Reviews
+              </Link>
+              <Link
+                to="/admin-commands"
+                className="nav-link text-dark custom-nav-link"
+              >
+                Admin Commands
+              </Link>
+            </>
           )}
           <Link to="/search" className="nav-link text-dark custom-nav-link">
             Search Courses

@@ -23,6 +23,7 @@ import Reset from "./pages/guest/Reset";
 import SetPassword from "./pages/guest/SetPassword";
 import AskAi from "./pages/user/AskAi";
 import AllReviews from "./pages/admin/AllReviews";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ const AppRoutesBasedOnAuth = () => {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="all-reviews" element={<AllReviews />} />
+          <Route path="admin-commands" element={<AdminDashboard />} />
           <Route path="my-reviews" element={<MyReviews />} />
           <Route path="search" element={<Search />} />
           <Route path="ask-ai" element={<AskAi />} />

@@ -66,6 +66,16 @@ public class User implements UserDetails {
         return count != null && count >= hub.getReqCount();
     }
 
+    public List<HubRequirement> getUnfulfilledHubs() {
+        List<HubRequirement> unfulfilledHubs = new ArrayList<>();
+        for (HubRequirement hub : HubRequirement.values()) {
+            if (!isHubFulfilled(hub)) {
+                unfulfilledHubs.add(hub);
+            }
+        }
+        return unfulfilledHubs;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

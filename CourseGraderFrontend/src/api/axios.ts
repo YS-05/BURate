@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO, PasswordResetDTO } from "../auth/AuthDTOs";
+import { CourseDisplayDTO, UserDashboardDTO, HubProgressDTO, CourseDTO, CreateReviewDTO, ReviewResponseDTO, VoteResponseDTO, AccountDTO, UpdatePasswordDTO, ContactUsDTO, PasswordResetDTO, ChatRequestDTO } from "../auth/AuthDTOs";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL, // baseURL: "http://localhost:8080/api" for local
@@ -190,6 +190,21 @@ export const fetchCoursesSearch = async (
   params.append("size", String(size));
 
   return api.get(`/courses/search?${params.toString()}`);
+};
+
+export const syncCoursesToRAG = async (): Promise<{ message: string } | string> => {
+  const response = await api.post("/ai/sync-courses");
+  return response.data;
+};
+
+export const syncReviewsToRAG = async (): Promise<{ message: string } | string> => {
+  const response = await api.post("/ai/sync-reviews");
+  return response.data;
+};
+
+export const askAIAdvisor = async (request: ChatRequestDTO): Promise<string> => {
+  const response = await api.post<string>("/ai/chat", request);
+  return response.data;
 };
 
 export default api;
