@@ -7,9 +7,9 @@ const features = [
     desc: "Quickly find courses by typing the course code, name, or various filters.",
   },
   {
-    icon: "graph-up-arrow",
-    title: "Verified Reviews",
-    desc: "All reviews are fully guarenteed to be from BU Students",
+    icon: "magic",
+    title: "AI Advisor",
+    desc: "Get quick course advice by asking simple questions about classes/professors.",
   },
   {
     icon: "shield",
