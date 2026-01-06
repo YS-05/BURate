@@ -1,149 +1,191 @@
-# BU Rate 🎓
+# BU Rate
 
-A comprehensive course review and planning platform built specifically for Boston University students.
+**BU Rate** is a full-stack course discovery and review platform built for Boston University students.  
+It helps students explore courses, read anonymous reviews, track HUB progress, and get AI-assisted course advice — all in one place.
 
-**Live Application**: [burate.org](https://burate.org)
+The platform is designed to be secure, scalable, and data-driven, with a modern React frontend and a Spring Boot backend.
 
-![BU Rate Landing Page](https://github.com/user-attachments/assets/a9a35f3a-d981-4d57-af37-3f6de26b1b0d)
-
-## Overview
-
-BU Rate addresses the lack of detailed course information available to BU students by providing a centralized platform for course reviews, advanced search capabilities, and academic planning tools. Built with modern web technologies, it serves the entire BU student body of 30,000+ students with data on 7,500+ courses.
+---
 
 ## Features
 
-### 📝 Course Reviews
+### Course Discovery & Search
 
-- **5-category rating system**: Usefulness, difficulty, workload, interest, and teacher
-- **Course-specific teacher ratings**: See how professors perform in specific courses, not just overall
-- **Teacher performance analysis**: Sort reviews by teacher to get average teacher scores for specific courses
-- **Detailed student feedback**: Get the real insights you need for course selection
+- Browse **7,500+ BU courses** with pagination and sorting
+- Advanced filtering by:
+  - College
+  - Department
+  - HUB requirements
+  - Minimum rating
+  - Prerequisites
+- Keyword search by course code or name
+- Detailed course pages with ratings and reviews
 
-### 🔍 Advanced Search & Filtering
+### Anonymous Reviews & Voting
 
-- Filter by prerequisites (courses with/without requirements)
-- Search by rating categories and thresholds
-- Standard academic filters (college, department, course code)
-- HUB requirement filtering
-- Combine multiple filters for precise results
+- Create, edit, and delete **anonymous course reviews**
+- Filter reviews by instructor
+- View instructor-specific scores
+- Upvote and downvote reviews to surface helpful feedback
+- Personal “My Reviews” section for users
 
-### 📊 User Dashboard & HUB Progress Tracking
+### User Accounts & Security
 
-- **Personal dashboard** for registered users with academic planning tools
-- **Course management**: Add courses to completed or future course lists
-- **Dynamic HUB tracking**: Real-time updates to HUB progress based on your course selections
-- **Visual progress graphs** for all HUB categories
-- Plan your academic path efficiently with semester-by-semester tracking
+- Email-verified user registration
+- JWT-based authentication and authorization
+- Secure password reset and update flows
+- Account settings management
+- Full account deletion support
+
+### HUB Progress Tracking
+
+- Mark courses as completed
+- Automatic HUB requirement progress calculation
+- Personalized dashboard with academic overview
+
+### AI Course Advisor
+
+- Chat-based advisor trained on:
+  - BU course data
+  - Student reviews
+- Ask natural questions about:
+  - Course difficulty
+  - Workload
+  - Comparisons between classes
+  - Academic fit
+- Retrieval-Augmented Generation (RAG) pipeline using vector embeddings
+
+---
 
 ## Tech Stack
 
 ### Backend
 
-- **Spring Boot** (Java) - REST API and business logic
-- **PostgreSQL** - Primary database for courses, reviews, and user data
-- **JWT Authentication** - Secure user authentication and authorization
-- **JSoup** - Web scraping for course data collection
-- **JUnit** - Comprehensive testing framework
+- Java 17
+- Spring Boot 3
+- Spring Security + JWT
+- Spring Data JPA (Hibernate)
+- PostgreSQL + pgvector
+- LangChain4j (RAG)
+- JSoup (course ingestion)
+- JUnit + H2 (testing)
+- Resend (email delivery)
 
 ### Frontend
 
-- **React** - Component-based user interface
-- **TypeScript** - Type-safe development
-- **Responsive Design** - Optimized for desktop and mobile
+- React
+- TypeScript
+- Vite
+- Bootstrap
+- Custom CSS
 
-### Infrastructure
+---
 
-- **Deployed Application** - Production-ready deployment
-- **RESTful APIs** - Clean, documented API endpoints
-- **Database Migration Scripts** - Automated data management
-
-## Key Technical Achievements
-
-- **Data Collection**: Automated web scraping system that collects and structures course information from multiple university sources
-- **Scalable Architecture**: Designed to handle the entire BU student population with efficient database queries and caching
-- **Security**: Implemented JWT-based authentication with secure password handling
-- **Testing**: Extensive test coverage ensuring application reliability
-- **User Experience**: Intuitive interface design focused on student workflow and course planning needs
-
-## Installation & Setup
-
-### Prerequisites
-
-- Java 17+
-- Node.js 16+
-- PostgreSQL 12+
-
-### Backend Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/YS-05/BURate.git
-cd BURate/backend
-
-# Configure database connection in application.properties
-# Run the application
-./mvnw spring-boot:run
-```
-
-### Frontend Setup
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-## API Documentation
+## API Overview
 
 ### Authentication
 
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
+- `POST /api/auth/register`
+- `POST /api/auth/verify`
+- `POST /api/auth/login`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
+- `PUT  /api/auth/update-password`
+- `GET  /api/auth/me`
 
 ### Courses
 
-- `GET /api/courses` - Get courses with filtering
-- `GET /api/courses/{id}` - Get specific course details
-- `GET /api/courses/search` - Advanced course search
+- `GET /api/courses`
+- `GET /api/courses/{id}`
+- `GET /api/courses/search`
+- `GET /api/courses/colleges`
+- `GET /api/courses/departments/{college}`
 
 ### Reviews
 
-- `POST /api/reviews` - Submit course review
-- `GET /api/reviews/course/{courseId}` - Get reviews for a course
-- `PUT /api/reviews/{id}` - Update review
+- `POST   /api/reviews/course/{courseId}`
+- `PUT    /api/reviews/{reviewId}`
+- `DELETE /api/reviews/{reviewId}`
+- `GET    /api/reviews/course/{courseId}`
+- `GET    /api/reviews/my-reviews`
 
-### HUB Tracking
+### Votes
 
-- `GET /api/hub/progress` - Get user's HUB progress
-- `POST /api/hub/courses` - Add course to planning
+- `POST /api/votes/review/{reviewId}`
+- `GET  /api/votes/review/{reviewId}`
 
-## Contributing
+### Users
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- `GET    /api/users/dashboard`
+- `GET    /api/users/hub-progress`
+- `POST   /api/users/completed-courses/{courseId}`
+- `DELETE /api/users/completed-courses/{courseId}`
+- `PUT    /api/users/account`
+- `DELETE /api/users/delete`
 
-## Future Enhancements
+### AI Advisor
 
-- [ ] Mobile app development
-- [ ] Professor rating integration
-- [ ] Course scheduling optimization
-- [ ] Email notifications for course updates
-- [ ] Integration with StudentLink
-- [ ] Advanced analytics dashboard
-
-## Contact
-
-**Yash Sharma** - [ysharma@bu.edu](mailto:ysharma@bu.edu) - [LinkedIn] [https://www.linkedin.com/in/yash-sharma-ys05/]
-
-**Project Link**: [https://github.com/YS-05/BURate](https://github.com/YS-05/BURate)
-
-**Live Application**: [burate.org](https://burate.org)
+- `POST /api/ai/chat`
+- `POST /api/ai/sync-courses`
+- `POST /api/ai/sync-reviews`
 
 ---
+
+## AI Advisor (RAG)
+
+The AI Advisor uses a Retrieval-Augmented Generation (RAG) pipeline:
+
+- Courses and reviews are embedded using MiniLM
+- Embeddings are stored in PostgreSQL via pgvector
+- Relevant context is retrieved at query time
+- Responses are generated using LLMs (OpenAI / Gemini)
+
+This ensures responses are grounded in real BU course and review data.
+
+---
+
+## Local Development
+
+### Backend
+
+```bash
+./gradlew bootRun
+```
+
+### Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+### Environment Variables (Backend)
+
+```env
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+JDBC_DATABASE_URL=
+JWT_SECRET_KEY=
+RESEND_API_KEY=
+GOOGLE_API_KEY=
+```
+
+---
+
+## Testing
+
+- JUnit and Spring Boot Test
+- H2 in-memory database for isolated tests
+- Spring Security test utilities
+
+Run tests:
+
+```bash
+./gradlew test
+```
+
+---
+
+## Disclaimer
+
+BU Rate is an independent project and is **not officially affiliated with Boston University**.
