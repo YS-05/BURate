@@ -285,7 +285,7 @@ const CoursePage = () => {
         <div className="col-lg-9">
           {/* Reviews grid */}
           <div className="border rounded-3 p-4">
-            <div className="d-flex justify-content-between mb-3">
+            <div className="d-flex justify-content-between mb-3 flex-wrap">
               <h3 className="fw-bold">Reviews</h3>
               <select
                 className="form-select w-auto"
